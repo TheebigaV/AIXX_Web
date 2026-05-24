@@ -6,8 +6,8 @@ on:
       - main
 
 env:
-  DEPLOY_PATH: /var/www/rmts/fe-rmts
-  DOMAIN: https://rmts.microwe.net/
+  DEPLOY_PATH: /var/www/aixx/fe-aixx
+  DOMAIN: https://aixx.microwe.net/
 
 jobs:
   deploy:
@@ -73,13 +73,13 @@ jobs:
             if [ -d .next_new ]; then
               echo "♻️ Swapping new build and restarting service..."
               mv .next_new .next
-              sudo systemctl restart fe-rmts
+              sudo systemctl restart fe-aixx
               echo "✅ Deployment completed successfully."
             else
               echo "❌ Build failed — restoring backup..."
               if [ -d .next_backup ]; then
                 mv .next_backup .next
-                sudo systemctl restart fe-rmts
+                sudo systemctl restart fe-aixx
               fi
               exit 1
             fi

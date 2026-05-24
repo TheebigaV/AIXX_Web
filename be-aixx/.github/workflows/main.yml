@@ -20,7 +20,7 @@ jobs:
 
     - name: Run deploy.sh on server
       env:
-        MICROWE_DEPLOY_PATH: /var/www/rmts/be-rmts
+        MICROWE_DEPLOY_PATH: /var/www/aixx/be-aixx
         MICROWE_DEPLOY_HOST: 192.46.230.132
         MICROWE_DEPLOY_USER: ubuntu
       run: |
