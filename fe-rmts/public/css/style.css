@@ -1,0 +1,382 @@
+/* globals.css */
+.beveled-corner2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #58b347;
+  color: white;
+  clip-path: polygon(
+    16px 0,                   /* Top-left bevel */
+    100% 0,
+    100% calc(100% - 16px),   /* Bottom-right upper point */
+    calc(100% - 16px) 100%,   /* Bottom-right bevel */
+    0 100%,
+    0 16px                    /* Top-left vertical slope */
+  );
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+
+  width: 100%;               /* Full width across breakpoints */
+  height: 49px;
+  padding: 0 1.5rem;
+}
+.beveled-corner:hover {
+  background-color: rgb(3, 11, 78);
+}
+
+/* globals.css */
+.beveled-corner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #58b347;
+  color: white;
+  clip-path: polygon(
+    16px 0,
+    100% 0,
+    100% calc(100% - 16px),
+    calc(100% - 16px) 100%,
+    0 100%,
+    0 16px
+  );
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+  height: 49px;
+  padding: 0 1.5rem;
+  font-weight: 500;
+}
+
+.beveled-corner:hover {
+  background-color: rgb(3, 11, 78);
+}
+
+.beveled-corner.active {
+  background-color: rgb(3, 11, 78);
+  clip-path: none;
+}
+
+/* Default: hidden on small screens */
+.beveled-corner3 {
+  display: none; /* hide by default */
+  align-items: center;
+  justify-content: center;
+  background-color: #58b347;
+  color: white;
+  clip-path: polygon(
+    16px 0,
+    100% 0,
+    100% calc(100% - 16px),
+    calc(100% - 16px) 100%,
+    0 100%,
+    0 16px
+  );
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+  height: 49px;
+  padding: 0 1.5rem;
+  font-weight: 500;
+}
+
+/* md and above: display inline-flex */
+@media (min-width: 600px) {
+  .beveled-corner3 {
+    display: inline-flex;
+  }
+}
+
+.beveled-corner:hover {
+  background-color: rgb(3, 11, 78);
+}
+
+.beveled-corner.active {
+  background-color: rgb(3, 11, 78);
+  clip-path: none;
+}
+
+
+/* globals.css */
+.angle-corner-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  clip-path: polygon(
+    0 0,                             /* Top-left */
+    calc(90% - 32px) 0,             /* Top-right bevel start */
+    100% 72px,                       /* Top-right slope */
+    100% 100%,                       /* Bottom-right */
+    16px 100%,                       /* Bottom-left bevel start */
+    0 calc(100% - 0px)              /* Bottom-left slope */
+  );
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+
+  width: 95%;
+  height: 48px;
+}
+
+.angle-corner-btn1 {
+  clip-path: polygon(
+    0 0,
+    calc(90% - 32px) 0,
+    100% 72px,
+    100% 100%,
+    16px 100%,
+    0 100%
+  );
+  transition: clip-path 0.4s ease-in-out, transform 0.4s ease-in-out;
+  z-index: 0;
+}
+
+/* Hover effect (make it rectangle + scale) */
+.group:hover .angle-corner-btn1 {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transform: scale(1.05);
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.beveled-corner1 {
+  display: inline-flex;
+  clip-path: polygon(
+    0 0,                          /* Top-left */
+    calc(100% - 12px) 0,          /* Top-right bevel start */
+    100% 12px,                    /* Top-right bevel point */
+    100% 100%,                    /* Bottom-right */
+    12px 100%,                    /* Bottom-left bevel start */
+    0 calc(100% - 12px)           /* Bottom-left bevel point */
+  );
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+
+  width: 40px;
+  height: 40px;
+  padding: 0 1.5rem;
+}
+
+html {
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+
+.beveled-corner4 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  clip-path: polygon(
+    16px 0,
+    100% 0,
+    100% calc(100% - 16px),
+    calc(100% - 16px) 100%,
+    0 100%,
+    0 16px
+  );
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+  height: 49px;
+  padding: 0 1.5rem;
+  font-weight: 500;
+}
+
+
+.polygon-corner-bg {
+  position: relative;
+  color: white;
+  background-color: #f3f4f6; /* bg-gray-100 */
+  clip-path: polygon(
+    0 0,                        /* Top-left corner - sharp */
+    calc(100% - 20px) 0,        /* Top edge before cut - sharp */
+    100% 20px,                  /* Diagonal cut at top-right - sharp */
+    100% 100%,                  /* Bottom-right corner - sharp */
+    0 100%                      /* Bottom-left corner - sharp */
+  );
+  transition: all 0.3s ease;
+}
+
+.polygon-corner-bg1 {
+  position: relative;
+  color: #191E42; /* text color */
+  background-color: #f3f4f6; /* gray background */
+  clip-path: polygon(
+    0 0,                          /* Top-left corner */
+    calc(100% - 30px) 0,          /* Top edge before cut */
+    100% 30px,                    /* Diagonal cut at top-right */
+    100% 100%,                    /* Bottom-right corner */
+    0 100%                        /* Bottom-left corner */
+  );
+  transition: all 0.3s ease;
+}
+
+.polygon-corner-bg2 {
+  position: relative;
+  color: #191E42; /* text color */
+  background-color: #f3f4f6; /* gray background */
+  clip-path: polygon(
+    0 0,                          /* Top-left corner */
+    calc(100% - 80px) 0,          /* Top edge before cut */
+    100% 70px,                    /* Diagonal cut at top-right */
+    100% 100%,                    /* Bottom-right corner */
+    0 100%                        /* Bottom-left corner */
+  );
+  transition: all 0.3s ease;
+}
+
+.task {
+  transition: all 0.2s ease; /* Smooth transition for visual effects */
+}
+
+.task {
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgba(16, 24, 40, 0.1),
+    0 1px 2px 0 rgba(16, 24, 40, 0.06);
+  opacity: 0.8;
+  cursor: grabbing; /* Changes the cursor to indicate dragging */
+}
+
+.custom-dots {
+  display: flex !important;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+.custom-dots li {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #c4c4c4;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.custom-dots li.slick-active {
+  background-color: #2f3472;
+  border-color: #2f3472;
+}
+.custom-dots li button {
+  display: none;
+}
+
+.pagination-button {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4b5563;
+  transition: all 0.2s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.pagination-button.active {
+  background-color: #2f3472;
+  color: white;
+  border-color: #2f3472;
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* Reusable Folded Border Button Style */
+.folded-border {
+  background: white;
+  position: relative;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #58b347;
+  cursor: pointer;
+  border: none;
+  z-index: 0;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.folded-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  background: #58b347;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  -webkit-clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  z-index: 1;
+}
+
+.folded-border::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  background: white;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  -webkit-clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  z-index: 2;
+}
+
+/* For icon and text inside the button */
+.folded-border span,
+.folded-border svg {
+  position: relative;
+  z-index: 3;
+}
+
+/* Default: square */
+.custom-bullet {
+  display: inline-block;
+  width: 8px;   /* square width */
+  height: 8px;  /* square height */
+  border-radius: 0.5px;
+  background-color: #e5e7eb; /* gray-200 */
+  transition: all 0.3s ease;
+}
+
+/* Active: rectangle */
+.custom-bullet.swiper-pagination-bullet-active {
+  background-color: #00245A; /* dark blue */
+  width: 20px;   /* rectangle width */
+  height: 8px;   /* rectangle height */
+  border-radius: 2px;
+}
+
+.beveled-image {
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(
+    66px 0,
+    100% 0,
+    100% calc(100% - 66px),
+    calc(100% - 66px) 100%,
+    0 100%,
+    0 66px
+  );
+}
+
+
+
+

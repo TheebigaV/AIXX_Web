@@ -1,0 +1,30 @@
+name: Auto Deploy
+
+on:
+  push:
+    branches:
+      - main  # or 'dev'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup SSH key (MICROWE_DEPLOY_KEY)
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.MICROWE_DEPLOY_KEY }}
+
+    - name: Run deploy.sh on server
+      env:
+        MICROWE_DEPLOY_PATH: /var/www/rmts/be-rmts
+        MICROWE_DEPLOY_HOST: 192.46.230.132
+        MICROWE_DEPLOY_USER: ubuntu
+      run: |
+        ssh -o StrictHostKeyChecking=no $MICROWE_DEPLOY_USER@$MICROWE_DEPLOY_HOST << EOF
+          cd $MICROWE_DEPLOY_PATH
+          bash deploy.sh
+        EOF

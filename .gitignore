@@ -1,0 +1,10 @@
+# General gitignore for unified monorepo
+node_modules/
+vendor/
+.env
+.env*.local
+.idea/
+.vscode/
+*.log
+.DS_Store
+Thumbs.db

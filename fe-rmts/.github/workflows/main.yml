@@ -1,0 +1,119 @@
+name: 🚀 Deploy Next.js App
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DEPLOY_PATH: /var/www/rmts/fe-rmts
+  DOMAIN: https://rmts.microwe.net/
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup Node.js and enable npm caching
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      # 3️⃣ SSH into server, pull latest code, build, and deploy
+      - name: Build & Deploy on Server with Rollback
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            echo "🚀 Starting deployment on server..."
+
+            cd "${{ env.DEPLOY_PATH }}"
+
+            # Ensure correct branch and latest code
+            if [ -d .git ]; then
+              echo "🔄 Fetching latest code..."
+              git fetch origin main
+              git reset --hard origin/main
+            else
+              echo "⚠️ No git repository found at ${{ env.DEPLOY_PATH }}"
+              echo "Please clone the repository first:"
+              echo "git clone git@github.com:${{ github.repository }} ."
+              exit 1
+            fi
+
+            # Backup current build
+            if [ -d .next ]; then
+              echo "📦 Backing up existing .next build..."
+              rm -rf .next_backup
+              mv .next .next_backup
+            fi
+
+            # Install dependencies and build
+            echo "📥 Installing dependencies..."
+            npm ci
+
+            echo "🏗️ Building Next.js project..."
+            npm run build
+
+            # Prepare new build
+            echo "🧱 Preparing new build directory..."
+            rm -rf .next_new
+            cp -r .next .next_new
+
+            # Swap build and restart service
+            if [ -d .next_new ]; then
+              echo "♻️ Swapping new build and restarting service..."
+              mv .next_new .next
+              sudo systemctl restart fe-rmts
+              echo "✅ Deployment completed successfully."
+            else
+              echo "❌ Build failed — restoring backup..."
+              if [ -d .next_backup ]; then
+                mv .next_backup .next
+                sudo systemctl restart fe-rmts
+              fi
+              exit 1
+            fi
+
+      # 4️⃣ Notify success on Telegram
+      - name: ✅ Notify Telegram - Success
+        if: success()
+        uses: appleboy/telegram-action@master
+        with:
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          to: -1002635419258
+          format: html
+          message: |
+            🚦 <b>Deploy Success</b>
+            📦 <b>Repo:</b> ${{ github.repository }}
+            🌿 <b>Branch:</b> ${{ github.ref_name }}
+            👤 <b>By:</b> ${{ github.actor }}
+            📝 <b>Message:</b> ${{ github.event.head_commit.message }}
+            🌐 <b>Domain:</b> ${{ env.DOMAIN }}
+            🕒 <b>Time:</b> ${{ github.event.head_commit.timestamp }}
+
+      # 5️⃣ Notify failure on Telegram
+      - name: 🚨 Notify Telegram - Failure
+        if: failure()
+        uses: appleboy/telegram-action@master
+        with:
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          to: -1002635419258
+          format: html
+          message: |
+            ❌ <b>Deployment Failed</b>
+            📦 <b>Repo:</b> ${{ github.repository }}
+            🌿 <b>Branch:</b> ${{ github.ref_name }}
+            👤 <b>By:</b> ${{ github.actor }}
+            📝 <b>Message:</b> ${{ github.event.head_commit.message }}
+            🌐 <b>Domain:</b> ${{ env.DOMAIN }}
+            ⚙️ <b>Check Logs:</b> https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
