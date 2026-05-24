@@ -13,18 +13,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup SSH key (MICROWE_DEPLOY_KEY)
+    - name: Setup SSH key (AIXX_DEPLOY_KEY)
       uses: webfactory/ssh-agent@v0.9.0
       with:
-        ssh-private-key: ${{ secrets.MICROWE_DEPLOY_KEY }}
+        ssh-private-key: ${{ secrets.AIXX_DEPLOY_KEY }}
 
     - name: Run deploy.sh on server
       env:
-        MICROWE_DEPLOY_PATH: /var/www/aixx/be-aixx
-        MICROWE_DEPLOY_HOST: 192.46.230.132
-        MICROWE_DEPLOY_USER: ubuntu
+        AIXX_DEPLOY_PATH: /var/www/aixx/be-aixx
+        AIXX_DEPLOY_HOST: 192.46.230.132
+        AIXX_DEPLOY_USER: ubuntu
       run: |
-        ssh -o StrictHostKeyChecking=no $MICROWE_DEPLOY_USER@$MICROWE_DEPLOY_HOST << EOF
-          cd $MICROWE_DEPLOY_PATH
+        ssh -o StrictHostKeyChecking=no $AIXX_DEPLOY_USER@$AIXX_DEPLOY_HOST << EOF
+          cd $AIXX_DEPLOY_PATH
           bash deploy.sh
         EOF

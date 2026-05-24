@@ -7,7 +7,7 @@ on:
 
 env:
   DEPLOY_PATH: /var/www/aixx/fe-aixx
-  DOMAIN: https://aixx.microwe.net/
+  DOMAIN: https://aixx-web.vercel.app/
 
 jobs:
   deploy:
