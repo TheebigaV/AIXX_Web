@@ -2,7 +2,6 @@
 
 namespace App\Services\Admin;
 
-use App\Models\Product;
 use App\Models\Project;
 use App\Repositories\Admin\ProjectRepository;
 use App\Types;

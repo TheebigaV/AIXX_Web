@@ -120,7 +120,7 @@ export default function RoleFrom() {
                         {Object.entries(grouped).map(([module, perms]) => (
                             <div key={module} className="bg-white dark:bg-gray-900 border rounded-lg shadow-sm p-4">
                                 <h3 className="font-semibold text-gray-700 dark:text-white capitalize mb-2">
-                                    {module}
+                                    {module === "categories" ? "Service Categories" : module}
                                 </h3>
                                 <div className="space-y-2">
                                     {perms.map((perm) => (

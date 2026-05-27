@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TrainingController;
+
 
 
 Route::get('/user', function (Request $request) {
@@ -56,15 +58,13 @@ Route::middleware('auth:sanctum')->group(function () {
         // Categories (Services)
         Route::get('categories/all', [CategoryController::class, 'all']);
         Route::apiResource('categories', CategoryController::class);
+
+        // Trainings
+        Route::get('trainings/all', [TrainingController::class, 'all']);
+        Route::apiResource('trainings', TrainingController::class);
+
         // Customers
         Route::apiResource('customers', CustomerController::class);
-        // Enquiries
-        Route::apiResource('inquiries', InquiryController::class);
-        Route::get('inquiries/all', [InquiryController::class, 'all']);
-
-        Route::post('enquiries/{inquiry}/mark-viewed', [InquiryController::class, 'markAsViewed']);
-        Route::post('enquiries/{inquiry}/mark-replied', [InquiryController::class, 'markAsReplied']);
-        Route::post('enquiries/{inquiry}/reply', [InquiryController::class, 'reply']);
 
         // Settings
         Route::get('settings', [SettingController::class, 'index']);
@@ -74,13 +74,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-Route::middleware('guest')->group(function () {
-    Route::get('banners/all', [\App\Http\Controllers\Guest\BannerController::class, 'all']);
-    Route::get('banners', [\App\Http\Controllers\Guest\BannerController::class,'index']);
-    Route::get('categories/{slug}/by-slug', [\App\Http\Controllers\Guest\CategoryController::class, 'show']);
-    Route::get('categories/all', [\App\Http\Controllers\Guest\CategoryController::class, 'all']);
-    Route::get('categories', [\App\Http\Controllers\Guest\CategoryController::class,'index']);
-    Route::post('inquiries', [\App\Http\Controllers\Guest\InquiryController::class, 'store']);
-    Route::post('submit-contact-form', [\App\Http\Controllers\Guest\InquiryController::class, 'submitContact']);
-    Route::get('settings', [SettingController::class, 'index']);
-});
+// Public Routes (Accessible by both guests and authenticated users)
+Route::get('banners/all', [\App\Http\Controllers\Guest\BannerController::class, 'all']);
+Route::get('banners', [\App\Http\Controllers\Guest\BannerController::class,'index']);
+Route::get('categories/{slug}/by-slug', [\App\Http\Controllers\Guest\CategoryController::class, 'show']);
+Route::get('categories/all', [\App\Http\Controllers\Guest\CategoryController::class, 'all']);
+Route::get('categories', [\App\Http\Controllers\Guest\CategoryController::class,'index']);
+Route::get('trainings/all', [\App\Http\Controllers\Guest\TrainingController::class, 'all']);
+Route::get('trainings', [\App\Http\Controllers\Guest\TrainingController::class, 'index']);
+Route::post('inquiries', [\App\Http\Controllers\Guest\InquiryController::class, 'store']);
+Route::post('submit-contact-form', [\App\Http\Controllers\Guest\InquiryController::class, 'submitContact']);
+Route::get('settings', [SettingController::class, 'index']);
+

@@ -5,23 +5,21 @@ namespace App\Models;
 use App\Types;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Product extends Model
+class Training extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
     protected $fillable = [
         'name',
         'slug',
-        'category_id',
+        'type',
         'description',
-        'is_active',
+        'is_active'
     ];
 
     protected $casts = [
@@ -31,32 +29,16 @@ class Product extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('Product')
+            ->useLogName('Training')
             ->logOnlyDirty()
             ->logFillable();
     }
 
     /**
-     * @return BelongsTo
-     */
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
-    }
-
-    /**
      * @return MorphOne
      */
-    public function mainProductImage(): MorphOne
+    public function image(): MorphOne
     {
-        return $this->morphOne(Document::class, 'documentable')->where('type', Types::MainProdctImage);
-    }
-
-    /**
-     * @return MorphMany
-     */
-    public function subProductImages(): MorphMany
-    {
-        return $this->morphMany(Document::class, 'documentable')->where('type', Types::SubProductImage);
+        return $this->morphOne(Document::class, 'documentable')->where('type', Types::Image);
     }
 }
