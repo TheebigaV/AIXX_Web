@@ -38,14 +38,14 @@ const HomeServicesAixx: React.FC<HomeServicesProps> = ({ isHomePage = true }) =>
   const renderHomeCard = (sector: any, index: number) => {
     const Icon = icons[index % icons.length];
     return (
-      <div className="h-full flex flex-col group rounded-[24px] border border-slate-200 bg-white shadow-md transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 hover:border-brand-300 relative overflow-hidden w-full p-8">
+      <div className="h-full min-h-[320px] flex flex-col group rounded-[24px] border border-slate-200 bg-white shadow-md transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 hover:border-brand-300 relative overflow-hidden w-full p-8">
         <div className="absolute inset-0 bg-gradient-to-br from-brand-600/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
         <div className="relative z-10 flex-grow flex flex-col">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-50 text-brand-600 shadow-sm mb-6 group-hover:bg-brand-600 group-hover:text-white transition-all duration-500 border border-slate-100 group-hover:scale-110 group-hover:rotate-3">
             <Icon className="h-8 w-8 transition-transform duration-500 group-hover:scale-110" />
           </div>
-          <h3 className="text-xl font-bold text-[#111827] mb-4 line-clamp-2 group-hover:text-brand-600 transition-colors duration-300">{sector.name}</h3>
-          <p className="text-sm text-[#4B5563] leading-relaxed whitespace-pre-line flex-grow mb-8">{sector.description}</p>
+          <h3 className="text-xl font-bold text-[#111827] mb-4 h-14 line-clamp-2 group-hover:text-brand-600 transition-colors duration-300">{sector.name}</h3>
+          <p className="text-sm text-[#4B5563] leading-relaxed whitespace-pre-line flex-grow mb-8 line-clamp-4">{sector.description}</p>
           <div className="mt-auto pt-4 border-t border-slate-100 transition-colors">
             <Link href={`/services#${sector.slug}`} className="inline-flex items-center text-brand-600 font-semibold text-sm hover:text-brand-700 transition-colors group/link">
               Explore Services
@@ -176,7 +176,7 @@ const HomeServicesAixx: React.FC<HomeServicesProps> = ({ isHomePage = true }) =>
                   className="!pb-20 !pt-4"
                 >
                   {categories.filter((c: any) => c.slug !== 'seminars-workshops-courses-skill-training-certification' && c.slug !== 'news-letters').map((sector: any, index: number) => (
-                    <SwiperSlide key={sector.id} className="h-auto">
+                    <SwiperSlide key={sector.id} className="!h-auto" style={{ height: 'auto' }}>
                       {renderHomeCard(sector, index)}
                     </SwiperSlide>
                   ))}

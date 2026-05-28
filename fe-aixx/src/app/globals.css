@@ -746,3 +746,10 @@ span.flatpickr-weekday,
   @apply border-brand-500 bg-brand-500 dark:border-brand-500;
 }
 
+/* Equal-height Swiper slides for home services carousel */
+.swiper-wrapper {
+  align-items: stretch;
+}
+.swiper-slide {
+  height: auto !important;
+}
