@@ -92,7 +92,7 @@ const Header = () => {
                   className={`${navLinkClass("/services")} whitespace-nowrap`}
                   aria-current={pathname === "/services" ? "page" : undefined}
                 >
-                  Services
+                  Technologies
                 </Link>
               </li>
               <li>
@@ -102,7 +102,17 @@ const Header = () => {
                   className={`${navLinkClass("/training-and-certification")} whitespace-nowrap`}
                   aria-current={pathname === "/training-and-certification" ? "page" : undefined}
                 >
-                  Training
+                  AI Training
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/products"
+                  onClick={handleNavClick}
+                  className={`${navLinkClass("/products")} whitespace-nowrap`}
+                  aria-current={pathname === "/products" ? "page" : undefined}
+                >
+                  Innovative Products
                 </Link>
               </li>
             </ul>
@@ -165,7 +175,7 @@ const Header = () => {
               className={`flex items-center justify-between ${navLinkClass("/services")} group`}
               aria-current={pathname === "/services" ? "page" : undefined}
             >
-              <span>Services</span>
+              <span>Technologies</span>
               <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
             </Link>
 
@@ -175,7 +185,17 @@ const Header = () => {
               className={`flex items-center justify-between ${navLinkClass("/training-and-certification")} group`}
               aria-current={pathname === "/training-and-certification" ? "page" : undefined}
             >
-              <span className="truncate max-w-[250px]">Training</span>
+              <span className="truncate max-w-[250px]">AI Training</span>
+              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
+            </Link>
+
+            <Link
+              href="/products"
+              onClick={handleNavClick}
+              className={`flex items-center justify-between ${navLinkClass("/products")} group`}
+              aria-current={pathname === "/products" ? "page" : undefined}
+            >
+              <span>Innovative Products</span>
               <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
             </Link>
 

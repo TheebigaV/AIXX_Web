@@ -16,19 +16,19 @@ const nextConfig: NextConfig = {
       // Development - localhost
       {
         protocol: 'http',
-        hostname: 'localhost',
+        hostname: '47.128.222.47',
         port: '8000',
         pathname: '/storage/**',
       },
       {
         protocol: 'http',
-        hostname: '127.0.0.1',
+        hostname: '47.128.222.47',
         port: '8000',
         pathname: '/storage/**',
       },
       {
         protocol: 'https',
-        hostname: 'api.aixx.com.sg',
+        hostname: '47.128.222.47',
         pathname: '/storage/**',
       },
     ],

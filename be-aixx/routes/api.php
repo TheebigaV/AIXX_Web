@@ -84,5 +84,4 @@ Route::get('trainings/all', [\App\Http\Controllers\Guest\TrainingController::cla
 Route::get('trainings', [\App\Http\Controllers\Guest\TrainingController::class, 'index']);
 Route::post('inquiries', [\App\Http\Controllers\Guest\InquiryController::class, 'store']);
 Route::post('submit-contact-form', [\App\Http\Controllers\Guest\InquiryController::class, 'submitContact']);
-Route::get('settings', [SettingController::class, 'index']);
-
+Route::get('products', [App\Http\Controllers\Api\ProductController::class, 'index']);

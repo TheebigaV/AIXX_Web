@@ -34,7 +34,7 @@ class UpdateTrainingRequest extends FormRequest
             'type' => [
                 'required',
                 'string',
-                'in:seminars,workshops,courses,certification,newsletters',
+                'in:seminars,workshops,courses,certification,newsletters,media_gallery',
             ],
             'description' => [
                 'nullable',

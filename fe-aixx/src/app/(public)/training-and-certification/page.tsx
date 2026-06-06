@@ -11,6 +11,7 @@ const TrainingAndCertificationPage: React.FC = () => {
         paths={[{ name: 'Home', href: '/' }, { name: 'Training & Certification' }]}
         title="Training & Certification"
         subtitle="Empowering your workforce with the skills needed for tomorrow's technology."
+        bgImage="/images/training_banner.png"
       />
       
       <TrainingContent />

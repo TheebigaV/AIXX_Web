@@ -38,6 +38,8 @@ export default function ProductForm() {
         useCategories();
 
     const [categoriesLoading, setCategoriesLoading] = useState(true);
+    const [addToInnovative, setAddToInnovative] = useState(false);
+    const [innovativeCategoryId, setInnovativeCategoryId] = useState<number | null>(null);
 
     // Local state for new images
     const [mainImage, setMainImage] = useState<string>("");
@@ -49,8 +51,16 @@ export default function ProductForm() {
     useEffect(() => {
         const fetchCategories = async () => {
             setCategoriesLoading(true);
-            await getAllCategories();
+            const res = await getAllCategories();
             setCategoriesLoading(false);
+
+            // detect innovative-products category by slug or name
+            const found = (res || []).find((c: any) => c.slug === 'innovative-products' || c.name?.toLowerCase() === 'innovative products');
+            if (found) {
+                setInnovativeCategoryId(found.id);
+                // if the current form already has this category, mark checkbox
+                if (formData.category_id && Number(formData.category_id) === found.id) setAddToInnovative(true);
+            }
         };
         fetchCategories();
     }, []);
@@ -128,7 +138,11 @@ export default function ProductForm() {
                         </Label>
                         <select
                             value={formData.category_id || ""}
-                            onChange={(e) => handleChange("category_id", e.target.value)}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              handleChange("category_id", val);
+                              if (innovativeCategoryId && Number(val) !== innovativeCategoryId) setAddToInnovative(false);
+                            }}
                             className={`w-full rounded border px-3 py-2 text-sm ${
                                 errors.category_id ? "border-red-500" : "border-gray-300"
                             }`}
@@ -140,6 +154,20 @@ export default function ProductForm() {
                                 </option>
                             ))}
                         </select>
+                        {innovativeCategoryId && (
+                          <div className="mt-2">
+                            <label className="inline-flex items-center space-x-2">
+                              <input type="checkbox" checked={addToInnovative} onChange={(e) => {
+                                const checked = e.target.checked;
+                                setAddToInnovative(checked);
+                                if (checked && innovativeCategoryId) {
+                                  handleChange("category_id", String(innovativeCategoryId));
+                                }
+                              }} className="form-checkbox" />
+                              <span className="text-sm text-gray-600">Add to Innovative Products collection</span>
+                            </label>
+                          </div>
+                        )}
                         {errors.category_id && <p className="mt-1 text-xs text-red-500">{errors.category_id}</p>}
                     </div>
                 )}

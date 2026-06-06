@@ -30,7 +30,6 @@ export default function TrainingForm() {
     });
 
     const [imagePreview, setImagePreview] = useState<string>("");
-
     // Show preview when selecting file or load existing image URL
     useEffect(() => {
         if (existingImageUrl) setImagePreview(existingImageUrl);
@@ -47,7 +46,8 @@ export default function TrainingForm() {
         { value: "workshops", label: "Workshops" },
         { value: "courses", label: "Courses" },
         { value: "certification", label: "Skill Training & Certification" },
-        { value: "newsletters", label: "News Letters" }
+        { value: "newsletters", label: "Latest Technology News" },
+        { value: "media_gallery", label: "Training Media Gallery" }
     ];
 
     return (
@@ -98,25 +98,25 @@ export default function TrainingForm() {
                 </div>
 
                 {/* Image */}
-                <div>
-                    <Label>Training Image</Label>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="mt-1 block w-full text-sm text-gray-500"
-                    />
-                    {errors.image && (
-                        <span className="text-red-500 text-sm">{errors.image}</span>
-                    )}
-                    {imagePreview && (
-                        <img
-                            src={imagePreview}
-                            alt="Training Preview"
-                            className="mt-2 w-40 h-20 object-cover border"
+                    <div>
+                        <Label>Training Image</Label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="mt-1 block w-full text-sm text-gray-500"
                         />
-                    )}
-                </div>
+                        {errors.image && (
+                            <span className="text-red-500 text-sm">{errors.image}</span>
+                        )}
+                        {imagePreview && (
+                            <img
+                                src={imagePreview}
+                                alt="Training Preview"
+                                className="mt-2 w-40 h-20 object-cover border"
+                            />
+                        )}
+                    </div>
 
                 {/* Active Checkbox */}
                 <div>

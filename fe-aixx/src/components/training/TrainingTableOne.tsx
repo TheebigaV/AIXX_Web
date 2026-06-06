@@ -48,8 +48,9 @@ export default function TrainingTableOne() {
 
     const formatType = (type: string) => {
         if (!type) return "-";
-        if (type === "newsletters") return "News Letters";
+        if (type === "newsletters") return "Latest Technology News";
         if (type === "certification") return "Skill Training & Certification";
+        if (type === "media_gallery") return "Training Media Gallery";
         return type.charAt(0).toUpperCase() + type.slice(1);
     };
 

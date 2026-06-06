@@ -9,6 +9,7 @@ interface BannerProps {
   paths?: { name: string; href?: string }[];
   title?: string;
   subtitle?: string;
+  bgImage?: string;
   height?: {
     xl?: string;
     lg?: string;
@@ -23,6 +24,7 @@ const Banner: React.FC<BannerProps> = ({
   paths = [{ name: 'Home', href: '/' }, { name: 'Services' }],
   title = "Next-Generation Technology Solutions",
   subtitle = "Harnessing AI, Quantum computing, and Autonomous systems to redefine what's possible.",
+  bgImage = "/images/service/services_banner.png",
   height = {
     xl: '600px',
     lg: '500px',
@@ -33,15 +35,11 @@ const Banner: React.FC<BannerProps> = ({
 }) => {
   return (
     <section
-      className="relative w-full"
-      style={{
-        height: height.xl,
-        maxHeight: height.xl,
-      }}
+      className="relative w-full h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] xl:h-[600px]"
     >
       {/* Background Image */}
             <Image
-        src="/images/service/services_banner.png"
+        src={bgImage}
         alt={altText}
         fill
         className="object-cover object-center"

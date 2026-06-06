@@ -55,13 +55,19 @@ const navItems: NavItem[] = [
         skipPermissionCheck: true,
     },
     {
-        icon: <BoxCubeIcon />,
-        name: "Services",
-        path: "/admin/categories",
-        permission: "categories-view",
-        skipPermissionCheck: false,
+        icon: <BoxCubeIcon />, 
+        name: "Services", 
+        path: "/admin/categories", 
+        permission: "categories-view", 
+        skipPermissionCheck: true,
     },
-
+    {
+        icon: <PaperPlaneIcon />, 
+        name: "Products", 
+        path: "/admin/products", 
+        permission: "products-view", 
+        skipPermissionCheck: true,
+    },
 ];
 
 const othersItems: NavItem[] = [

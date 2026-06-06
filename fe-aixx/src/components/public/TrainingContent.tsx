@@ -1,15 +1,21 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { FaGraduationCap, FaChalkboardTeacher, FaLaptopCode, FaCertificate, FaCheckCircle, FaArrowRight, FaNewspaper } from 'react-icons/fa';
+import React, { useState, useEffect, useRef } from 'react';
+import { FaGraduationCap, FaChalkboardTeacher, FaLaptopCode, FaCertificate, FaCheckCircle, FaNewspaper, FaImages, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { fetchPublicTrainings } from '@/lib/training';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const tabs = [
   { id: 'seminars', label: 'Seminars', icon: FaChalkboardTeacher },
   { id: 'workshops', label: 'Workshops', icon: FaLaptopCode },
   { id: 'courses', label: 'Courses', icon: FaGraduationCap },
   { id: 'certification', label: 'Skill Training & Certification', icon: FaCertificate },
-  { id: 'newsletters', label: 'News Letters', icon: FaNewspaper },
+  { id: 'newsletters', label: 'Latest Technology News', icon: FaNewspaper },
+  { id: 'media_gallery', label: 'Training Media Gallery', icon: FaImages },
 ];
 
 interface TrainingItem {
@@ -53,6 +59,66 @@ const TrainingContent = () => {
     }
 
     const currentTab = tabs.find(t => t.id === activeTab);
+    
+    if (activeTab === 'media_gallery') {
+      const defaultGallery = [
+        { src: '/images/gallery/classroom.png', alt: 'Classroom Settings', title: 'Classroom Settings' },
+        { src: '/images/gallery/certificate.png', alt: 'AIXX Certificate', title: 'Certificate from AIXX PTE LTD' },
+        { src: '/images/gallery/award.png', alt: 'Award Presentation', title: 'Award Presentation Ceremony' },
+      ];
+
+      const dynamicGallery = filteredItems.filter(item => item.image?.url).map(item => ({
+        src: item.image!.url,
+        alt: item.name,
+        title: item.name
+      }));
+
+      const galleryImages = [...dynamicGallery, ...defaultGallery];
+
+      return (
+        <div className="animate-fade-in-up">
+          <h3 className="text-3xl font-bold text-[#191E42] mb-6">{currentTab?.label}</h3>
+          <div className="mb-8 relative px-2 sm:px-12 group">
+            <button className="swiper-custom-prev absolute top-1/2 left-0 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow-[0_4px_14px_rgba(0,0,0,0.1)] flex items-center justify-center text-[#191E42] hover:bg-brand-500 hover:text-white transition-all cursor-pointer opacity-80 hover:opacity-100 disabled:opacity-30 disabled:cursor-not-allowed">
+              <FaChevronLeft size={16} className="ml-[-2px]" />
+            </button>
+            
+            <button className="swiper-custom-next absolute top-1/2 right-0 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow-[0_4px_14px_rgba(0,0,0,0.1)] flex items-center justify-center text-[#191E42] hover:bg-brand-500 hover:text-white transition-all cursor-pointer opacity-80 hover:opacity-100 disabled:opacity-30 disabled:cursor-not-allowed">
+              <FaChevronRight size={16} className="ml-[2px]" />
+            </button>
+
+            <Swiper
+              modules={[Navigation, Pagination, Autoplay]}
+              spaceBetween={24}
+              slidesPerView={1}
+              breakpoints={{
+                640: { slidesPerView: 2 },
+                1024: { slidesPerView: 2 }
+              }}
+              navigation={{
+                prevEl: '.swiper-custom-prev',
+                nextEl: '.swiper-custom-next',
+              }}
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 4000, disableOnInteraction: false }}
+              className="w-full pb-16 pt-2"
+              style={{ '--swiper-pagination-bottom': '0px', paddingBottom: '3rem' } as React.CSSProperties}
+            >
+              {galleryImages.map((img, idx) => (
+                <SwiperSlide key={idx}>
+                  <div className="group relative rounded-2xl overflow-hidden shadow-lg h-72 border border-brand-100 cursor-pointer">
+                    <img src={img.src} alt={img.alt} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#191E42]/90 via-[#191E42]/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                      <h4 className="font-bold text-white text-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">{img.title}</h4>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        </div>
+      );
+    }
     
     return (
       <div className="animate-fade-in-up">
@@ -129,7 +195,7 @@ const TrainingContent = () => {
 
           {/* Content Area */}
           <div className="lg:w-2/3">
-            <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100 min-h-[500px]">
+            <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100 min-h-[500px] h-full">
               {renderContent()}
             </div>
           </div>
