@@ -66,6 +66,7 @@ export const EcommerceMetrics = () => {
   }
 
   const metricsArray = [
+    { label: "Products", value: metrics.products?.value || 0, icon: "box", permission: "products-viewany" },
     { label: "Enquiries", value: metrics.enquiries?.value || 0, icon: "group", permission: "enquiries-view" },
     { label: "Categories", value: metrics.categories?.value || 0, icon: "box", permission: "categories-view" },
     { label: "Banners", value: metrics.banners?.value || 0, icon: "box", permission: "banners-viewany" },
@@ -82,7 +83,7 @@ export const EcommerceMetrics = () => {
   }
 
   return (
-    <div className="w-full px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
+    <div className="w-full px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 md:gap-6">
       {metricsArray.map((metric, index) => (
         <Can key={index} permission={metric.permission}>
           <div

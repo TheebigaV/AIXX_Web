@@ -7,6 +7,7 @@ import Link from "next/link";
 import ContentStatus from "@/components/ecommerce/ContentStatus";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Can from "@/components/permissions/Can";
+import ComponentCard from "@/components/common/ComponentCard";
 
 export default function Dashboard() {
   return (

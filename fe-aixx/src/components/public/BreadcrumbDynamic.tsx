@@ -14,7 +14,7 @@ interface BreadcrumbDynamicProps {
    * slug for project id or product URL segment
    */
   slug: string;
-  productCategoryName:string;
+  productCategoryName?: string;
   /**
    * Only required when type==='product'
    */

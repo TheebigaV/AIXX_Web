@@ -13,10 +13,20 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      // Development - localhost
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        pathname: '/**',
+      },
       {
         protocol: 'http',
-        hostname: '47.128.222.47',
+        hostname: 'localhost',
+        port: '8000',
+        pathname: '/storage/**',
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
         port: '8000',
         pathname: '/storage/**',
       },
@@ -34,10 +44,14 @@ const nextConfig: NextConfig = {
     ],
     // Allow SVG images
     dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment',
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Use inline disposition for external images
+    contentDispositionType: 'inline',
+    // Disable strict CSP for image optimization
+    contentSecurityPolicy: "default-src 'self' https://via.placeholder.com;",
+    // Let Next.js handle external images without optimization
+    unoptimized: true,
   },
-  
+
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,

@@ -23,7 +23,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
                                                        link,
                                                      }) => {
 
-  const showButton = permission && buttonName && link;
+  const showButton = buttonName && link && (!permission || permission);
 
   return (
       <div
@@ -42,11 +42,17 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
             )}
           </div>
           {showButton && (
-              <Can permission={ permission as string}>
+            permission ? (
+              <Can permission={permission as string}>
                 <Link href={link as string}>
                   <Button>{buttonName}</Button>
                 </Link>
               </Can>
+            ) : (
+              <Link href={link as string}>
+                <Button>{buttonName}</Button>
+              </Link>
+            )
           )}
         </div>
 

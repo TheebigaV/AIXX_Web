@@ -17,6 +17,7 @@ export interface DashboardMetrics {
   categories: MetricData;
   banners: MetricData;
   users: MetricData;
+  products: MetricData;
   recentInquiries?: any[];
   contentStatus?: {
     total_content: number;

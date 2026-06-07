@@ -20,7 +20,7 @@ const ProjectDetailBanner: React.FC<ProjectDetailBannerProps> = ({
   // ─── LOADING STATE ───
   if (loading) {
     return (
-      <section className="relative w-full sm:h-[570px] md:h-[500px] 2xl:h-[524px]">
+      <section className="relative w-full h-[420px] sm:h-[520px] md:h-[560px] lg:h-[620px]">
         <Image
           src="/images/home/futuristic_about.png"
           alt="Project Banner"
@@ -48,7 +48,7 @@ const ProjectDetailBanner: React.FC<ProjectDetailBannerProps> = ({
   // ─── ERROR STATE ───
   if (error || !projectData) {
     return (
-      <section className="relative w-full sm:h-[570px] md:h-[500px] 2xl:h-[524px]">
+      <section className="relative w-full h-[420px] sm:h-[520px] md:h-[560px] lg:h-[620px]">
         <Image
           src="/images/home/futuristic_about.png"
           alt="Project Banner"
@@ -62,7 +62,7 @@ const ProjectDetailBanner: React.FC<ProjectDetailBannerProps> = ({
             <div className="text-white ">
               <BreadcrumbDynamic
                 type="project"
-                slug={projectData?.categoryId || projectData?.slug || 'not-found'}
+                slug={projectData?.id?.toString() || 'not-found'}
               />
               <h1 className="text-3xl sm:text-[28px] md:text-[32px] lg:text-[48px] xl:text-[48px] 2xl:text-[48px] font-medium text-red-400">
                 Project Not Found
@@ -77,12 +77,14 @@ const ProjectDetailBanner: React.FC<ProjectDetailBannerProps> = ({
 
   // ─── DYNAMIC DATA ───
   const displayImage =
-    projectData.banner_image?.url ||
+    (typeof projectData.banner_image === 'string'
+      ? projectData.banner_image
+      : undefined) ||
     '/images/home/futuristic_about.png';
 
   return (
-    <section className="relative w-full sm:h-[570px] md:h-[500px] 2xl:h-[524px]">
-      {/* ✅ Dynamic Background Image */}
+    <section className="relative w-full h-[420px] sm:h-[520px] md:h-[560px] lg:h-[620px]">
+      {/* Dynamic Background Image */}
       <Image
         src={displayImage}
         alt={`${projectData.title || 'Project'} Banner`}
@@ -101,7 +103,7 @@ const ProjectDetailBanner: React.FC<ProjectDetailBannerProps> = ({
             {/* Breadcrumb */}
             <BreadcrumbDynamic
               type="project"
-              slug={projectData.categoryId || projectData.slug}
+              slug={projectData.id.toString()}
               className="mb-[24px]"
             />
 

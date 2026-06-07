@@ -10,13 +10,7 @@ interface BannerProps {
   title?: string;
   subtitle?: string;
   bgImage?: string;
-  height?: {
-    xl?: string;
-    lg?: string;
-    md?: string;
-    sm?: string;
-    xs?: string;
-  };
+  overlay?: boolean; // true = show dark gradient overlay, false = no overlay
 }
 
 const Banner: React.FC<BannerProps> = ({
@@ -25,20 +19,14 @@ const Banner: React.FC<BannerProps> = ({
   title = "Next-Generation Technology Solutions",
   subtitle = "Harnessing AI, Quantum computing, and Autonomous systems to redefine what's possible.",
   bgImage = "/images/service/services_banner.png",
-  height = {
-    xl: '600px',
-    lg: '500px',
-    md: '450px',
-    sm: '400px',
-    xs: '350px',
-  },
+  overlay = true,
 }) => {
   return (
     <section
-      className="relative w-full h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] xl:h-[600px]"
+      className="relative w-screen max-w-[100vw] left-[calc(-50vw+50%)] overflow-hidden h-[420px] sm:h-[520px] md:h-[560px] lg:h-[620px] xl:h-[620px] 2xl:h-[620px]"
     >
       {/* Background Image */}
-            <Image
+      <Image
         src={bgImage}
         alt={altText}
         fill
@@ -50,9 +38,10 @@ const Banner: React.FC<BannerProps> = ({
         }}
       />
 
-      {/* Gradient Overlay - Electric Blue Tint */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#00062A] via-[#001f4d]/60 to-[#003366]/20 z-10" />
-
+      {/* Gradient Overlay */}
+      {overlay && (
+        <div className="absolute inset-0 bg-gradient-to-t from-[#00062A] via-[#00062A]/70 to-[#00062A]/50 z-10" />
+      )}
       {/* Content Container */}
       <div className="absolute bottom-0 left-0 w-full z-20">
         <div className="mx-auto container px-4 sm:px-[16px] md:px-[24px] lg:px-[24px] xl:px-[60px] 2xl:px-[240px] pb-6 sm:pb-8 md:pb-12 lg:pb-16">
@@ -64,14 +53,18 @@ const Banner: React.FC<BannerProps> = ({
             </div>
 
             {/* Heading */}
-            <h1 className="text-[26px] sm:text-[32px] md:text-[48px] lg:text-[56px] xl:text-[56px] font-bold leading-tight sm:leading-tight md:leading-snug">
-              {title}
-            </h1>
+            {title && (
+              <h1 className="text-[26px] sm:text-[32px] md:text-[48px] lg:text-[56px] xl:text-[56px] font-bold leading-tight sm:leading-tight md:leading-snug">
+                {title}
+              </h1>
+            )}
 
             {/* Subtitle */}
-            <p className="text-[15px] sm:text-[14px] md:text-[18px] lg:text-[20px] leading-relaxed text-white/90">
-              {subtitle}
-            </p>
+            {subtitle && (
+              <p className="text-[15px] sm:text-[14px] md:text-[18px] lg:text-[20px] leading-relaxed text-white/90">
+                {subtitle}
+              </p>
+            )}
           </div>
         </div>
       </div>

@@ -39,10 +39,10 @@ const ProjectBanner: React.FC = () => {
   const title = data?.title || "Impactful Technology Integration";
   const subtitle = data?.subtitle || "Our portfolio showcases the successful deployment of AI, Quantum solutions, and autonomous systems that empower businesses globally.";
 
-  if (loading) return <div className="w-full h-[600px] bg-gray-200 animate-pulse" />;
+  if (loading) return <div className="w-full h-[420px] sm:h-[520px] md:h-[560px] lg:h-[620px] bg-gray-200 animate-pulse" />;
 
   return (
-    <section className="relative w-full h-[600px] sm:h-[645px]">
+    <section className="relative w-full h-[420px] sm:h-[520px] md:h-[560px] lg:h-[620px]">
       {/* Background Image */}
       <img
         src={bgImage}

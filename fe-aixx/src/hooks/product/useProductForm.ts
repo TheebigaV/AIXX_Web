@@ -11,6 +11,8 @@ interface ProductFormData {
     sub_product_images: File[]; // multiple sub images
 }
 
+type ProductImageValue = string | { url?: string | null; file_name?: string | null } | null;
+
 export const useProductForm = (
     productId?: string,
     onSuccess?: () => void
@@ -26,8 +28,8 @@ export const useProductForm = (
         sub_product_images: [],
     });
 
-    const [existingMainImage, setExistingMainImage] = useState<string | null>(null);
-    const [existingSubImages, setExistingSubImages] = useState<{ id: number, url: string }[]>([]);// existing images from backend
+    const [existingMainImage, setExistingMainImage] = useState<ProductImageValue>(null);
+    const [existingSubImages, setExistingSubImages] = useState<{ id: number, url?: string | null; file_name?: string | null }[]>([]);// existing images from backend
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [serverError, setServerError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -40,12 +42,13 @@ export const useProductForm = (
             .then((res) => {
                 if (res) {
                     setFormData({
-                        ...res.data,
+                        ...res,
+                        is_active: res.is_active == 1 || res.is_active === '1' || res.is_active === true,
                         main_product_image: null, // keep null, use existing image
                         sub_product_images: [],
                     });
-                    if (res.data.main_product_image?.url) setExistingMainImage(res.data.main_product_image.url);
-                    if (res.data.sub_product_images?.length) setExistingSubImages(res.data.sub_product_images);
+                    if (res.main_product_image) setExistingMainImage(res.main_product_image);
+                    if (res.sub_product_images?.length) setExistingSubImages(res.sub_product_images);
                 }
             })
             .catch(() => setServerError("Failed to fetch product"))
@@ -56,11 +59,9 @@ export const useProductForm = (
     const validate = () => {
         const newErrors: Record<string, string> = {};
         if (!formData.name.trim()) newErrors.name = "Name is required";
-        if (!formData.category_id) newErrors.category_id = "Category is required";
         if (!formData.description.trim()) newErrors.description = "Description is required";
-        if (!formData.main_product_image && existingMainImage.length === 0) newErrors.main_product_image = "Main product image is required";
 
-         if (!formData.main_product_image && !existingMainImage) {
+        if (!formData.main_product_image && !existingMainImage) {
             newErrors.main_product_image = "Main product image is required";
         }
         
@@ -95,9 +96,11 @@ export const useProductForm = (
             Object.entries(formData).forEach(([key, value]) => {
                 if (key === "main_product_image") {
                     if (value instanceof File) {
-                        payload.append(key, value); // append only new file
+                        // Append under expected backend key "image"
+                        payload.append("image", value);
                     }
                     // Do NOT append existing image object
+                    return;
                 }
                 if (key === "sub_product_images") return;
                 if (key === "is_active") payload.append(key, value ? "1" : "0");

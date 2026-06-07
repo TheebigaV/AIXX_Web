@@ -82,10 +82,8 @@ export default function ProductTableOne() {
                   <TableCell isHeader className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs">
                     Slug
                   </TableCell>
-                  <TableCell isHeader className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs">
-                    Category
-                  </TableCell>
-                  {/*<TableCell isHeader className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs">*/}
+
+
                   {/*  Description*/}
                   {/*</TableCell>*/}
                   <TableCell isHeader className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs">
@@ -110,22 +108,18 @@ export default function ProductTableOne() {
                       <TableCell className="px-5 py-4 sm:px-6 text-center">
                         {product.slug}
                       </TableCell>
+
+
                       <TableCell className="px-5 py-4 sm:px-6 text-center">
-                        {product.category?.name ?? "-"}
-                      </TableCell>
-                      {/*<TableCell className="px-5 py-4 sm:px-6 text-center">*/}
-                      {/*  {product.description ?? "-"}*/}
-                      {/*</TableCell>*/}
-                      <TableCell className="px-5 py-4 sm:px-6 text-center">
-                        {product.is_active ? (
-                          <span className="inline-flex items-center text-green-600">
-                            <EyeIcon className="mr-1 h-4 w-4" /> Active
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center text-gray-500">
-                            <EyeCloseIcon className="mr-1 h-4 w-4" /> Inactive
-                          </span>
-                        )}
+                                             {(product.is_active == 1 || product.is_active === true || product.is_active === '1') ? (
+                        <span className="inline-flex items-center text-green-600">
+                          <EyeIcon className="mr-1 h-4 w-4" /> Active
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center text-gray-500">
+                          <EyeCloseIcon className="mr-1 h-4 w-4" /> Inactive
+                        </span>
+                      )}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-center text-theme-sm dark:text-gray-400">
                         <div className="inline-flex items-center space-x-4">
@@ -158,9 +152,7 @@ export default function ProductTableOne() {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center p-6">
-                      {loading ? "Loading..." : "No products found"}
-                    </TableCell>
+
                   </TableRow>
                 )}
               </TableBody>

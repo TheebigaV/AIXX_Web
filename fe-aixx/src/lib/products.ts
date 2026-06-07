@@ -1,5 +1,5 @@
-import {api} from "./api";
-import {ProductFormData} from "../types/product";
+import { api } from "./api";
+import { ProductFormData } from "../types/product";
 
 export const fetchProducts = (page: number = 1, perPage: number = 10) =>
     api.get(`/api/admin/products?page=${page}&per_page=${perPage}`);
@@ -10,15 +10,16 @@ export const fetchAllProducts = () =>
 export const getProduct = (id: string) =>
     api.get(`/api/admin/products/${id}`);
 
-export const createProduct = (data: ProductFormData) =>
+// Accept FormData for multipart/form-data uploads
+export const createProduct = (data: FormData) =>
     api.post("/api/admin/products", data, {
         headers: { "Content-Type": "multipart/form-data" },
     });
 
-export const updateProduct = (id: string, data: ProductFormData) =>
+export const updateProduct = (id: string, data: FormData) =>
     api.post(`/api/admin/products/${id}`, data, {
-    headers: { "Content-Type": "multipart/form-data" },
-});
+        headers: { "Content-Type": "multipart/form-data" },
+    });
 
 export const deleteProduct = (id: string | null) =>
     api.delete(`/api/admin/products/${id}`);

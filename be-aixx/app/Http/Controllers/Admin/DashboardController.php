@@ -23,6 +23,7 @@ class DashboardController extends Controller
                 'categories' => $this->getCategoriesMetric(),
                 'banners' => $this->getBannersMetric(),
                 'users' => $this->getUsersMetric(),
+                'products' => $this->getProductsMetric(),
                 'recentInquiries' => Inquiry::latest()->take(5)->get(),
                 'contentStatus' => $this->getContentStatus(),
                 'categoriesWithCount' => $this->getCategoriesWithProductCount(),
@@ -111,6 +112,22 @@ class DashboardController extends Controller
             'label' => 'Users',
             'value' => $current,
             'icon' => 'group'
+        ];
+    }
+
+    /**
+     * Get products metric
+     *
+     * @return array
+     */
+    private function getProductsMetric()
+    {
+        $current = \App\Models\Product::count();
+
+        return [
+            'label' => 'Products',
+            'value' => $current,
+            'icon' => 'box'
         ];
     }
 

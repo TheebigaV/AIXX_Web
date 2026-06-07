@@ -10,7 +10,7 @@ enum Types
 
     const ThumbNailImage = 'thumbnail_image';
 
-    const MainProdctImage = 'main_product_image';
+    const MainProductImage = 'main_product_image';
 
     const SubProductImage = 'sub_product_image';
 }

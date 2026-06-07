@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TrainingController;
+use App\Http\Controllers\Admin\ProductController;
 
 
 
@@ -59,6 +60,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('categories/all', [CategoryController::class, 'all']);
         Route::apiResource('categories', CategoryController::class);
 
+        // Products
+        Route::apiResource('products', ProductController::class);
+
         // Trainings
         Route::get('trainings/all', [TrainingController::class, 'all']);
         Route::apiResource('trainings', TrainingController::class);
@@ -85,3 +89,4 @@ Route::get('trainings', [\App\Http\Controllers\Guest\TrainingController::class, 
 Route::post('inquiries', [\App\Http\Controllers\Guest\InquiryController::class, 'store']);
 Route::post('submit-contact-form', [\App\Http\Controllers\Guest\InquiryController::class, 'submitContact']);
 Route::get('products', [App\Http\Controllers\Api\ProductController::class, 'index']);
+Route::get('products/{slug}/by-slug', [App\Http\Controllers\Api\ProductController::class, 'show']);

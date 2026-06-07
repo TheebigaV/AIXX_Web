@@ -107,10 +107,10 @@ const Header = () => {
               </li>
               <li>
                 <Link
-                  href="/products"
+                  href="/innovative-products"
                   onClick={handleNavClick}
-                  className={`${navLinkClass("/products")} whitespace-nowrap`}
-                  aria-current={pathname === "/products" ? "page" : undefined}
+                  className={`${navLinkClass("/innovative-products")} whitespace-nowrap`}
+                  aria-current={pathname === "/innovative-products" ? "page" : undefined}
                 >
                   Innovative Products
                 </Link>
@@ -190,10 +190,10 @@ const Header = () => {
             </Link>
 
             <Link
-              href="/products"
+              href="/innovative-products"
               onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/products")} group`}
-              aria-current={pathname === "/products" ? "page" : undefined}
+              className={`flex items-center justify-between ${navLinkClass("/innovative-products")} group`}
+              aria-current={pathname === "/innovative-products" ? "page" : undefined}
             >
               <span>Innovative Products</span>
               <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>

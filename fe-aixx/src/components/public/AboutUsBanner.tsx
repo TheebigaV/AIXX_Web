@@ -33,10 +33,10 @@ const AboutUsBanner: React.FC = () => {
   const title = getSetting('about_banner_title') || data?.title || "Engineering the Future of AI & Quantum Integration";
   const subtitle = getSetting('about_banner_subtitle') || data?.subtitle || "AIXX unites next-generation intelligence, quantum computing, and autonomous systems to build resilient operations for a shared future.";
 
-  if (loading) return <div className="w-full h-[500px] bg-gray-200 animate-pulse" />;
+  if (loading) return <div className="w-full h-[420px] sm:h-[520px] md:h-[560px] lg:h-[620px] bg-gray-200 animate-pulse" />;
 
   return (
-    <section className="relative w-full h-[500px] sm:h-[570px] md:h-[636px] lg:h-[645px] overflow-hidden">
+    <section className="relative w-full h-[420px] sm:h-[520px] md:h-[560px] lg:h-[620px] overflow-hidden">
       {/* Background Image */}
       <img
         src={bgImage}

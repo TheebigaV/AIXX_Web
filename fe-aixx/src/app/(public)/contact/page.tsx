@@ -98,7 +98,7 @@ const ContactPage = () => {
   return (
     <div className="w-full bg-white font-lato">
       {/* Hero Section */}
-      <div className="relative h-[300px] sm:h-[400px] lg:h-[500px] xl:h-[665px] w-full">
+      <div className="relative h-[420px] sm:h-[520px] md:h-[560px] lg:h-[620px] w-full">
         <div className="relative w-full h-full">
           <img
             src={bgImage}

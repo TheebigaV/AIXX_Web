@@ -69,7 +69,7 @@ const HomeBanner: React.FC = () => {
 
   if (loading) {
     return (
-      <section className="relative w-full h-[500px] sm:h-[550px] md:h-[600px] lg:h-[645px] xl:h-[645px] 2xl:h-[645px] bg-gray-200 animate-pulse">
+      <section className="relative w-full h-[420px] sm:h-[520px] md:h-[560px] lg:h-[620px] bg-gray-200 animate-pulse">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-gray-500">Loading...</div>
         </div>
@@ -78,7 +78,7 @@ const HomeBanner: React.FC = () => {
   }
 
   return (
-    <section className="relative w-full h-[500px] sm:h-[550px] md:h-[600px] lg:h-[645px] xl:h-[645px] 2xl:h-[645px]">
+    <section className="relative w-full h-[420px] sm:h-[520px] md:h-[560px] lg:h-[620px]">
       {/* Background Image */}
       <img
         src={bgImage}
