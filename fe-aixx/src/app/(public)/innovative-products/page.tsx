@@ -51,9 +51,9 @@ export default function InnovativeProductsPage() {
       />
 
       {/* Product Cards */}
-      <section className="w-full px-4 mb-16 bg-white pt-16 md:pt-20">
+      <section className="w-full px-4 mb-16 bg-white pt-8 md:pt-10">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center text-black mb-8 mt-12">Our AI‑Hardware Solutions</h2>
+          <h2 className="text-3xl font-bold text-center text-black mb-8">Our AI‑Hardware Solutions</h2>
           {isLoading && <p className="text-center">Loading products…</p>}
           {isError && (
             <p className="text-center text-red-400">Failed to load products.</p>
