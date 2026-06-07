@@ -7,6 +7,7 @@ use App\Models\Inquiry;
 use App\Models\Category;
 use App\Models\Banner;
 use App\Models\User;
+use App\Models\Training;
 
 class DashboardController extends Controller
 {
@@ -24,6 +25,7 @@ class DashboardController extends Controller
                 'banners' => $this->getBannersMetric(),
                 'users' => $this->getUsersMetric(),
                 'products' => $this->getProductsMetric(),
+                'trainings' => $this->getTrainingsMetric(),
                 'recentInquiries' => Inquiry::latest()->take(5)->get(),
                 'contentStatus' => $this->getContentStatus(),
                 'categoriesWithCount' => $this->getCategoriesWithProductCount(),
@@ -126,6 +128,22 @@ class DashboardController extends Controller
 
         return [
             'label' => 'Products',
+            'value' => $current,
+            'icon' => 'box'
+        ];
+    }
+
+    /**
+     * Get trainings metric
+     *
+     * @return array
+     */
+    private function getTrainingsMetric()
+    {
+        $current = Training::count();
+
+        return [
+            'label' => 'Trainings',
             'value' => $current,
             'icon' => 'box'
         ];

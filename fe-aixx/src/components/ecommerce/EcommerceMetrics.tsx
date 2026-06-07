@@ -71,16 +71,8 @@ export const EcommerceMetrics = () => {
     { label: "Categories", value: metrics.categories?.value || 0, icon: "box", permission: "categories-view" },
     { label: "Banners", value: metrics.banners?.value || 0, icon: "box", permission: "banners-viewany" },
     { label: "Users", value: metrics.users?.value || 0, icon: "group", permission: "users-view" },
+    { label: "Trainings", value: metrics.trainings?.value || 0, icon: "box", permission: "training-view" },
   ];
-
-  if (settings) {
-    metricsArray.push({
-      label: "Training Page",
-      value: settings.training_page_active === "true" ? "Active" : "Inactive",
-      icon: "box",
-      permission: "training-view"
-    });
-  }
 
   return (
     <div className="w-full px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 md:gap-6">
