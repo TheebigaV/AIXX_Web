@@ -101,16 +101,23 @@ class ProductController extends Controller
     public function update(Request $request, $id): JsonResponse
     {
         $product = Product::findOrFail($id);
-            $validated = $request->validate([
-                'name' => 'sometimes|required|string|max:255',
-                'description' => 'nullable|string',
-                'category_id' => 'nullable|exists:categories,id',
-                'is_active' => 'sometimes|boolean',
-                'image' => 'nullable|image|max:2048',
-                // Sub images validation
-                'sub_product_images' => 'nullable|array',
-                'sub_product_images.*' => 'image|max:2048',
-            ]);
+
+        // Explicitly cast is_active from FormData string ("0"/"1") to boolean
+        // before validation, because multipart/form-data only sends strings.
+        if ($request->has('is_active')) {
+            $request->merge(['is_active' => filter_var($request->input('is_active'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false]);
+        }
+
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'description' => 'nullable|string',
+            'category_id' => 'nullable|exists:categories,id',
+            'is_active' => 'sometimes|boolean',
+            'image' => 'nullable|image|max:2048',
+            // Sub images validation
+            'sub_product_images' => 'nullable|array',
+            'sub_product_images.*' => 'image|max:2048',
+        ]);
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');
@@ -148,6 +155,9 @@ class ProductController extends Controller
                 }
             }
         }
+
+        // Return a fresh instance with relationships to avoid accessor conflicts
+        $product->refresh();
         return response()->json($product);
     }
 

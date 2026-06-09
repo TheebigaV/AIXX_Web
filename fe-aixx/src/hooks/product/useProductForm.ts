@@ -41,8 +41,13 @@ export const useProductForm = (
         getProduct(productId)
             .then((res) => {
                 if (res) {
+                    // Only pick known form fields — do NOT spread the full API response,
+                    // because extra fields (id, slug, created_at, category object, etc.)
+                    // would get sent in the FormData on submit and cause backend errors.
                     setFormData({
-                        ...res,
+                        name: res.name || '',
+                        category_id: res.category_id ? String(res.category_id) : '',
+                        description: res.description || '',
                         is_active: res.is_active == 1 || res.is_active === '1' || res.is_active === true,
                         main_product_image: null, // keep null, use existing image
                         sub_product_images: [],
@@ -51,20 +56,22 @@ export const useProductForm = (
                     if (res.sub_product_images?.length) setExistingSubImages(res.sub_product_images);
                 }
             })
-            .catch(() => setServerError("Failed to fetch product"))
+            .catch(() => setServerError('Failed to fetch product'))
             .finally(() => setLoading(false));
     }, [productId]);
 
     // Validation
     const validate = () => {
         const newErrors: Record<string, string> = {};
-        if (!formData.name.trim()) newErrors.name = "Name is required";
-        if (!formData.description.trim()) newErrors.description = "Description is required";
+        if (!formData.name.trim()) newErrors.name = 'Name is required';
+        // Strip HTML tags to check if description is truly empty
+        const descriptionText = formData.description.replace(/<[^>]*>/g, '').trim();
+        if (!descriptionText) newErrors.description = 'Description is required';
 
         if (!formData.main_product_image && !existingMainImage) {
-            newErrors.main_product_image = "Main product image is required";
+            newErrors.main_product_image = 'Main product image is required';
         }
-        
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -94,17 +101,25 @@ export const useProductForm = (
 
             // Append normal fields
             Object.entries(formData).forEach(([key, value]) => {
-                if (key === "main_product_image") {
+                if (key === 'main_product_image') {
                     if (value instanceof File) {
                         // Append under expected backend key "image"
-                        payload.append("image", value);
+                        payload.append('image', value);
                     }
                     // Do NOT append existing image object
                     return;
                 }
-                if (key === "sub_product_images") return;
-                if (key === "is_active") payload.append(key, value ? "1" : "0");
-                else if (value !== null && value !== undefined) payload.append(key, value);
+                if (key === 'sub_product_images') return;
+                if (key === 'is_active') {
+                    payload.append(key, value ? '1' : '0');
+                } else if (key === 'category_id') {
+                    // Only send category_id if it has a valid value
+                    if (value !== null && value !== undefined && value !== '') {
+                        payload.append(key, value);
+                    }
+                } else if (value !== null && value !== undefined) {
+                    payload.append(key, value);
+                }
             });
 
             // Append new images
