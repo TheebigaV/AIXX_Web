@@ -58,8 +58,11 @@ class CategoryService
     {
         $data['slug'] = Str::slug($data['name']);
         $category = $this->categoryRepository->create($data);
-        $data['type'] = Types::Image;
-        $this->documentService->create(Category::class, $category->id, $data);
+        // Only create image document if an image file was provided
+        if (isset($data['image'])) {
+            $data['type'] = Types::Image;
+            $this->documentService->create(Category::class, $category->id, $data);
+        }
         return $category;
     }
 

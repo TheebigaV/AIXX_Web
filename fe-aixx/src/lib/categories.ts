@@ -1,5 +1,5 @@
-import {api} from "./api";
-import {CategoryFormData} from "@/hooks/category/useCategoryForm";
+import { api } from "./api";
+import { CategoryFormData } from "@/types/category";
 
 export const fetchCategories = (page: number = 1, perPage: number = 10) =>
     api.get(`/api/admin/categories?page=${page}&per_page=${perPage}`);
@@ -11,14 +11,10 @@ export const getCategory = (id: string) =>
     api.get(`/api/admin/categories/${id}`);
 
 export const createCategory = (data: CategoryFormData) =>
-    api.post("/api/admin/categories", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-    });
+    api.post("/api/admin/categories", data);
 
 export const updateCategory = (id: string, data: CategoryFormData) =>
-    api.post(`/api/admin/categories/${id}`, data, {
-        headers: { "Content-Type": "multipart/form-data" },
-    });
+    api.post(`/api/admin/categories/${id}`, data);
 
 export const deleteCategory = (id: string | null) =>
     api.delete(`/api/admin/categories/${id}`);

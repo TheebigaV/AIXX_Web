@@ -84,7 +84,7 @@ class CategoryController extends Controller
      */
     public function show(string $category): CategoryResource
     {
-        $category = $this->categoryService->find($category);
+        $category = Category::with('image')->findOrFail($category);
         $this->authorize('view', [$category]);
         return new CategoryResource($category);
     }

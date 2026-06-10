@@ -37,10 +37,10 @@ class StoreCategoryRequest extends FormRequest
                 'boolean',
             ],
             'image' => [
-                'required',
+                'nullable',
                 'image',
                 'mimes:jpeg,png,jpg,gif',
-//                'dimensions:width=470,height=600'
+                // 'dimensions:width=470,height=600'
             ],
         ];
     }
