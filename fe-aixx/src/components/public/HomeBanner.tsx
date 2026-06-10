@@ -65,7 +65,7 @@ const HomeBanner: React.FC = () => {
   // Safely handle image URL - only use if it's a valid string
   const bgImage = data?.image_url && typeof data.image_url === 'string' && data.image_url.trim() !== ''
     ? data.image_url
-        : '/images/home/home_banner_v3.png';
+        : '/images/home/premium_home_banner.png';
 
   if (loading) {
     return (
@@ -87,7 +87,7 @@ const HomeBanner: React.FC = () => {
         style={{ objectPosition: 'center top' }}
         onError={(e) => {
           const target = e.target as HTMLImageElement;
-          target.src = '/images/home/home_banner.svg';
+          target.src = '/images/home/premium_home_banner.png';
         }}
       />
 

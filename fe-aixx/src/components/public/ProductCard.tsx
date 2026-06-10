@@ -18,22 +18,25 @@ const resolveImageUrl = (
 ) => {
   // Handle different input formats
   if (!mainProductImage) return null;
-  
+
   const rawImage = typeof mainProductImage === 'string' ? mainProductImage : mainProductImage?.url;
-  
+
   if (!rawImage) return null;
   if (rawImage.startsWith('http')) return rawImage;
-  
+
   // If path already starts with /storage, prepend API base URL
   if (rawImage.startsWith('/storage')) {
     return `${API_BASE_URL}${rawImage}`;
   }
-  
+
   // For other paths, assume storage path
   return `${API_BASE_URL}/storage/${rawImage}`;
 };
 
-const stripHtml = (value: string) => value.replace(/<[^>]*>/g, '').trim();
+const stripHtml = (value: string | null | undefined) => {
+  if (!value) return '';
+  return value.replace(/<[^>]*>/g, '').trim();
+};
 
 export const ProductCard: React.FC<ProductCardProps> = ({ name, description, mainProductImage, slug }) => {
   const imageUrl = resolveImageUrl(mainProductImage);
@@ -45,7 +48,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ name, description, mai
         {imageUrl && showImage ? (
           <Image
             src={imageUrl}
-            alt={name}
+            alt={name || 'Product'}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             className="object-cover transition-opacity group-hover:opacity-90"
@@ -57,8 +60,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ name, description, mai
           </div>
         )}
       </div>
-      <h3 className="text-xl font-semibold text-blue-900 mb-2 group-hover:text-black transition-colors">{stripHtml(name)}</h3>
-      <p className="text-sm text-gray-800 line-clamp-3 group-hover:text-gray-900 transition-colors">{stripHtml(description)}</p>
+      <h3 className="text-xl font-semibold text-blue-900 mb-2 group-hover:text-black transition-colors">
+        {stripHtml(name) || 'Unnamed Product'}
+      </h3>
+      <p className="text-sm text-gray-800 line-clamp-3 group-hover:text-gray-900 transition-colors">
+        {stripHtml(description) || 'No description available'}
+      </p>
       <Link href={`/products/${slug}`} className="mt-4 inline-block text-sm font-medium text-blue-600 hover:text-black transition-colors">
         Learn More &rarr;
       </Link>

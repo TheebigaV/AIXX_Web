@@ -12,12 +12,12 @@ export default function useRoles() {
         from:0,
         to:0
     });
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
 
     const loadRoles = async (page: number = 1, perPage: number = 10) => {
         setLoading(true);
+        setError(null);
         try {
             const res = await fetchRoles(page, perPage);
             setRoles(res.data.data);
@@ -28,12 +28,11 @@ export default function useRoles() {
                 total: res.data.meta.total,
                 from: res.data.meta.from,
                 to: res.data.meta.to,
-
             });
         } catch (err: any) {
+            console.error("Error loading roles:", err);
             if (err.response) {
-                // Backend responded with error
-                setError(err.response.data.message || "Something went wrong while loading users.");
+                setError(err.response.data.message || "Something went wrong while loading roles.");
             } else {
                 setError("Network error or server is not reachable.");
             }
@@ -48,6 +47,7 @@ export default function useRoles() {
             await deleteRole(id);
             await loadRoles();
         } catch (err: any) {
+            console.error("Error deleting role:", err);
             if (err.response) {
                 setError(err.response.data.message || "Failed to delete role.");
                 throw err;
@@ -70,17 +70,20 @@ export default function useRoles() {
         }
     };
 
-
     const getAllRoles = async () => {
         setError(null);
         try {
             const res = await fetchAllRoles();
-            setRoles(res.data.data)
-            console.log('ddd',res.data.data)
-            return res.data || [];
+            // API returns array directly in data
+            const rolesData = Array.isArray(res.data) ? res.data : (res.data?.data || []);
+            setRoles(rolesData);
+            console.log('getAllRoles - Roles loaded:', rolesData);
+            return rolesData;
         } catch (err: any) {
-            console.error("Error fetching all roles:", err);
-            setError(err?.response?.data?.message || "Failed to fetch all roles.");
+            console.error("getAllRoles - Error fetching roles:", err.response?.status, err.response?.data || err.message);
+            // Return empty array on error instead of crashing
+            setRoles([]);
+            setError(err?.response?.data?.message || "Failed to fetch roles. Please try again.");
             return [];
         }
     };

@@ -29,7 +29,7 @@ const AboutUsBanner: React.FC = () => {
 
   const { getSetting } = useSettings();
 
-  const bgImage = data?.image_url || "/images/aboutus/about_banner.png";
+  const bgImage = data?.image_url || "/images/aboutus/about_banner.jpg";
   const title = getSetting('about_banner_title') || data?.title || "Engineering the Future of AI & Quantum Integration";
   const subtitle = getSetting('about_banner_subtitle') || data?.subtitle || "AIXX unites next-generation intelligence, quantum computing, and autonomous systems to build resilient operations for a shared future.";
 

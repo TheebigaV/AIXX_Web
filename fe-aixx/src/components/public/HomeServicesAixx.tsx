@@ -4,7 +4,8 @@ import Link from 'next/link';
 import {
   FaBrain, FaAtom, FaShieldAlt, FaShoppingCart, FaCar, FaPlane,
   FaChartLine, FaTruck, FaChevronLeft, FaChevronRight,
-  FaGraduationCap, FaNewspaper, FaRocket
+  FaGraduationCap, FaNewspaper, FaRocket,
+  FaMicrochip, FaServer, FaCubes, FaNetworkWired, FaProjectDiagram, FaHdd
 } from 'react-icons/fa';
 import useCategories from '@/hooks/public/useCategories';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -14,10 +15,24 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 const icons = [
-  FaBrain, FaAtom, FaShieldAlt, FaShoppingCart,
-  FaCar, FaPlane, FaChartLine, FaTruck,
-  FaRocket, FaChartLine, FaBrain, FaGraduationCap, FaNewspaper
+  FaRocket, FaGraduationCap, FaNewspaper, FaCubes, FaNetworkWired, FaProjectDiagram, FaHdd
 ];
+
+const getIconForSector = (slug: string, index: number) => {
+  switch (slug) {
+    case 'artificial-intelligence': return FaBrain;
+    case 'hardware-for-ai': return FaMicrochip;
+    case 'ai-embedded-hardware': return FaServer;
+    case 'quantum-technology': return FaAtom;
+    case 'cyber-security': return FaShieldAlt;
+    case 'ecommerce-and-payments': return FaShoppingCart;
+    case 'autonomous-mobility': return FaCar;
+    case 'decision-support-systems': return FaChartLine;
+    case 'logistics-and-transports': return FaPlane;
+    case 'ai-quantum-supply-chain-and-logistics': return FaTruck;
+    default: return icons[index % icons.length];
+  }
+};
 
 interface HomeServicesProps {
   isHomePage?: boolean;
@@ -36,7 +51,7 @@ const HomeServicesAixx: React.FC<HomeServicesProps> = ({ isHomePage = true }) =>
 
   /* ─── HOME CAROUSEL CARD ─── */
   const renderHomeCard = (sector: any, index: number) => {
-    const Icon = icons[index % icons.length];
+    const Icon = getIconForSector(sector.slug, index);
     return (
       <div className="h-full min-h-[320px] flex flex-col group rounded-[24px] border border-slate-200 bg-white shadow-md transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 hover:border-brand-300 relative overflow-hidden w-full p-8">
         <div className="absolute inset-0 bg-gradient-to-br from-brand-600/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
@@ -61,7 +76,7 @@ const HomeServicesAixx: React.FC<HomeServicesProps> = ({ isHomePage = true }) =>
 
   /* ─── SERVICES PAGE CIRCLE ITEM ─── */
   const renderServiceCircle = (sector: any, index: number) => {
-    const Icon = icons[index % icons.length];
+    const Icon = getIconForSector(sector.slug, index);
     const delay = index * 80; // stagger ms
 
     return (

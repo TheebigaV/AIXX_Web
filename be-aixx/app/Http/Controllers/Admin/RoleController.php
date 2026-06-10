@@ -48,7 +48,7 @@ class RoleController extends Controller
      */
     public function index(Request $request): RoleCollection
     {
-        $this->authorize('viewany', Role::class);
+        $this->authorize('viewAny', Role::class);
         return new RoleCollection($this->roleService->paginate(
             $request->get('per_page', 15),
             [
@@ -139,7 +139,7 @@ class RoleController extends Controller
      */
     public function getAllPermissions(Request $request): PermissionCollection
     {
-        $this->authorize('viewany', Role::class);
+        $this->authorize('viewAny', Role::class);
         return new PermissionCollection($this->permissionService->all());
     }
 

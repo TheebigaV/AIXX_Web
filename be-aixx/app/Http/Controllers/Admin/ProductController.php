@@ -10,15 +10,12 @@ use Illuminate\Http\JsonResponse;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the products.
-     */
     public function index(): JsonResponse
     {
         $products = Product::with(['category', 'mainProductImage', 'subProductImages'])
             ->orderBy('id', 'desc')
             ->paginate(request()->get('per_page', 10));
-        
+
         return response()->json([
             'data' => $products->items(),
             'meta' => [
@@ -32,143 +29,122 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created product.
-     */
     public function store(Request $request): JsonResponse
     {
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'category_id' => 'nullable|exists:categories,id',
-                'is_active' => 'required|boolean',
-                'image' => 'nullable|image|max:2048',
-                // Sub product images array
-                'sub_product_images' => 'nullable|array',
-                'sub_product_images.*' => 'image|max:2048',
-            ]);
-
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            // Create Document entry for main product image
-            $filename = basename($path);
-            // We'll create the product first without image_path then attach the image
-        }
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'category_id' => 'nullable|exists:categories,id',
+            'is_active' => 'required|boolean',
+            'image' => 'nullable|image|max:2048',
+            'sub_product_images' => 'nullable|array',
+            'sub_product_images.*' => 'image|max:2048',
+        ]);
 
         $validated['slug'] = Str::slug($validated['name']);
+
+        $image = $validated['image'] ?? null;
+        unset($validated['image']);
+
         $product = Product::create($validated);
 
         // Store main image if uploaded
-        if (isset($path)) {
-            $product->mainProductImage()->create([
-                'file_name' => 'products/' . $filename,
-                'type' => \App\Types::MainProductImage,
-                'user_id' => auth()->id(),
-            ]);
+        if ($image && $request->hasFile('image')) {
+            try {
+                $path = $image->store('products', 'public');
+
+                // Delete existing main image if any
+                $product->mainProductImage()->delete();
+
+                // Use morphOne relationship directly
+                \App\Models\Document::create([
+                    'file_name' => $path,
+                    'type' => \App\Types::MainProductImage,
+                    'user_id' => auth()->id(),
+                    'documentable_type' => get_class($product),
+                    'documentable_id' => $product->id,
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('Failed to store main product image: ' . $e->getMessage());
+            }
         }
 
         // Store sub product images if any
         if ($request->hasFile('sub_product_images')) {
-            foreach ($request->file('sub_product_images') as $file) {
-                $subPath = $file->store('products/sub', 'public');
-                $subFilename = basename($subPath);
-                // Assuming a relationship subProductImages()
-                if (method_exists($product, 'subProductImages')) {
-                    $product->subProductImages()->create([
-                        'file_name' => 'products/sub/' . $subFilename,
+            try {
+                foreach ($request->file('sub_product_images') as $file) {
+                    $subPath = $file->store('products/sub', 'public');
+
+                    \App\Models\Document::create([
+                        'file_name' => $subPath,
                         'type' => \App\Types::SubProductImage,
                         'user_id' => auth()->id(),
+                        'documentable_type' => get_class($product),
+                        'documentable_id' => $product->id,
                     ]);
                 }
+            } catch (\Exception $e) {
+                \Log::error('Failed to store sub product images: ' . $e->getMessage());
             }
         }
 
         return response()->json($product, 201);
     }
 
-    /**
-     * Display the specified product.
-     */
-    public function show($id): JsonResponse
+    public function show(string $id): JsonResponse
     {
         $product = Product::with(['category', 'mainProductImage', 'subProductImages'])->findOrFail($id);
         return response()->json($product);
     }
 
-    /**
-     * Update the specified product.
-     */
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, string $id): JsonResponse
     {
         $product = Product::findOrFail($id);
 
-        // Explicitly cast is_active from FormData string ("0"/"1") to boolean
-        // before validation, because multipart/form-data only sends strings.
-        if ($request->has('is_active')) {
-            $request->merge(['is_active' => filter_var($request->input('is_active'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false]);
-        }
-
         $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
+            'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
             'category_id' => 'nullable|exists:categories,id',
             'is_active' => 'sometimes|boolean',
             'image' => 'nullable|image|max:2048',
-            // Sub images validation
-            'sub_product_images' => 'nullable|array',
-            'sub_product_images.*' => 'image|max:2048',
         ]);
-
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $filename = basename($path);
-        }
 
         if (isset($validated['name'])) {
             $validated['slug'] = Str::slug($validated['name']);
         }
 
+        $image = $validated['image'] ?? null;
+        unset($validated['image']);
+
         $product->update($validated);
 
-        // Update main image if new uploaded
-        if (isset($path)) {
-            // Delete old main image if exists
-            $product->mainProductImage()->delete();
-            $product->mainProductImage()->create([
-                'file_name' => 'products/' . $filename,
-                'type' => \App\Types::MainProductImage,
-                'user_id' => auth()->id(),
-            ]);
-        }
+        if ($image) {
+            try {
+                $path = $image->store('products', 'public');
 
-        // Add new sub images if provided
-        if ($request->hasFile('sub_product_images')) {
-            foreach ($request->file('sub_product_images') as $file) {
-                $subPath = $file->store('products/sub', 'public');
-                $subFilename = basename($subPath);
-                if (method_exists($product, 'subProductImages')) {
-                    $product->subProductImages()->create([
-                        'file_name' => 'products/sub/' . $subFilename,
-                        'type' => \App\Types::SubProductImage,
-                        'user_id' => auth()->id(),
-                    ]);
-                }
+                // Delete existing main image
+                $product->mainProductImage()->delete();
+
+                // Create new image
+                \App\Models\Document::create([
+                    'file_name' => $path,
+                    'type' => \App\Types::MainProductImage,
+                    'user_id' => auth()->id(),
+                    'documentable_type' => get_class($product),
+                    'documentable_id' => $product->id,
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('Failed to update product image: ' . $e->getMessage());
             }
         }
 
-        // Return a fresh instance with relationships to avoid accessor conflicts
-        $product->refresh();
         return response()->json($product);
     }
 
-    /**
-     * Remove the specified product.
-     */
-    public function destroy($id): JsonResponse
+    public function destroy(string $id): JsonResponse
     {
         $product = Product::findOrFail($id);
         $product->delete();
-        return response()->json(['message' => 'Deleted']);
+        return response()->json(['message' => 'Product deleted successfully']);
     }
 }
-?>

@@ -12,9 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Disable CSRF for all API routes
         $middleware->validateCsrfTokens(except: [
-            'api/inquiries', 'api/submit-contact-form'
+            'api/login', 'api/forgot-password', 'api/reset-password', 'api/inquiries', 'api/submit-contact-form'
         ]);
         $middleware->statefulApi();
     })

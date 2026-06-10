@@ -37,7 +37,8 @@ const TrainingContent = () => {
   useEffect(() => {
     fetchPublicTrainings()
       .then((res) => {
-        setTrainings(res.data.data || []);
+        const payload = res.data.data || res.data;
+        setTrainings(Array.isArray(payload) ? payload : []);
       })
       .catch((err) => {
         console.error('Failed to fetch trainings:', err);

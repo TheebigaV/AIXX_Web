@@ -4,7 +4,6 @@ import ComponentCard from '../common/ComponentCard';
 import Label from '../form/Label';
 import Input from '../form/input/InputField';
 import {EyeCloseIcon, EyeIcon} from '../../icons';
-import Select from "@/components/form/Select";
 import MultiSelect from "@/components/form/MultiSelect";
 import {useParams} from "next/navigation";
 import {useUserForm} from "@/hooks/user/useUserForm";
@@ -37,54 +36,52 @@ export default function UserForm() {
     const [rolesLoading, setRolesLoading] = useState(false);
     const [roleOptions, setRoleOptions] = useState<{ value: number; label: string }[]>([]);
 
-
     const handleActiveToggle = () => handleChange("is_active", !formData.is_active);
     const handleSelectToggle = () => setIsSelectOpen(prev => !prev);
 
     const {roles, getAllRoles}: {
-        roles: [];
+        roles: any[];
         getAllRoles: () => void;
     } = useRoles();
 
-    const handleRoleChange = (value: string | number) => {
-        handleChange("role_ids", typeof value === 'string' ? parseInt(value, 10) : value);
-        setIsSelectOpen(false);
-    };
-
+    // Fetch roles once on mount
     useEffect(() => {
         const fetchRoles = async () => {
             setRolesLoading(true);
             await getAllRoles();
-            setRoleOptions(roles.map((role) => ({
-                value: role.id,
-                label: role.name
-            })));
-            console.log('roles', roles)
-            console.log('roleOptions', roleOptions)
             setRolesLoading(false);
         };
 
         fetchRoles();
     }, []);
 
+    // Update role options when roles change
     useEffect(() => {
-        const setRoles = async () => {
-            setRolesLoading(true);
-            setRoleOptions(roles.map((role) => ({
-                value: role.id,
-                text: role.name
-            })));
-            setRolesLoading(false);
-        };
-
-        setRoles();
+        const options = roles.map((role) => ({
+            value: role.id,
+            label: role.name
+        }));
+        setRoleOptions(options);
     }, [roles]);
 
+    // Proper role change handler
+    const handleRoleChange = (selectedValues: any) => {
+        let roleIds: number[] = [];
+
+        if (Array.isArray(selectedValues)) {
+            roleIds = selectedValues.map(v => typeof v === 'string' ? parseInt(v, 10) : v);
+        } else if (selectedValues) {
+            roleIds = [typeof selectedValues === 'string' ? parseInt(selectedValues, 10) : selectedValues];
+        }
+
+        handleChange("role_ids", roleIds);
+        setIsSelectOpen(false);
+    };
 
     return (
         <ComponentCard title="User Information">
-
             {serverError && <div className="mb-4 text-red-500">{serverError}</div>}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                     <Label htmlFor="name" required>Full Name</Label>
@@ -117,14 +114,13 @@ export default function UserForm() {
                 </div>
             </div>
 
-
-            {roleOptions.length > 0 ? (
+            {!rolesLoading && roleOptions.length > 0 ? (
                 <div className="space-y-2" ref={selectRef}>
-                    <Label>User Role</Label>
+                    <Label required>User Role</Label>
                     <MultiSelect
                         options={roleOptions}
-                        value={formData.role_ids}
-                        defaultSelected={formData.role_ids}
+                        value={formData.role_ids || []}
+                        defaultSelected={formData.role_ids || []}
                         onChange={handleRoleChange}
                         isOpen={isSelectOpen}
                         onToggle={handleSelectToggle}
@@ -134,16 +130,15 @@ export default function UserForm() {
                         multiple
                     />
                 </div>
+            ) : rolesLoading ? (
+                <p className="text-gray-500 text-sm">Loading roles...</p>
             ) : (
                 <p className="text-gray-500 text-sm">No roles available</p>
             )}
 
-            {/* Password fields - show for both create and edit */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <Label>
-                        Password
-                    </Label>
+                    <Label>Password</Label>
                     <div className="relative">
                         <Input
                             type={showPassword ? "text" : "password"}
@@ -168,9 +163,7 @@ export default function UserForm() {
                 </div>
 
                 <div className="space-y-2">
-                    <Label>
-                        Confirm Password
-                    </Label>
+                    <Label>Confirm Password</Label>
                     <div className="relative">
                         <Input
                             type={showConfirmPassword ? "text" : "password"}
@@ -179,7 +172,6 @@ export default function UserForm() {
                             onChange={(e) => handleChange("password_confirmation", e.target.value)}
                             error={!!errors.password_confirmation}
                             hint={errors.password_confirmation}
-
                         />
                         <button
                             type="button"
@@ -196,7 +188,6 @@ export default function UserForm() {
                 </div>
             </div>
 
-            {/* Active */}
             <div>
                 <Label>Account Status</Label>
                 <ActiveToggle
@@ -205,7 +196,6 @@ export default function UserForm() {
                 />
             </div>
 
-            {/* Form Actions */}
             <div className="flex justify-end space-x-3">
                 <Button onClick={handleSubmit} disabled={loading}>
                     {loading ? "Saving..." : "Save"}
@@ -217,7 +207,6 @@ export default function UserForm() {
                     Cancel
                 </Button>
             </div>
-
         </ComponentCard>
     );
 }

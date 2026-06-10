@@ -16,18 +16,20 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Get CSRF token + user
   const fetchUser = async () => {
     setLoading(true);
     const response = await getProfileService();
     if (response) {
       setUser(response.user);
+    } else {
+      setUser(null);
     }
     setLoading(false);
   };
 
   const login = async (email: string, password: string) => {
     await loginService(email, password);
+    await fetchUser();
   };
 
   const logout = async () => {
@@ -42,13 +44,8 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
   );
 
   useEffect(() => {
-    if (!user) {
-      fetchUser();
-    } else {
-
-    }
+    fetchUser();
   }, []);
-
 
   return (
       <AuthContext.Provider value={value}>

@@ -7,6 +7,8 @@ return [
 
     'allowed_origins' => [
       	'http://47.128.222.47',
+        'https://aixx.com.sg',
+        'https://www.aixx.com.sg',
         'http://localhost:3000',
         'http://localhost:5173',
 

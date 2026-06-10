@@ -90,3 +90,4 @@ Route::post('inquiries', [\App\Http\Controllers\Guest\InquiryController::class, 
 Route::post('submit-contact-form', [\App\Http\Controllers\Guest\InquiryController::class, 'submitContact']);
 Route::get('products', [App\Http\Controllers\Api\ProductController::class, 'index']);
 Route::get('products/{slug}/by-slug', [App\Http\Controllers\Api\ProductController::class, 'show']);
+Route::get('settings', [\App\Http\Controllers\SettingController::class, 'index']);

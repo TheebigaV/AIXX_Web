@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Training;
+use App\Models\Setting;
 use App\Models\User;
 
-class TrainingPolicy
+class SettingPolicy
 {
     public function before($user, $ability)
     {
@@ -14,8 +14,8 @@ class TrainingPolicy
     }
 
     public function viewAny(User $user): bool { return true; }
-    public function view(User $user, Training $training): bool { return true; }
+    public function view(User $user, Setting $setting): bool { return true; }
     public function create(User $user): bool { return true; }
-    public function update(User $user, Training $training): bool { return true; }
-    public function delete(User $user, Training $training): bool { return true; }
+    public function update(User $user, Setting $setting): bool { return true; }
+    public function delete(User $user, Setting $setting): bool { return true; }
 }

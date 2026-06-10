@@ -16,45 +16,49 @@ use App\Http\Resources\Auth\User\ProfileResource;
 
 class AuthController extends Controller
 {
-    // Login function
-    public function login(LoginRequest $request)
+    // API Login with Sanctum token
+    public function login(Request $request)
     {
-        $email = $request->input('email');
-        $user = User::where('email', $email)->first();
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
 
-//        if (!$user->email_verified_at){
-//            return response()->json(['message' => 'Unauthorized.'], 401);
-//        }
-        $request->authenticate();
-        $request->session()->regenerate();
-//        return response()->noContent();
+        $user = User::where('email', $validated['email'])->first();
+
+        if (!$user || !Hash::check($validated['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+
+        // Create Sanctum token
+        $token = $user->createToken('api-token')->plainTextToken;
+
         return response()->json([
             'message' => 'Login successful',
             'user' => new ProfileResource($user),
-        ]);
+            'token' => $token,
+        ], 200);
     }
 
     // Logout function
     public function logout(Request $request)
     {
-        Auth::guard('web')->logout();
+        $request->user()->currentAccessToken()->delete();
 
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return response()->noContent();
+        return response()->json([
+            'message' => 'Logged out successfully'
+        ], 200);
     }
 
     // Forgot password
     public function forgot(Request $request)
     {
         $request->validate(['email' => 'required|email']);
-
         $status = Password::sendResetLink(
             $request->only('email')
         );
-
         return $status === Password::RESET_LINK_SENT
             ? response()->json(['message' => __($status)])
             : response()->json(['message' => __($status)], 400);
@@ -76,14 +80,12 @@ class AuthController extends Controller
                     'password' => Hash::make($password),
                     'remember_token' => Str::random(60),
                 ])->save();
-
                 event(new PasswordReset($user));
             }
         );
 
-        return $status === Password::PASSWORD_RESET
+        return $status === PASSWORD_RESET
             ? response()->json(['message' => 'Password reset successful'])
             : response()->json(['message' => __($status)], 400);
     }
-
 }
