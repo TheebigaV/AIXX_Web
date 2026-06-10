@@ -15,10 +15,11 @@ class BannerSeeder extends Seeder
     {
         // Create a sample banner for testing
         Banner::create([
-            'title1' => 'Powering the North',
-            'title2' => 'Over 20 Years',
+            'title_1' => 'Powering the North',
+            'title_2' => 'Over 20 Years',
             'subtitle' => 'Trusted Electrical & Electronics Services covering 90% of the Northern Province.',
-            'image' => null, // You can add a default image path here if needed
+            'link' => null,
+            'is_active' => true,
         ]);
 
         $this->command->info('Sample banner created successfully!');
