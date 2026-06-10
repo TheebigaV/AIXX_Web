@@ -42,8 +42,7 @@ export const useCategoryForm = (categoryId?: string, onSuccess?: () => void) => 
   const validate = () => {
     const newErrors: typeof errors = {};
     if (!formData.name) newErrors.name = "Name is required";
-    if (!formData.image && !existingImageUrl)
-      newErrors.image = "Image is required";
+    // Image is now optional; removed mandatory check
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
