@@ -15,9 +15,9 @@ class BannerSeeder extends Seeder
     {
         // Create a sample banner for testing
         Banner::create([
-            'title_1' => 'Powering the North',
-            'title_2' => 'Over 20 Years',
-            'subtitle' => 'Trusted Electrical & Electronics Services covering 90% of the Northern Province.',
+            'title_1' => 'Intelligent Solutions for Tomorrow',
+            'title_2' => 'Driving Intelligent Digital Transformation',
+            'subtitle' => 'We deliver AI-powered innovation and modern solutions that help businesses grow, adapt, and succeed.',
             'link' => null,
             'is_active' => true,
         ]);

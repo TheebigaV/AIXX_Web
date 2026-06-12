@@ -1,34 +1,25 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { FiMapPin, FiPhone, FiMail, FiAlertCircle, FiCheckCircle, FiX } from 'react-icons/fi';
+import Script from 'next/script';
+import { FiMapPin, FiPhone, FiMail, FiAlertCircle, FiX } from 'react-icons/fi';
 import { FaBolt } from 'react-icons/fa';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
-import { useContactForm } from "@/hooks/public/useContactForm";
+import { useInquiryForm } from "@/hooks/public/useInquiryForm";
 import { toast } from "react-toastify";
 
+import Banner from '@/components/public/Banner';
 import useBanners from "@/hooks/public/useBanners";
 import { useSettings } from "@/hooks/useSettings";
 
 const ContactPage = () => {
   const { banners, loading: bannerLoading, getAllBanners } = useBanners();
-  const [contactDetails, setContactDetails] = useState<any>(null);
   const { getSetting } = useSettings();
 
   useEffect(() => {
     getAllBanners('contact');
-    
-    // Fetch contact details banner separately using the underlying API to avoid hook conflicts
-    import('@/lib/public/banners').then(module => {
-      module.fetchAllBanners('contact_details').then(res => {
-        if (res.data?.data && res.data.data.length > 0) {
-          setContactDetails(res.data.data[0]);
-        }
-      }).catch(console.error);
-    });
   }, []);
 
   const bannerData = useMemo(() => {
@@ -47,13 +38,11 @@ const ContactPage = () => {
   const bannerTitle = bannerData?.title || "Connect with AIXX";
   const bannerSubtitle = bannerData?.subtitle || "AIXX accelerates intelligent businesses with AI, quantum, autonomous, and cybersecurity systems. Reach out to explore how we can power your next-generation transformation.";
 
-  // Use contact details banner if available
-  const address = getSetting('contact_address') || contactDetails?.subtitle || "Singapore";
-  const phoneVal = getSetting('contact_phone') || contactDetails?.title_1 || "+65 9771 0677";
-  const emailVal = getSetting('contact_email') || contactDetails?.title_2 || "cs@aixx.com.sg";
+  // Use settings for contact details, with fallback defaults
+  const address = getSetting('contact_address', 'Singapore');
+  const phoneVal = getSetting('contact_phone', '+65 9771 0677');
+  const emailVal = getSetting('contact_email', 'cs@aixx.com.sg');
 
-  const [phone, setPhone] = useState<string>('');
-  const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const {
@@ -62,72 +51,68 @@ const ContactPage = () => {
     serverError,
     loading,
     handleChange,
-    handleSubmit: handleContactSubmit,
-  } = useContactForm(() => {
-    toast.success("Your message has been sent!");
-    setSuccess(true);
+    handleSubmit: handleInquirySubmit,
+    resetForm,
+  } = useInquiryForm(() => {
+    toast.success("Your enquiry has been sent!");
     setError(null);
-
-    // Clear all form fields after successful submission
-    setPhone('');
-    // Clear formData by calling handleChange with empty values
-    handleChange('name', '');
-    handleChange('email', '');
-    handleChange('message', '');
+    resetForm();
   });
 
-  useEffect(() => {
-    formData.phone = phone;
-  }, [phone, formData]);
+  React.useEffect(() => {
+    if (serverError) {
+      setError(serverError);
+    }
+  }, [serverError]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccess(false);
     setError(null);
 
-    try {
-      await handleContactSubmit();
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong');
-    }
+    await handleInquirySubmit();
   };
 
-  const resetSuccess = () => setSuccess(false);
   const clearMessages = () => setError(null);
 
   return (
     <div className="w-full bg-white font-lato">
-      {/* Hero Section */}
-      <div className="relative h-[420px] sm:h-[520px] md:h-[560px] lg:h-[620px] w-full">
-        <div className="relative w-full h-full">
-          <img
-            src={bgImage}
-            alt="AIXX Contact Banner"
-            className="object-cover absolute w-full h-full inset-0"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20"></div>
-        </div>
+      <Banner
+        altText="AIXX Contact Banner"
+        paths={[{ name: 'Home', href: '/' }, { name: 'Contact' }]}
+        title={bannerTitle}
+        subtitle={bannerSubtitle}
+        bgImage={bgImage}
+      />
 
-        <div className="mx-auto container absolute inset-0 flex items-end px-4 sm:px-[16px] md:px-[24px] xl:px-[60px] 2xl:px-[240px] py-20 sm:py-24 lg:py-32 xl:py-40">
-          <div className="w-full max-w-[1200px] mx-auto lg:mx-[-60px] lg:pl-14 xl:pl-18 xl:mx-[-70px] 2xl:mx-0 2xl:pl-0 px-4">
-            <div className="max-w-[680px] 2xl:ml-[5px]">
-              <h1 className="Lato text-2xl sm:text-3xl md:text-4xl lg:text-[42px] xl:text-5xl font-bold text-white mb-4">
-                {bannerTitle}
-              </h1>
-              <p className="Lato text-xs xs:text-sm sm:text-[15px] md:text-[16px] lg:text-[18px] xl:text-[20px] text-white leading-normal sm:leading-relaxed">
-                {bannerSubtitle}
-              </p>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <Script id="contact-schema" type="application/ld+json">
+        {JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: 'AIXX',
+          url: 'https://aixx.com.sg/contact',
+          logo: 'https://aixx.com.sg/images/logo.png',
+          contactPoint: [
+            {
+              '@type': 'ContactPoint',
+              telephone: '+65 9771 0677',
+              contactType: 'customer service',
+              areaServed: 'SG',
+              availableLanguage: ['English'],
+            },
+          ],
+          address: {
+            '@type': 'PostalAddress',
+            addressCountry: 'SG',
+            addressLocality: 'Singapore',
+          },
+        })}
+      </Script>
 
       {/* Contact Form Section */}
-      <div className="container mx-auto px-4 sm:px-[16px] md:px-[24px] xl:px-[60px] 2xl:px-[240px] py-8 sm:py-12 md:py-16 relative z-10">
-        <div className="flex flex-col lg:flex-col xlmid:flex-row xl:flex-row gap-6 sm:gap-8 w-full">
+      <main className="container mx-auto px-4 sm:px-6 md:px-8 xl:px-16 2xl:px-24 py-8 sm:py-10 md:py-12 relative z-10">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8 w-full">
           {/* Form Container - Left side at 1280px */}
-          <div className="w-full lg:w-full xlmid:w-1/2 bg-gray-50 p-4 sm:p-6 md:p-8 xl:p-8 2xl:p-8 shadow-lg -mt-12 md:-mt-28 sm:-mt-16 lg:-mt-36 xl:-mt-44 2xl:-mt-44 xlmid:h-fit xl:h-fit 2xl:h-fit xlmid:ml-[0px]  z-20 relative order-1 lg:order-1 xlmid:order-1">
+          <section className="w-full max-w-3xl mx-auto xl:mx-0 bg-gray-50 p-4 sm:p-6 md:p-8 xl:p-10 shadow-lg -mt-10 sm:-mt-14 md:-mt-18 lg:-mt-24 xl:-mt-28 2xl:-mt-32 min-w-0 relative">
 
             {/* Error Message */}
             {error && (
@@ -151,87 +136,141 @@ const ContactPage = () => {
             )}
 
             <form className="space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
-              {/* Name */}
+              {/* Question 1: Service Interest */}
               <div>
+                <label htmlFor="service_interest" className="text-sm font-semibold text-gray-700">
+                  1. What service are you interested in?
+                </label>
                 <input
                   type="text"
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
-                  placeholder="Name"
-                  className={`w-full h-12 px-4 py-2 bg-white border ${errors.name ? 'border-red-500' : 'border-gray-300'
-                    } focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent`}
+                  id="service_interest"
+                  value={formData.service_interest}
+                  onChange={(e) => handleChange('service_interest', e.target.value)}
+                  placeholder="e.g. Electrical installation, system automation, maintenance"
+                  className={`w-full h-12 px-4 py-2 bg-white border ${errors.service_interest ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent`}
                 />
-                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                {errors.service_interest && <p className="text-red-500 text-sm mt-1">{errors.service_interest}</p>}
               </div>
 
-              {/* Email */}
+              {/* Question 2: Industry / Business Type */}
               <div>
+                <label htmlFor="industry_type" className="text-sm font-semibold text-gray-700">
+                  2. What is your industry / business type?
+                </label>
                 <input
-                  type="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={(e) => handleChange("email", e.target.value)}
-                  placeholder="E-mail"
-                  className={`w-full h-12 px-4 py-2 bg-white border ${errors.email ? 'border-red-500' : 'border-gray-300'
-                    } focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent`}
+                  type="text"
+                  id="industry_type"
+                  value={formData.industry_type}
+                  onChange={(e) => handleChange('industry_type', e.target.value)}
+                  placeholder="e.g. Manufacturing, retail, hospitality, education"
+                  className={`w-full h-12 px-4 py-2 bg-white border ${errors.industry_type ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent`}
                 />
-                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                {errors.industry_type && <p className="text-red-500 text-sm mt-1">{errors.industry_type}</p>}
               </div>
 
-              {/* Phone */}
+              {/* Question 3: Requirement or Problem */}
               <div>
-                <div className={`relative w-full border ${errors.phone ? 'border-red-500' : 'border-gray-300'
-                  } focus-within:ring-2 focus-within:ring-blue-900 focus-within:border-transparent`}>
-                  <PhoneInput
-                    international
-                                        defaultCountry="SG"
-                    value={phone}
-                    onChange={(value) => setPhone(value || '')}
-                    placeholder="Enter phone number"
-                    className={`!h-12 !w-full !border-none !px-4 !py-2 ${errors.phone ? '!bg-red-50' : '!bg-white'
-                      }`}
-                  />
-                </div>
-                {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
-              </div>
-
-              {/* Message */}
-              <div>
+                <label htmlFor="message" className="text-sm font-semibold text-gray-700">
+                  3. What is your requirement or problem?
+                </label>
                 <textarea
                   id="message"
-                  rows={8}
+                  rows={6}
                   value={formData.message}
-                  onChange={(e) => handleChange("message", e.target.value)}
-                  placeholder="Message"
-                  className={`w-full px-4 py-2 bg-white border ${errors.message ? 'border-red-500' : 'border-gray-300'
-                    } focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent resize-none`}
+                  onChange={(e) => handleChange('message', e.target.value)}
+                  placeholder="Tell us the challenge you want solved or the service you need"
+                  className={`w-full px-4 py-3 bg-white border ${errors.message ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent resize-none`}
                 ></textarea>
                 {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
+              </div>
+
+              {/* Question 4: Budget / Timeline */}
+              <div>
+                <label htmlFor="budget_timeline" className="text-sm font-semibold text-gray-700">
+                  4. What is your budget or timeline?
+                </label>
+                <input
+                  type="text"
+                  id="budget_timeline"
+                  value={formData.budget_timeline}
+                  onChange={(e) => handleChange('budget_timeline', e.target.value)}
+                  placeholder="e.g. $5,000 - $10,000, within 4 weeks, urgent"
+                  className={`w-full h-12 px-4 py-2 bg-white border ${errors.budget_timeline ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent`}
+                />
+                {errors.budget_timeline && <p className="text-red-500 text-sm mt-1">{errors.budget_timeline}</p>}
+              </div>
+
+              <hr className="border-gray-200" />
+
+              {/* Contact Details */}
+              <div>
+                <label htmlFor="customer_name" className="text-sm font-semibold text-gray-700">
+                  5. Your name
+                </label>
+                <input
+                  type="text"
+                  id="customer_name"
+                  value={formData.customer_name}
+                  onChange={(e) => handleChange('customer_name', e.target.value)}
+                  placeholder="Full name"
+                  className={`w-full h-12 px-4 py-2 bg-white border ${errors.customer_name ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent`}
+                />
+                {errors.customer_name && <p className="text-red-500 text-sm mt-1">{errors.customer_name}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="customer_email" className="text-sm font-semibold text-gray-700">
+                  6. Your email
+                </label>
+                <input
+                  type="email"
+                  id="customer_email"
+                  value={formData.customer_email}
+                  onChange={(e) => handleChange('customer_email', e.target.value)}
+                  placeholder="you@example.com"
+                  className={`w-full h-12 px-4 py-2 bg-white border ${errors.customer_email ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent`}
+                />
+                {errors.customer_email && <p className="text-red-500 text-sm mt-1">{errors.customer_email}</p>}
+              </div>
+
+              <div>
+                <label htmlFor="customer_phone" className="text-sm font-semibold text-gray-700">
+                  7. Your phone number
+                </label>
+                <div className={`relative w-full border ${errors.customer_phone ? 'border-red-500' : 'border-gray-300'} focus-within:ring-2 focus-within:ring-blue-900 focus-within:border-transparent rounded-xl`}>
+                  <PhoneInput
+                    international
+                    defaultCountry="SG"
+                    value={formData.customer_phone}
+                    onChange={(value) => handleChange('customer_phone', value || '')}
+                    placeholder="Enter phone number"
+                    className={`!h-12 !w-full !border-none !px-4 !py-2 ${errors.customer_phone ? '!bg-red-50' : '!bg-white'}`}
+                  />
+                </div>
+                {errors.customer_phone && <p className="text-red-500 text-sm mt-1">{errors.customer_phone}</p>}
               </div>
 
               {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
-                className={`Lato ${loading ? '' : 'beveled-corner4'} w-full flex justify-center items-center py-3 px-4 border border-transparent shadow-sm text-sm font-medium text-white ${loading ? 'bg-[#191E42]' : 'bg-brand-500 hover:bg-[#182166]'
-                  } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900 transition-colors duration-200`}
+                className={`Lato ${loading ? '' : 'beveled-corner4'} w-full flex justify-center items-center py-3 px-4 border border-transparent shadow-sm text-sm font-medium text-white ${loading ? 'bg-[#191E42]' : 'bg-brand-500 hover:bg-[#182166]'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900 transition-colors duration-200`}
               >
-                {loading ? 'Sending...' : 'Send Message'}
+                {loading ? 'Sending...' : 'Submit Service Request'}
                 <FaBolt className="ml-2 text-white" />
               </button>
             </form>
-          </div>
+          </section>
 
           {/* Contact Info - Right side at 1280px */}
-          <div className="w-full lg:w-full xlmid:w-1/2 p-4 sm:p-6 md:p-8 -mt-4 sm:-mt-6 xlmid:mt-0 ml-auto order-2 lg:order-2 xlmid:order-2">
+          <aside className="self-start w-full max-w-lg mx-auto xl:mx-0 p-4 sm:p-6 md:p-8 xl:p-10 bg-white border border-slate-200 rounded-3xl shadow-sm">
             <h2 className="Lato text-2xl sm:text-3xl text-gray-800 mb-4 sm:mb-6">
               Build Smarter Systems With AIXX
             </h2>
             <p className="Lato text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 leading-relaxed">
               AIXX helps organizations design and deploy intelligent solutions across AI, quantum, autonomy, and cyber resilience so teams can make better decisions faster.
             </p>
-            <div className="space-y-4 sm:space-y-6">
+            <address className="not-italic space-y-4 sm:space-y-6">
               <ContactDetail
                 icon={<FiMapPin className="text-xl text-brand-500" />}
                 title="Address"
@@ -250,12 +289,12 @@ const ContactPage = () => {
                 value={emailVal}
                 href={`mailto:${emailVal}`}
               />
-            </div>
+            </address>
 
-          </div>
+          </aside>
 
         </div>
-      </div>
+      </main>
     </div>
   );
 };
