@@ -6,10 +6,13 @@ import { InquiryFormData, InquiryFormErrors } from "@/types/inquiry";
 
 export function useInquiryForm(onSuccess?: () => void) {
     const [formData, setFormData] = useState<InquiryFormData>({
-        product_id: "",
+        product_id: undefined,
         customer_name: "",
         customer_email: "",
         customer_phone: "",
+        service_interest: "",
+        industry_type: "",
+        budget_timeline: "",
         message: "",
     });
 
@@ -18,8 +21,23 @@ export function useInquiryForm(onSuccess?: () => void) {
     const [loading, setLoading] = useState(false);
 
     const handleChange = (field: keyof InquiryFormData, value: any) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-        setErrors((prev) => ({ ...prev, [field]: undefined }));
+        setFormData((prev: InquiryFormData) => ({ ...prev, [field]: value }));
+        setErrors((prev: InquiryFormErrors) => ({ ...prev, [field]: undefined }));
+    };
+
+    const resetForm = () => {
+        setFormData({
+            product_id: undefined,
+            customer_name: "",
+            customer_email: "",
+            customer_phone: "",
+            service_interest: "",
+            industry_type: "",
+            budget_timeline: "",
+            message: "",
+        });
+        setErrors({});
+        setServerError(null);
     };
 
     const validate = (): boolean => {
@@ -32,7 +50,10 @@ export function useInquiryForm(onSuccess?: () => void) {
             newErrors.customer_email = "Enter a valid email";
         }
         if (!formData.customer_phone.trim()) newErrors.customer_phone = "Phone number is required";
-        if (!formData.message.trim()) newErrors.message = "Message is required";
+        if (!formData.service_interest.trim()) newErrors.service_interest = "Service interest is required";
+        if (!formData.industry_type.trim()) newErrors.industry_type = "Industry/business type is required";
+        if (!formData.budget_timeline.trim()) newErrors.budget_timeline = "Budget or timeline is required";
+        if (!formData.message.trim()) newErrors.message = "Tell us your requirement or problem";
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -62,5 +83,6 @@ export function useInquiryForm(onSuccess?: () => void) {
         loading,
         handleChange,
         handleSubmit,
+        resetForm,
     };
 }
