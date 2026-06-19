@@ -35,8 +35,8 @@ const ContactPage = () => {
   }, [banners]);
 
   const bgImage = bannerData?.image_url || "/images/contact-us/contact_banner.png";
-  const bannerTitle = bannerData?.title || "Connect with AIXX";
-  const bannerSubtitle = bannerData?.subtitle || "AIXX accelerates intelligent businesses with AI, quantum, autonomous, and cybersecurity systems. Reach out to explore how we can power your next-generation transformation.";
+  const bannerTitle = bannerData?.title || "Connect with AIXX Academy";
+  const bannerSubtitle = bannerData?.subtitle || "Tell us about your AI training needs and we will match your team with the right program, workshop, or enterprise learning path.";
 
   // Use settings for contact details, with fallback defaults
   const address = getSetting('contact_address', 'Singapore');
@@ -184,28 +184,12 @@ const ContactPage = () => {
                 {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
               </div>
 
-              {/* Question 4: Budget / Timeline */}
-              <div>
-                <label htmlFor="budget_timeline" className="text-sm font-semibold text-gray-700">
-                  4. What is your budget or timeline?
-                </label>
-                <input
-                  type="text"
-                  id="budget_timeline"
-                  value={formData.budget_timeline}
-                  onChange={(e) => handleChange('budget_timeline', e.target.value)}
-                  placeholder="e.g. $5,000 - $10,000, within 4 weeks, urgent"
-                  className={`w-full h-12 px-4 py-2 bg-white border ${errors.budget_timeline ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent`}
-                />
-                {errors.budget_timeline && <p className="text-red-500 text-sm mt-1">{errors.budget_timeline}</p>}
-              </div>
-
               <hr className="border-gray-200" />
 
               {/* Contact Details */}
               <div>
                 <label htmlFor="customer_name" className="text-sm font-semibold text-gray-700">
-                  5. Your name
+                  4. Your name
                 </label>
                 <input
                   type="text"
@@ -220,7 +204,7 @@ const ContactPage = () => {
 
               <div>
                 <label htmlFor="customer_email" className="text-sm font-semibold text-gray-700">
-                  6. Your email
+                  5. Your email
                 </label>
                 <input
                   type="email"
@@ -235,7 +219,7 @@ const ContactPage = () => {
 
               <div>
                 <label htmlFor="customer_phone" className="text-sm font-semibold text-gray-700">
-                  7. Your phone number
+                  6. Your phone number
                 </label>
                 <div className={`relative w-full border ${errors.customer_phone ? 'border-red-500' : 'border-gray-300'} focus-within:ring-2 focus-within:ring-blue-900 focus-within:border-transparent rounded-xl`}>
                   <PhoneInput

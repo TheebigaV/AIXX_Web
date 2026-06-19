@@ -27,8 +27,8 @@ const HomeAbout = () => {
   const { getSetting } = useSettings();
 
   const bgImage = data?.image_url || "/images/home/futuristic_about.png";
-  const title = getSetting('home_about_title') || data?.title || "A Futuristic AI & Quantum Technology Integrator";
-  const subtitle = getSetting('home_about_subtitle') || data?.subtitle || "AIXX is a forward‑looking technology integrator, uniting AI, Quantum computing, and cutting‑edge innovation to deliver real‑world solutions across diverse high‑tech sectors.\n\nFuture training programs in AI and Quantum technologies will empower the next generation of innovators.";
+  const title = getSetting('home_about_title') || data?.title || "AIXX Academy: AI training with real business outcomes";
+  const subtitle = getSetting('home_about_subtitle') || data?.subtitle || "AIXX delivers corporate-ready AI training, workshops, and certification for executives, teams, and developers across Southeast Asia.\n\nBuild practical know-how in generative AI, prompt engineering, AI leadership, and agentic systems to accelerate your digital transformation.";
 
   return (
     <section className="w-full bg-[#FAFAFA] -mt-8 pt-8 sm:pt-8 md:pt-8 lg:pt-8 lgmid:pt-14 xlmid:pt-8 pb-8 sm:pb-12 md:pb-16 lg:pb-20">

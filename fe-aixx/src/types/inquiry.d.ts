@@ -5,7 +5,6 @@ export interface InquiryFormData {
     customer_phone: string;
     service_interest: string;
     industry_type: string;
-    budget_timeline: string;
     message: string;
 }
 
@@ -15,6 +14,5 @@ export interface InquiryFormErrors {
     customer_phone?: string;
     service_interest?: string;
     industry_type?: string;
-    budget_timeline?: string;
     message?: string;
 }

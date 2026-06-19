@@ -58,9 +58,9 @@ const HomeBanner: React.FC = () => {
 
   const { getSetting } = useSettings();
 
-  const headingLine1 = getSetting('home_banner_title') || data?.title1 || 'AIXX: Futuristic AI & Quantum Integrator';
-  const headingLine2 = data?.title2 || 'Driving Innovation Across Leading Tech Sectors';
-  const subtitle = getSetting('home_banner_subtitle') || data?.subtitle || 'We combine AI, Quantum tech, and modern solutions to empower businesses across global high‑tech industries.';
+  const headingLine1 = getSetting('home_banner_title') || data?.title1 || 'Master AI. Lead Tomorrow.';
+  const headingLine2 = data?.title2 || 'Industry-certified AI training for leaders, teams and developers';
+  const subtitle = getSetting('home_banner_subtitle') || data?.subtitle || 'AIXX Academy delivers practical AI training, workshops, and certification for enterprises, executives and technical teams across Southeast Asia.';
 
   // Safely handle image URL - only use if it's a valid string
   const bgImage = data?.image_url && typeof data.image_url === 'string' && data.image_url.trim() !== ''
@@ -107,14 +107,23 @@ const HomeBanner: React.FC = () => {
               {subtitle}
             </p>
 
-            <Link
-              href="/contact"
-              className="beveled-corner inline-flex items-center justify-center space-x-2 bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 transition-all duration-300 w-full md:inline-flex md:w-auto"
-              aria-label="Contact Us"
-            >
-              <span>Start the Future</span>
-              <FaBolt className="text-white" />
-            </Link>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 max-w-sm">
+              <Link
+                href="/training-and-certification"
+                className="beveled-corner inline-flex items-center justify-center space-x-2 bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 transition-all duration-300 w-full md:w-auto"
+                aria-label="Explore Training Programs"
+              >
+                <span>Explore Training</span>
+                <FaBolt className="text-white" />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center space-x-2 border border-white/20 text-white bg-white/10 hover:bg-white/20 px-6 py-3 transition-all duration-300 w-full md:w-auto"
+                aria-label="Contact AIXX"
+              >
+                <span>Contact AIXX</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

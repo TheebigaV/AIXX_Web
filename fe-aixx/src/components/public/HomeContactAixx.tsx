@@ -28,8 +28,8 @@ const HomeContactAixx = () => {
   const { getSetting } = useSettings();
 
   const bgImage = data?.image_url || "/images/aboutus/quantum_engineer.png";
-  const title = getSetting('home_contact_title') || data?.title || "Ready to Build the Future With AIXX?";
-  const subtitle = getSetting('home_contact_subtitle') || data?.subtitle || "Partner with AIXX to deliver AI, Quantum, cybersecurity, autonomous mobility and logistics systems designed for the next generation of intelligent enterprises.";
+  const title = getSetting('home_contact_title') || data?.title || "Ready to Launch Your AI Training Journey?";
+  const subtitle = getSetting('home_contact_subtitle') || data?.subtitle || "Connect with AIXX for corporate AI training, certification tracks, executive workshops and developer bootcamps designed to build skills fast.";
 
   return (
     <div className="w-full container mx-auto px-[16px] sm:px-[16px] md:px-[24px] lg:py-[50px] lg:px-[28px] xl:py-[60px] xl:px-[75px] 2xl:py-[60px] 2xl:px-[240px] py-[100px] bg-white">

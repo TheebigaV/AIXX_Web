@@ -25,6 +25,7 @@ export default function Dashboard() {
 
         {/* Main Metrics */}
         <EcommerceMetrics />
+
       </div>
     </ProtectedRoute>
   );

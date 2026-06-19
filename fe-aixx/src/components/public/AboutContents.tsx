@@ -43,42 +43,33 @@ const AboutContents: React.FC = () => {
   return (
     <section className="bg-[#00062A] w-full">
       <div className="mx-auto container  py-10 px-[36px] sm:px-[24px] md:px-[24px] lg:px-[24px] xl:px-[60px] 2xl:px-[240px]">
-        <div className="grid grid-cols-1 xlmid:grid-cols-4 md:grid-cols-2 sm:grid-cols-1">
+        <div className="grid grid-cols-1 xlmid:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
                     {/* Card 1 */}
-          <div className="flex justify-center xlmid:border-r xlmid:border-white/20 ">
-            <StatCard
-              iconSrc="/images/aboutus/experience.svg"
-              value="Next-Gen"
-              label="AI & Quantum"
-            />
-          </div>
+                      <div className="flex justify-center xlmid:border-r xlmid:border-white/20 ">
+                <StatCard
+                  iconSrc="/images/aboutus/experience.svg"
+                  value="78%"
+                  label="Regular AI Users"
+                />
+              </div>
 
-          {/* Card 2 */}
-          <div className="flex justify-center xlmid:border-r xlmid:border-white/20">
-            <StatCard
-              iconSrc="/images/aboutus/project3.svg"
-              value="Global"
-              label="Tech Ecosystems"
-            />
-          </div>
+              {/* Card 2 */}
+              <div className="flex justify-center xlmid:border-r xlmid:border-white/20">
+                <StatCard
+                  iconSrc="/images/aboutus/project3.svg"
+                  value="68.8%"
+                  label="Have taken AI courses"
+                />
+              </div>
 
-          {/* Card 3 */}
-          <div className="flex justify-center xlmid:border-r xlmid:border-white/20">
-            <StatCard
-              iconSrc="/images/aboutus/product.svg"
-              value="13"
-              label="Specialized Sectors"
-            />
-          </div>
-
-          {/* Card 4 */}
-          <div className="flex justify-center">
-            <StatCard
-              iconSrc="/images/aboutus/client.svg"
-              value="Scalable"
-              label="Digital Solutions"
-            />
-          </div>
+              {/* Card 3 */}
+              <div className="flex justify-center xlmid:border-r xlmid:border-white/20">
+                <StatCard
+                  iconSrc="/images/aboutus/product.svg"
+                  value="59.4%"
+                  label="Prefer Online Learning"
+                />
+              </div>
         </div>
       </div>
     </section>

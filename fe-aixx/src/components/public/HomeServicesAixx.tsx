@@ -133,13 +133,13 @@ const HomeServicesAixx: React.FC<HomeServicesProps> = ({ isHomePage = true }) =>
           <div className="max-w-4xl mx-auto text-center mb-14">
             <div className="flex items-center justify-center gap-2 mb-3 text-brand-600">
               <FaAtom className="animate-[spin_4s_linear_infinite]" />
-              <p className="text-base sm:text-lg font-semibold uppercase tracking-wider m-0">Advanced Tech Sectors</p>
+              <p className="text-base sm:text-lg font-semibold uppercase tracking-wider m-0">AI Training & Learning Tracks</p>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#191E42] leading-tight">
-              AIXX: A Futuristic Technology Ecosystem
+              Practical AI training for every role and industry
             </h2>
             <p className="mt-5 text-base sm:text-lg text-[#4B5563] max-w-3xl mx-auto">
-              We act as a technology integrator, combining AI, Quantum, and modern infrastructure into real-world solutions across critical high-tech industries.
+              Discover AIXX’s learning pathways for executives, developers, and enterprise teams — from generative AI to applied automation and certification-ready skill training.
             </p>
           </div>
         )}

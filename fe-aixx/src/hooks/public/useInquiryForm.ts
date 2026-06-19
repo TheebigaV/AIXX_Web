@@ -12,7 +12,6 @@ export function useInquiryForm(onSuccess?: () => void) {
         customer_phone: "",
         service_interest: "",
         industry_type: "",
-        budget_timeline: "",
         message: "",
     });
 
@@ -33,7 +32,6 @@ export function useInquiryForm(onSuccess?: () => void) {
             customer_phone: "",
             service_interest: "",
             industry_type: "",
-            budget_timeline: "",
             message: "",
         });
         setErrors({});
@@ -52,7 +50,7 @@ export function useInquiryForm(onSuccess?: () => void) {
         if (!formData.customer_phone.trim()) newErrors.customer_phone = "Phone number is required";
         if (!formData.service_interest.trim()) newErrors.service_interest = "Service interest is required";
         if (!formData.industry_type.trim()) newErrors.industry_type = "Industry/business type is required";
-        if (!formData.budget_timeline.trim()) newErrors.budget_timeline = "Budget or timeline is required";
+
         if (!formData.message.trim()) newErrors.message = "Tell us your requirement or problem";
 
         setErrors(newErrors);
