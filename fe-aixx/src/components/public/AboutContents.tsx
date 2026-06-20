@@ -11,7 +11,7 @@ interface StatCardProps {
 
 const StatCard: React.FC<StatCardProps> = ({ iconSrc, value, label }) => {
   return (
-    <div className="flex items-center gap-4 w-full px-2 sm:px-[32px] py-[22px]">
+    <div className="flex items-center gap-4 w-full px-2 sm:px-[32px] py-[22px] bg-[#00062A] rounded-xl">
       {/* Icon inside a white circle */}
       <div className="w-[84px] h-[84px] sm:w-[84px] sm:h-[84px] bg-white flex items-center justify-center shadow-md shrink-0">
         <Image
@@ -28,7 +28,7 @@ const StatCard: React.FC<StatCardProps> = ({ iconSrc, value, label }) => {
 
       {/* Stat text */}
       <div className="text-left">
-        <p className="text-xl sm:text-[24px] md:text-[28px] lg:text-[32px] font-semibold text-white leading-snug">
+        <p className="text-xl sm:text-[24px] md:text-[28px] lg:text-[32px] font-semibold text-green-400 leading-snug">
           {value}
         </p>
         <p className="text-[16px] sm:text-[16px] md:text-[18px] font-medium text-gray-300">
