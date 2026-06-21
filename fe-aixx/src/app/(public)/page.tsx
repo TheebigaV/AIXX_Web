@@ -2,7 +2,7 @@
 
 import React from 'react';
 import HomeBanner from '@/components/public/HomeBanner';
-import StatsSection from '@/components/dashboard/StatsSection';
+
 import HomeAbout from '@/components/public/HomeAbout';
 import HomeServices from '@/components/public/HomeServicesAixx';
 import HomeContact from '@/components/public/HomeContactAixx';
@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
     <div className="w-full">
       {/* Full-width banner */}
       <HomeBanner />
-        <StatsSection />
+        
 
       {/* Other sections (content has its own padding) */}
       <div className="w-full">
