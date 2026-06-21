@@ -164,10 +164,10 @@ const TrainingContent = () => {
           </p>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex flex-col lg:flex-row gap-12 w-full mx-auto">
-          {/* Sidebar Tabs */}
-          <div className="lg:w-1/3 flex flex-col gap-3">
+        {/* Navigation Tabs - horizontal on top */}
+        <div className="flex flex-col w-full mx-auto gap-6">
+          {/* Horizontal tab bar */}
+          <div className="flex gap-4 overflow-x-auto pb-2">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -175,30 +175,22 @@ const TrainingContent = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-4 w-full p-5 rounded-2xl transition-all duration-300 text-left border ${
-                    isActive 
-                      ? 'bg-white border-brand-500 shadow-[0_8px_30px_rgb(0,0,0,0.08)] text-brand-600 transform scale-[1.02]' 
-                      : 'bg-transparent border-transparent hover:bg-slate-100 text-slate-600 hover:text-[#191E42]'
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-600 border border-brand-500 shadow-md'
+                      : 'bg-transparent text-slate-600 hover:bg-slate-100'
                   }`}
                 >
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-colors ${
-                    isActive ? 'bg-brand-50 text-brand-600' : 'bg-slate-200 text-slate-500'
-                  }`}>
-                    <Icon size={20} />
-                  </div>
-                  <span className={`font-bold text-lg ${isActive ? 'text-[#191E42]' : ''}`}>
-                    {tab.label}
-                  </span>
+                  <Icon size={20} />
+                  <span className="font-medium">{tab.label}</span>
                 </button>
               );
             })}
           </div>
 
           {/* Content Area */}
-          <div className="lg:w-2/3">
-            <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100 min-h-[500px] h-full">
-              {renderContent()}
-            </div>
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100 min-h-[500px]">
+            {renderContent()}
           </div>
         </div>
       </div>
