@@ -157,7 +157,7 @@ const TrainingContent = () => {
         {/* Header Area */}
         <div className="text-center w-full mx-auto mb-16">
           <h2 className="text-4xl sm:text-5xl font-bold text-[#191E42] mb-6 tracking-tight">
-            AI Training Designed for Business Outcomes
+            Strategic AI Training Designed for Business Outcomes
           </h2>
           <p className="text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto">
             Explore AIXX’s learning journeys for executives, technical teams, and corporate innovators — from fast workshops to full certification tracks.
