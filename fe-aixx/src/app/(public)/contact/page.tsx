@@ -58,6 +58,7 @@ const ContactPage = () => {
     setError(null);
     resetForm();
   });
+  
 
   React.useEffect(() => {
     if (serverError) {
@@ -73,6 +74,29 @@ const ContactPage = () => {
   };
 
   const clearMessages = () => setError(null);
+
+  // MCQ options derived from site content (services, technologies, training)
+  const SERVICE_OPTIONS = [
+    'Artificial Intelligence',
+    'Quantum Technology',
+    'Cyber Security',
+    'Autonomous Mobility',
+    'Logistics & Transport',
+    'AI Training & Certification',
+    'Other',
+  ];
+
+  // Industry options reflecting sectors referenced across the site
+  const INDUSTRY_OPTIONS = [
+    'Manufacturing',
+    'Finance & Insurance',
+    'Healthcare',
+    'Education',
+    'Retail / Commerce',
+    'Logistics / Transport',
+    'Government / Public Sector',
+    'Other',
+  ];
 
   return (
     <div className="w-full bg-white font-lato">
@@ -136,35 +160,41 @@ const ContactPage = () => {
             )}
 
             <form className="space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
-              {/* Question 1: Service Interest */}
+              {/* Question 1: Service Interest (Select) */}
               <div>
                 <label htmlFor="service_interest" className="text-sm font-semibold text-gray-700">
                   1. What service are you interested in?
                 </label>
-                <input
-                  type="text"
+                <select
                   id="service_interest"
                   value={formData.service_interest}
                   onChange={(e) => handleChange('service_interest', e.target.value)}
-                  placeholder="e.g. Electrical installation, system automation, maintenance"
-                  className={`w-full h-12 px-4 py-2 bg-white border ${errors.service_interest ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent`}
-                />
+                  className={`w-full h-12 mt-2 px-4 py-2 bg-white border ${errors.service_interest ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent rounded-lg`}
+                >
+                  <option value="">Select a service</option>
+                  {SERVICE_OPTIONS.map((opt) => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
                 {errors.service_interest && <p className="text-red-500 text-sm mt-1">{errors.service_interest}</p>}
               </div>
 
-              {/* Question 2: Industry / Business Type */}
+              {/* Question 2: Industry / Business Type (Select) */}
               <div>
                 <label htmlFor="industry_type" className="text-sm font-semibold text-gray-700">
                   2. What is your industry / business type?
                 </label>
-                <input
-                  type="text"
+                <select
                   id="industry_type"
                   value={formData.industry_type}
                   onChange={(e) => handleChange('industry_type', e.target.value)}
-                  placeholder="e.g. Manufacturing, retail, hospitality, education"
-                  className={`w-full h-12 px-4 py-2 bg-white border ${errors.industry_type ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent`}
-                />
+                  className={`w-full h-12 mt-2 px-4 py-2 bg-white border ${errors.industry_type ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent rounded-lg`}
+                >
+                  <option value="">Select an industry</option>
+                  {INDUSTRY_OPTIONS.map((opt) => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
                 {errors.industry_type && <p className="text-red-500 text-sm mt-1">{errors.industry_type}</p>}
               </div>
 
