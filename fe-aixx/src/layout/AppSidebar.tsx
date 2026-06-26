@@ -68,7 +68,15 @@ const navItems: NavItem[] = [
         permission: "products-view", 
         skipPermissionCheck: true,
     },
+    {
+        icon: <TaskIcon />,
+        name: "Enquiries",
+        path: "/admin/inquiries",
+        permission: "inquiries-view",
+        skipPermissionCheck: false,
+    },
 ];
+
 
 const othersItems: NavItem[] = [
     {

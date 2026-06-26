@@ -9,6 +9,7 @@ use Spatie\Permission\Models\Role;
 
 class RoleAndPermissionSeeder extends Seeder
 {
+    
     public function run(): void
     {
         // Reset cached roles and permissions
@@ -17,9 +18,9 @@ class RoleAndPermissionSeeder extends Seeder
         // Create permissions
         $entities = ['users', 'roles', 'categories', 'banners', 'settings', 'training', 'products', 'inquiries'];
         $actions = ['view', 'viewany', 'create', 'update', 'delete'];
-        
+
         $permissions = ['dashboard-view'];
-        
+
         foreach ($entities as $entity) {
             foreach ($actions as $action) {
                 $permissions[] = $entity . '-' . $action;

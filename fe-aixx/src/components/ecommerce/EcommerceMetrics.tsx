@@ -4,14 +4,17 @@ import Badge from "../ui/badge/Badge";
 import { ArrowDownIcon, ArrowUpIcon, BoxIconLine, GroupIcon } from "@/icons";
 import { useSettings } from "@/hooks/useSettings";
 import { useDashboard } from "@/hooks/useDashboard";
-import Can from "../permissions/Can";
+import { useAuth } from "@/context/AuthContext";
+import { hasPermission } from "@/hooks/usePermission";
 
 export const EcommerceMetrics = () => {
+  const { user } = useAuth();
   const { metrics, loading: dashLoading, error } = useDashboard();
   const { settings, loading: setLoading } = useSettings();
 
   const loading = dashLoading || setLoading;
 
+  
   const getIcon = (iconType: string) => {
     switch (iconType) {
       case "group":
@@ -66,37 +69,44 @@ export const EcommerceMetrics = () => {
   }
 
   const metricsArray = [
-    { label: "Products", value: metrics.products?.value || 0, icon: "box", permission: "products-viewany" },
-    { label: "Enquiries", value: metrics.enquiries?.value || 0, icon: "group", permission: "enquiries-view" },
-    { label: "Categories", value: metrics.categories?.value || 0, icon: "box", permission: "categories-view" },
-    { label: "Banners", value: metrics.banners?.value || 0, icon: "box", permission: "banners-viewany" },
-    { label: "Users", value: metrics.users?.value || 0, icon: "group", permission: "users-view" },
-    { label: "Trainings", value: metrics.trainings?.value || 0, icon: "box", permission: "training-view" },
+    { label: "Products", value: metrics.products?.value || 0, icon: "box", permission: "products-viewany", link: "/admin/products" },
+    { label: "Enquiries", value: metrics.enquiries?.value || 0, icon: "group", permission: "inquiries-view", link: "/admin/inquiries" },
+    { label: "Categories", value: metrics.categories?.value || 0, icon: "box", permission: "categories-view", link: "/admin/categories" },
+    { label: "Banners", value: metrics.banners?.value || 0, icon: "box", permission: "banners-viewany", link: "/admin/banners" },
+    { label: "Users", value: metrics.users?.value || 0, icon: "group", permission: "users-view", link: "/admin/users" },
+    { label: "Trainings", value: metrics.trainings?.value || 0, icon: "box", permission: "training-view", link: "/admin/training" },
   ];
 
   return (
     <div className="w-full px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 md:gap-6">
-      {metricsArray.map((metric, index) => (
-        <Can key={index} permission={metric.permission}>
-          <div
-            className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6"
-          >
-            <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-              {getIcon(metric.icon)}
-            </div>
-            <div className="flex items-end justify-between mt-5">
-              <div>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {metric.label}
-                </span>
-                <h4 className={`mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90 ${metric.value === 'Active' ? 'text-green-500' : metric.value === 'Inactive' ? 'text-gray-400' : ''}`}>
-                  {formatValue(metric.value)}
-                </h4>
+
+      {metricsArray.map((metric, index) => {
+        const canAccess = hasPermission(user, metric.permission);
+        
+        if (!canAccess) return null;
+        
+        return (
+          <a key={index} href={metric.link} className="block">
+            <div
+              className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6 hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-700 cursor-pointer transition-all"
+            >
+              <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
+                {getIcon(metric.icon)}
+              </div>
+              <div className="flex items-end justify-between mt-5">
+                <div>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    {metric.label}
+                  </span>
+                  <h4 className={`mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90 ${metric.value === 'Active' ? 'text-green-500' : metric.value === 'Inactive' ? 'text-gray-400' : ''}`}>
+                    {formatValue(metric.value)}
+                  </h4>
+                </div>
               </div>
             </div>
-          </div>
-        </Can>
-      ))}
+          </a>
+        );
+      })}
     </div>
   );
 };
