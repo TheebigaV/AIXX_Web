@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\SetupPermissionsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
@@ -17,14 +18,15 @@ use App\Http\Controllers\Admin\ProductController;
 
 
 
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::get('/setup-permissions', [SetupPermissionsController::class, 'setup'])->middleware('auth:sanctum');
+Route::get('/setup-permissions-now', [SetupPermissionsController::class, 'setupNoAuth']);
+
 Route::get('/banners/latest', [BannerController::class, 'latestPublic']);
-
-Route::get('admin/dashboard/metrics', [DashboardController::class, 'metrics']);
-
 
 Route::middleware('guest')->group(function () {
     Route::post('/forgot-password', [AuthController::class, 'forgot']);
@@ -45,6 +47,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::prefix('admin')->group(function () {
+
+        Route::get('dashboard/metrics', [DashboardController::class, 'metrics']);
+
+        Route::get('inquiries/all', [InquiryController::class, 'all']);
+        Route::apiResource('inquiries', InquiryController::class)->only(['index', 'show', 'destroy']);
+        Route::post('inquiries/{inquiry}/reply', [InquiryController::class, 'sendReply']);
 
         // Roles & Permissions
         Route::get('roles/all', [RoleController::class, 'all']);

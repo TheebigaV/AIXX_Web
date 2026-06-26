@@ -13,7 +13,8 @@ import ConfirmDeleteModal from "@/components/ui/modal/ConfirmDeleteModal";
 import { toast } from "react-toastify";
 import Pagination from "@/components/tables/Pagination";
 import useInquiries from "@/hooks/inquiry/useInquiries";
-import Can from "../permissions/Can";
+import { sendInquiryReply } from "@/lib/admin/inquiryReply";
+
 
 export default function InquiryTableOne() {
   const {
@@ -31,9 +32,13 @@ export default function InquiryTableOne() {
   } = useInquiries();
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showReplyModal, setShowReplyModal] = useState(false);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [enquiryToDelete, setEnquiryToDelete] = useState<string | null>(null);
+  const [selectedInquiry, setSelectedInquiry] = useState<any>(null);
+  const [replyMessage, setReplyMessage] = useState("");
+  const [replySending, setReplySending] = useState(false);
 
   useEffect(() => {
     loadInquiries(page, perPage);
@@ -43,7 +48,6 @@ export default function InquiryTableOne() {
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
         <div className="max-w-full overflow-x-auto">
           <div className="min-w-[700px]">
-            <Can permission="enquiries-view">
             <Table>
               {/* Table Header */}
               <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
@@ -98,18 +102,29 @@ export default function InquiryTableOne() {
                             )}
                           </TableCell>
                           <TableCell className="px-4 py-3 text-center text-theme-sm dark:text-gray-400">
-                            <Can permission="enquiries-delete">
-                            <button
-                                onClick={() => {
-                                  setEnquiryToDelete(inquiry.id);
-                                  setShowConfirmModal(true);
-                                }}
-                                className="text-red-500 hover:text-red-700"
-                                title="Delete"
-                            >
-                              <TrashBinIcon />
-                            </button>
-                            </Can>
+                            <div className="flex justify-center gap-2">
+                              <button
+                                  onClick={() => {
+                                    setSelectedInquiry(inquiry);
+                                    setReplyMessage("");
+                                    setShowReplyModal(true);
+                                  }}
+                                  className="text-blue-500 hover:text-blue-700"
+                                  title="Send Reply"
+                              >
+                                ✎
+                              </button>
+                              <button
+                                  onClick={() => {
+                                    setEnquiryToDelete(inquiry.id);
+                                    setShowConfirmModal(true);
+                                  }}
+                                  className="text-red-500 hover:text-red-700"
+                                  title="Delete"
+                              >
+                                <TrashBinIcon />
+                              </button>
+                            </div>
                           </TableCell>
                         </TableRow>
                     ))
@@ -122,7 +137,6 @@ export default function InquiryTableOne() {
                 )}
               </TableBody>
             </Table>
-            </Can>
           </div>
 
           {/* Pagination */}
@@ -165,6 +179,76 @@ export default function InquiryTableOne() {
               title="Are you sure?"
               message="This will permanently delete the inquiry."
           />
+
+          {/* Reply Modal */}
+          {showReplyModal && selectedInquiry && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                <div className="w-full max-w-2xl rounded-lg bg-white p-6 dark:bg-gray-800">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h2 className="text-xl font-bold">Send Reply</h2>
+                    <button
+                        onClick={() => setShowReplyModal(false)}
+                        className="text-gray-500 hover:text-gray-700"
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  <div className="mb-4 space-y-2 rounded bg-gray-100 p-3 dark:bg-gray-700">
+                    <p><strong>From:</strong> {selectedInquiry.name} ({selectedInquiry.email})</p>
+                    <p><strong>Original Message:</strong> {selectedInquiry.message}</p>
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-2">Your Reply</label>
+                    <textarea
+                        value={replyMessage}
+                        onChange={(e) => setReplyMessage(e.target.value)}
+                        className="w-full rounded border border-gray-300 p-3 dark:bg-gray-700 dark:border-gray-600"
+                        rows={5}
+                        placeholder="Type your reply here..."
+                    />
+                  </div>
+
+                  <div className="flex justify-end gap-2">
+                    <button
+                        onClick={() => setShowReplyModal(false)}
+                        className="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                        onClick={async () => {
+                          if (!replyMessage.trim()) {
+                            toast.error("Reply message cannot be empty");
+                            return;
+                          }
+                          setReplySending(true);
+                          try {
+                            await sendInquiryReply(selectedInquiry.id, replyMessage);
+                            toast.success("Reply sent successfully");
+                            setShowReplyModal(false);
+                            setReplyMessage("");
+                            loadInquiries(page, perPage);
+                          } catch (error: any) {
+                            toast.error(
+                                error?.response?.data?.message ||
+                                error?.message ||
+                                "Failed to send reply"
+                            );
+                          } finally {
+                            setReplySending(false);
+                          }
+                        }}
+                        disabled={replySending}
+                        className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50"
+                    >
+                      {replySending ? "Sending..." : "Send Reply"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+          )}
         </div>
       </div>
   );

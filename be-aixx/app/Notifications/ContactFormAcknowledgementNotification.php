@@ -3,43 +3,69 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ContactFormAcknowledgementNotification extends Notification
+
+class ContactFormAcknowledgementNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected array $data;
+    protected array $contactData;
 
-    public function __construct(array $data)
+    /**
+     * Create a new notification instance.
+     */
+    public function __construct(array $contactData)
     {
-        $this->data = $data;
+        $this->contactData = $contactData;
     }
 
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @return array<int, string>
+     */
     public function via(object $notifiable): array
     {
         return ['mail'];
     }
 
+    /**
+     * Get the mail representation of the notification.
+     */
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('AIXX: We received your message')
-            ->greeting('Hello ' . ($this->data['name'] ?? 'there') . ',')
-            ->line('Thank you for contacting AIXX. We have received your message and one of our team members will get back to you shortly.')
-            ->line('Here is a copy of your submission:')
-            ->line('Service Interest: ' . ($this->data['service_interest'] ?? 'N/A'))
-            ->line('Industry Type: ' . ($this->data['industry_type'] ?? 'N/A'))
-            ->line('Timeline: ' . ($this->data['budget_timeline'] ?? 'N/A'))
-            ->line('Message: ' . ($this->data['message'] ?? ''))
-            ->line('If you need urgent assistance, feel free to reply directly to this email.')
-            ->line('Thanks again for reaching out to AIXX.')
-            ->salutation('Best regards,')->salutation('AIXX Support Team');
+            ->subject('We received your message - AIXX')
+            ->greeting("Hello {$this->contactData['name']},")
+            ->line('Thank you for reaching out to us. We have received your inquiry and will get back to you as soon as possible.')
+            ->line('')
+            ->line('Here is a summary of your submission:')
+            ->line('**Service Interest:** ' . $this->contactData['service_interest'])
+            ->line('**Industry Type:** ' . $this->contactData['industry_type'])
+            ->line('**Budget Timeline:** ' . $this->contactData['budget_timeline'])
+            ->line('')
+            ->line('**Your Message:**')
+            ->line($this->contactData['message'])
+            ->line('')
+            ->line('Our team will review your inquiry and contact you shortly.')
+            ->line('If you have any urgent questions, please feel free to contact us directly.')
+            ->salutation('Best regards, AIXX Team');
     }
 
+    /**
+     * Get the array representation of the notification.
+     *
+     * @return array<string, mixed>
+     */
     public function toArray(object $notifiable): array
     {
-        return $this->data;
+        return [
+            'customer_name' => $this->contactData['name'],
+            'customer_email' => $this->contactData['email'],
+            'service_interest' => $this->contactData['service_interest'],
+        ];
     }
 }
