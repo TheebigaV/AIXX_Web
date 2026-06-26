@@ -75,8 +75,8 @@ const ContactPage = () => {
 
   const clearMessages = () => setError(null);
 
-  // MCQ options derived from site content (services, technologies, training)
-  const SERVICE_OPTIONS = [
+  // Load service and industry options from site settings (comma-separated), else fallback to defaults
+  const defaultServiceOptions = [
     'Artificial Intelligence',
     'Quantum Technology',
     'Cyber Security',
@@ -86,8 +86,7 @@ const ContactPage = () => {
     'Other',
   ];
 
-  // Industry options reflecting sectors referenced across the site
-  const INDUSTRY_OPTIONS = [
+  const defaultIndustryOptions = [
     'Manufacturing',
     'Finance & Insurance',
     'Healthcare',
@@ -97,6 +96,18 @@ const ContactPage = () => {
     'Government / Public Sector',
     'Other',
   ];
+
+  // Settings keys: `contact_services_list` and `contact_industries_list` (comma-separated values)
+  const servicesSetting = getSetting('contact_services_list');
+  const industriesSetting = getSetting('contact_industries_list');
+
+  const SERVICE_OPTIONS = servicesSetting
+    ? servicesSetting.split(',').map((s: string) => s.trim()).filter(Boolean)
+    : defaultServiceOptions;
+
+  const INDUSTRY_OPTIONS = industriesSetting
+    ? industriesSetting.split(',').map((s: string) => s.trim()).filter(Boolean)
+    : defaultIndustryOptions;
 
   return (
     <div className="w-full bg-white font-lato">
@@ -198,7 +209,27 @@ const ContactPage = () => {
                 {errors.industry_type && <p className="text-red-500 text-sm mt-1">{errors.industry_type}</p>}
               </div>
 
-              {/* Question 3: Requirement or Problem */}
+              <div>
+                <label htmlFor="budget_timeline" className="text-sm font-semibold text-gray-700">
+                  3. What is your expected timeline?
+                </label>
+                <select
+                  id="budget_timeline"
+                  value={formData.budget_timeline}
+                  onChange={(e) => handleChange('budget_timeline', e.target.value)}
+                  className={`w-full h-12 mt-2 px-4 py-2 bg-white border ${errors.budget_timeline ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent rounded-lg`}
+                >
+                  <option value="">Select timeline</option>
+                  <option value="Within 1 month">Within 1 month</option>
+                  <option value="1-3 months">1-3 months</option>
+                  <option value="3-6 months">3-6 months</option>
+                  <option value="More than 6 months">More than 6 months</option>
+                  <option value="Planning / not sure yet">Planning / not sure yet</option>
+                </select>
+                {errors.budget_timeline && <p className="text-red-500 text-sm mt-1">{errors.budget_timeline}</p>}
+              </div>
+
+              {/* Question 4: Requirement or Problem */}
               <div>
                 <label htmlFor="message" className="text-sm font-semibold text-gray-700">
                   3. What is your requirement or problem?
@@ -270,7 +301,7 @@ const ContactPage = () => {
                 disabled={loading}
                 className={`Lato ${loading ? '' : 'beveled-corner4'} w-full flex justify-center items-center py-3 px-4 border border-transparent shadow-sm text-sm font-medium text-white ${loading ? 'bg-[#191E42]' : 'bg-brand-500 hover:bg-[#182166]'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900 transition-colors duration-200`}
               >
-                {loading ? 'Sending...' : 'Submit Service Request'}
+                {loading ? 'Sending...' : 'Submit'}
                 <FaBolt className="ml-2 text-white" />
               </button>
             </form>

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inquiry;
+use App\Notifications\ContactFormNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class InquiryController extends Controller
 {
@@ -30,6 +32,17 @@ class InquiryController extends Controller
             'budget_timeline' => $validated['budget_timeline'],
             'message' => $validated['message'],
         ]);
+
+        Notification::route('mail', 'cs@aixx.com.sg')
+            ->notify(new ContactFormNotification([
+                'name' => $validated['customer_name'],
+                'email' => $validated['customer_email'],
+                'mobile' => $validated['customer_phone'],
+                'service_interest' => $validated['service_interest'],
+                'industry_type' => $validated['industry_type'],
+                'budget_timeline' => $validated['budget_timeline'],
+                'message' => $validated['message'],
+            ]));
 
         return response()->json([
             'message' => 'Inquiry received',

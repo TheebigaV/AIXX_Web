@@ -28,6 +28,7 @@ export default function EnquiryFormModal({ visible, onClose, productTitle, produ
     handleChange("customer_name", "");
     handleChange("customer_phone", "");
     handleChange("customer_email", "");
+    handleChange("budget_timeline", "");
     handleChange("message", "");
   });
 
@@ -120,6 +121,25 @@ export default function EnquiryFormModal({ visible, onClose, productTitle, produ
                 disabled={loading}
               />
               {errors.customer_email && <p className="text-red-500 text-sm mt-1">{errors.customer_email}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="budget_timeline" className="sr-only">Timeline</label>
+              <select
+                id="budget_timeline"
+                value={formData.budget_timeline}
+                onChange={(e) => handleChange("budget_timeline", e.target.value)}
+                className={`w-full px-4 py-3 border ${errors.budget_timeline ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed`}
+                disabled={loading}
+              >
+                <option value="">Select timeline</option>
+                <option value="Within 1 month">Within 1 month</option>
+                <option value="1-3 months">1-3 months</option>
+                <option value="3-6 months">3-6 months</option>
+                <option value="More than 6 months">More than 6 months</option>
+                <option value="Planning / not sure yet">Planning / not sure yet</option>
+              </select>
+              {errors.budget_timeline && <p className="text-red-500 text-sm mt-1">{errors.budget_timeline}</p>}
             </div>
 
             <div>
