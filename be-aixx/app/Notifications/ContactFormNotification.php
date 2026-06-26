@@ -35,15 +35,27 @@ class ContactFormNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $mail = (new MailMessage)
-            ->line('New Contact Form Submission')
+            ->subject('New Contact Form Submission')
             ->greeting('Hello!')
             ->line('You have a new contact form submission.')
-            ->line('Name: ' . $this->data['name'])
-            ->line('Email: ' . $this->data['email']);
+            ->line('Name: ' . ($this->data['name'] ?? '-'))
+            ->line('Email: ' . ($this->data['email'] ?? '-'));
+
         if (!empty($this->data['mobile'])) {
             $mail->line('Mobile: ' . $this->data['mobile']);
         }
-        $mail->line('Message: ' . $this->data['message'])
+
+        if (!empty($this->data['service_interest'])) {
+            $mail->line('Service Interest: ' . $this->data['service_interest']);
+        }
+        if (!empty($this->data['industry_type'])) {
+            $mail->line('Industry Type: ' . $this->data['industry_type']);
+        }
+        if (!empty($this->data['budget_timeline'])) {
+            $mail->line('Budget / Timeline: ' . $this->data['budget_timeline']);
+        }
+
+        $mail->line('Message: ' . ($this->data['message'] ?? '-'))
             ->line('Thank you!');
 
         return $mail;
