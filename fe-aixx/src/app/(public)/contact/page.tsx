@@ -301,7 +301,7 @@ const ContactPage = () => {
                 disabled={loading}
                 className={`Lato ${loading ? '' : 'beveled-corner4'} w-full flex justify-center items-center py-3 px-4 border border-transparent shadow-sm text-sm font-medium text-white ${loading ? 'bg-[#191E42]' : 'bg-brand-500 hover:bg-[#182166]'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900 transition-colors duration-200`}
               >
-                {loading ? 'Sending...' : 'Submit Service Request'}
+                {loading ? 'Sending...' : 'Submit'}
                 <FaBolt className="ml-2 text-white" />
               </button>
             </form>
