@@ -89,7 +89,7 @@ export const EcommerceMetrics = () => {
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {metric.label}
                 </span>
-                <h4 className={`mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90 ${metric.value === 'Active' ? 'text-green-500' : metric.value === 'Inactive' ? 'text-gray-400' : ''}`}>
+                <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
                   {formatValue(metric.value)}
                 </h4>
               </div>
