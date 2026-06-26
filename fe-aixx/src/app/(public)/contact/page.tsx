@@ -209,7 +209,27 @@ const ContactPage = () => {
                 {errors.industry_type && <p className="text-red-500 text-sm mt-1">{errors.industry_type}</p>}
               </div>
 
-              {/* Question 3: Requirement or Problem */}
+              <div>
+                <label htmlFor="budget_timeline" className="text-sm font-semibold text-gray-700">
+                  3. What is your expected timeline?
+                </label>
+                <select
+                  id="budget_timeline"
+                  value={formData.budget_timeline}
+                  onChange={(e) => handleChange('budget_timeline', e.target.value)}
+                  className={`w-full h-12 mt-2 px-4 py-2 bg-white border ${errors.budget_timeline ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent rounded-lg`}
+                >
+                  <option value="">Select timeline</option>
+                  <option value="Within 1 month">Within 1 month</option>
+                  <option value="1-3 months">1-3 months</option>
+                  <option value="3-6 months">3-6 months</option>
+                  <option value="More than 6 months">More than 6 months</option>
+                  <option value="Planning / not sure yet">Planning / not sure yet</option>
+                </select>
+                {errors.budget_timeline && <p className="text-red-500 text-sm mt-1">{errors.budget_timeline}</p>}
+              </div>
+
+              {/* Question 4: Requirement or Problem */}
               <div>
                 <label htmlFor="message" className="text-sm font-semibold text-gray-700">
                   3. What is your requirement or problem?
