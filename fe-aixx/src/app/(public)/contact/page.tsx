@@ -75,8 +75,8 @@ const ContactPage = () => {
 
   const clearMessages = () => setError(null);
 
-  // MCQ options derived from site content (services, technologies, training)
-  const SERVICE_OPTIONS = [
+  // Load service and industry options from site settings (comma-separated), else fallback to defaults
+  const defaultServiceOptions = [
     'Artificial Intelligence',
     'Quantum Technology',
     'Cyber Security',
@@ -86,8 +86,7 @@ const ContactPage = () => {
     'Other',
   ];
 
-  // Industry options reflecting sectors referenced across the site
-  const INDUSTRY_OPTIONS = [
+  const defaultIndustryOptions = [
     'Manufacturing',
     'Finance & Insurance',
     'Healthcare',
@@ -97,6 +96,18 @@ const ContactPage = () => {
     'Government / Public Sector',
     'Other',
   ];
+
+  // Settings keys: `contact_services_list` and `contact_industries_list` (comma-separated values)
+  const servicesSetting = getSetting('contact_services_list');
+  const industriesSetting = getSetting('contact_industries_list');
+
+  const SERVICE_OPTIONS = servicesSetting
+    ? servicesSetting.split(',').map((s: string) => s.trim()).filter(Boolean)
+    : defaultServiceOptions;
+
+  const INDUSTRY_OPTIONS = industriesSetting
+    ? industriesSetting.split(',').map((s: string) => s.trim()).filter(Boolean)
+    : defaultIndustryOptions;
 
   return (
     <div className="w-full bg-white font-lato">
