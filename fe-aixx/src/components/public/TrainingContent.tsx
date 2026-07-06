@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaGraduationCap, FaChalkboardTeacher, FaLaptopCode, FaCertificate, FaCheckCircle, FaNewspaper, FaImages, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { fetchPublicTrainings } from '@/lib/training';
+import CourseCatalog from '@/components/public/CourseCatalog';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -29,26 +30,51 @@ interface TrainingItem {
   } | null;
 }
 
-const TrainingContent = () => {
-  const [activeTab, setActiveTab] = useState(tabs[0].id);
+interface TrainingContentProps {
+  defaultTab?: string;
+}
+
+const TrainingContent = ({ defaultTab = tabs[0].id }: TrainingContentProps) => {
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const [trainings, setTrainings] = useState<TrainingItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchPublicTrainings()
+    setActiveTab(defaultTab);
+  }, [defaultTab]);
+
+  useEffect(() => {
+    setLoading(true);
+
+    // For media gallery and newsletters we fetch all and filter client-side,
+    // otherwise request the server with a `type` param so the API returns only relevant items.
+    const fetchPromise = activeTab === 'media_gallery' || activeTab === 'newsletters'
+      ? fetchPublicTrainings()
+      : fetchPublicTrainings(activeTab);
+
+    fetchPromise
       .then((res) => {
         const payload = res.data.data || res.data;
-        setTrainings(Array.isArray(payload) ? payload : []);
+        // Ensure we always work with an array
+        const items = Array.isArray(payload) ? payload : [];
+
+        // If server returned all trainings (no type filter), filter here for tabs that have types
+        if (activeTab === 'media_gallery') {
+          setTrainings(items.filter(item => item.image?.url));
+        } else if (activeTab === 'newsletters') {
+          setTrainings(items.filter(item => item.type === 'newsletters' || item.type === 'newsletter'));
+        } else {
+          setTrainings(items);
+        }
       })
       .catch((err) => {
         console.error('Failed to fetch trainings:', err);
+        setTrainings([]);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
-
-  const filteredItems = trainings.filter((item) => item.type === activeTab);
+  }, [activeTab]);
 
   const renderContent = () => {
     if (loading) {
@@ -60,6 +86,10 @@ const TrainingContent = () => {
     }
 
     const currentTab = tabs.find(t => t.id === activeTab);
+
+    if (activeTab === 'courses') {
+      return <CourseCatalog />;
+    }
     
     if (activeTab === 'media_gallery') {
       const defaultGallery = [
@@ -68,7 +98,7 @@ const TrainingContent = () => {
         { src: '/images/gallery/award.png', alt: 'Award Presentation', title: 'Award Presentation Ceremony' },
       ];
 
-      const dynamicGallery = filteredItems.filter(item => item.image?.url).map(item => ({
+      const dynamicGallery = trainings.filter(item => item.image?.url).map(item => ({
         src: item.image!.url,
         alt: item.name,
         title: item.name
@@ -124,9 +154,9 @@ const TrainingContent = () => {
     return (
       <div className="animate-fade-in-up">
         <h3 className="text-3xl font-bold text-[#191E42] mb-6">{currentTab?.label}</h3>
-        {filteredItems.length > 0 ? (
+        {trainings.length > 0 ? (
           <div className="grid md:grid-cols-2 gap-6 mb-8">
-            {filteredItems.map((item) => (
+            {trainings.map((item) => (
               <div key={item.id} className="bg-brand-50 p-6 rounded-2xl border border-brand-100 flex items-start gap-4">
                 {item.image?.url ? (
                   <img src={item.image.url} alt={item.name} className="w-12 h-12 rounded-xl object-cover shrink-0" />

@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TrainingController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\CourseController;
 
 
 
@@ -93,6 +94,7 @@ Route::get('categories/{slug}/by-slug', [\App\Http\Controllers\Guest\CategoryCon
 Route::get('categories/all', [\App\Http\Controllers\Guest\CategoryController::class, 'all']);
 Route::get('categories', [\App\Http\Controllers\Guest\CategoryController::class,'index']);
 Route::get('trainings/all', [\App\Http\Controllers\Guest\TrainingController::class, 'all']);
+Route::get('courses', [CourseController::class, 'index']);
 Route::get('trainings', [\App\Http\Controllers\Guest\TrainingController::class, 'index']);
 Route::post('inquiries', [\App\Http\Controllers\Guest\InquiryController::class, 'store']);
 Route::post('submit-contact-form', [\App\Http\Controllers\Guest\InquiryController::class, 'submitContact']);
