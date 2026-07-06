@@ -16,6 +16,11 @@ class TrainingResource extends JsonResource
             'slug' => $this->slug,
             'type' => $this->type,
             'description' => $this->description,
+            'duration' => $this->duration,
+            'sub_modules' => $this->sub_modules,
+            'domestic_fee' => $this->domestic_fee,
+            'international_fee' => $this->international_fee,
+            'highlights' => $this->highlights,
             'is_active' => $this->is_active,
             'image'=> new DocumentResource($this->image) ?? null,
         ];

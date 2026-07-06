@@ -8,7 +8,9 @@ export const api = axios.create({
     'Accept': 'application/json',
     'Content-Type': 'application/json',
   },
-  timeout: 15000,
+  // Increase timeout for slower local/back-end responses
+  // to reduce spurious Axios timeout errors during development.
+  timeout: 30000,
 });
 
 // Add token to requests if it exists

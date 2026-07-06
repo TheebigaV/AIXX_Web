@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -19,12 +20,26 @@ class Training extends Model
         'slug',
         'type',
         'description',
+        'duration',
+        'sub_modules',
+        'domestic_fee',
+        'international_fee',
+        'highlights',
         'is_active'
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $training): void {
+            if (empty($training->slug)) {
+                $training->slug = Str::slug($training->name);
+            }
+        });
+    }
 
     public function getActivitylogOptions(): LogOptions
     {

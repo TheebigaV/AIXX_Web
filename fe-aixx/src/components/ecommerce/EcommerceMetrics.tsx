@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import Badge from "../ui/badge/Badge";
-import { ArrowDownIcon, ArrowUpIcon, BoxIconLine, GroupIcon } from "@/icons";
+import { BoxIconLine, GroupIcon } from "@/icons";
 import { useSettings } from "@/hooks/useSettings";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useAuth } from "@/context/AuthContext";
@@ -10,7 +9,7 @@ import { hasPermission } from "@/hooks/usePermission";
 export const EcommerceMetrics = () => {
   const { user } = useAuth();
   const { metrics, loading: dashLoading, error } = useDashboard();
-  const { settings, loading: setLoading } = useSettings();
+  const { loading: setLoading } = useSettings();
 
   const loading = dashLoading || setLoading;
 

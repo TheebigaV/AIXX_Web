@@ -31,6 +31,29 @@ class StoreTrainingRequest extends FormRequest
                 'nullable',
                 'string',
             ],
+            'duration' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+            'sub_modules' => [
+                'nullable',
+                'string',
+            ],
+            'domestic_fee' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+            'international_fee' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+            'highlights' => [
+                'nullable',
+                'string',
+            ],
             'is_active' => [
                 'nullable',
                 'boolean',

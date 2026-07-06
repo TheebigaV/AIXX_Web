@@ -10,6 +10,11 @@ export const useTrainingForm = (trainingId?: string, onSuccess?: () => void) => 
     name: "",
     type: "seminars",
     description: "",
+    duration: "",
+    sub_modules: "",
+    domestic_fee: "",
+    international_fee: "",
+    highlights: "",
     image: null,
     is_active: false,
   });

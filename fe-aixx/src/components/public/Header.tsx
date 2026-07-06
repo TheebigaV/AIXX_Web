@@ -37,7 +37,9 @@ const Header = () => {
 
   const navLinkClass = (href: string) =>
     `hover:text-brand-500 transition-colors ${
-      pathname === href || (href === "/product" && pathname?.startsWith("/product/"))
+      pathname === href ||
+      (href === "/training-and-certification" && pathname?.startsWith("/training-and-certification")) ||
+      (href === "/product" && pathname?.startsWith("/product/"))
         ? "text-brand-500 font-semibold"
         : ""
     }`;
@@ -95,15 +97,62 @@ const Header = () => {
                   Technologies
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/training-and-certification"
-                  onClick={handleNavClick}
-                  className={`${navLinkClass("/training-and-certification")} whitespace-nowrap`}
-                  aria-current={pathname === "/training-and-certification" ? "page" : undefined}
-                >
-                  AI Training
-                </Link>
+              <li className="relative group">
+                <div className="inline-flex items-center gap-1">
+                  <Link
+                    href="/training-and-certification"
+                    onClick={handleNavClick}
+                    className={`${navLinkClass("/training-and-certification")} whitespace-nowrap inline-flex items-center gap-1`}
+                    aria-current={pathname === "/training-and-certification" ? "page" : undefined}
+                  >
+                    AI Training
+                    <span className="text-[10px] text-slate-500">▾</span>
+                  </Link>
+                </div>
+                <div className="invisible absolute left-0 top-full z-40 mt-3 w-52 rounded-3xl border border-slate-200 bg-white p-4 shadow-xl transition-all duration-200 group-hover:visible group-hover:block">
+                  <Link
+                    href="/training-and-certification/seminars"
+                    onClick={handleNavClick}
+                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100"
+                  >
+                    Seminars
+                  </Link>
+                  <Link
+                    href="/training-and-certification/workshops"
+                    onClick={handleNavClick}
+                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100"
+                  >
+                    Workshops
+                  </Link>
+                  <Link
+                    href="/training-and-certification/courses"
+                    onClick={handleNavClick}
+                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100"
+                  >
+                    Courses
+                  </Link>
+                  <Link
+                    href="/training-and-certification/newsletters"
+                    onClick={handleNavClick}
+                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100"
+                  >
+                    Latest Technology News
+                  </Link>
+                  <Link
+                    href="/training-and-certification/media-gallery"
+                    onClick={handleNavClick}
+                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100"
+                  >
+                    Training Media Gallery
+                  </Link>
+                  <Link
+                    href="/training-and-certification/certification"
+                    onClick={handleNavClick}
+                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100"
+                  >
+                    Skill Training & Certification
+                  </Link>
+                </div>
               </li>
               <li>
                 <Link
@@ -186,6 +235,66 @@ const Header = () => {
               aria-current={pathname === "/training-and-certification" ? "page" : undefined}
             >
               <span className="truncate max-w-[250px]">AI Training</span>
+              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
+            </Link>
+
+            <Link
+              href="/training-and-certification/seminars"
+              onClick={handleNavClick}
+              className={`flex items-center justify-between ${navLinkClass("/training-and-certification/seminars")} group`}
+              aria-current={pathname === "/training-and-certification/seminars" ? "page" : undefined}
+            >
+              <span className="truncate max-w-[250px]">Seminars</span>
+              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
+            </Link>
+
+            <Link
+              href="/training-and-certification/workshops"
+              onClick={handleNavClick}
+              className={`flex items-center justify-between ${navLinkClass("/training-and-certification/workshops")} group`}
+              aria-current={pathname === "/training-and-certification/workshops" ? "page" : undefined}
+            >
+              <span className="truncate max-w-[250px]">Workshops</span>
+              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
+            </Link>
+
+            <Link
+              href="/training-and-certification/courses"
+              onClick={handleNavClick}
+              className={`flex items-center justify-between ${navLinkClass("/training-and-certification/courses")} group`}
+              aria-current={pathname === "/training-and-certification/courses" ? "page" : undefined}
+            >
+              <span className="truncate max-w-[250px]">Courses</span>
+              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
+            </Link>
+
+            <Link
+              href="/training-and-certification/newsletters"
+              onClick={handleNavClick}
+              className={`flex items-center justify-between ${navLinkClass("/training-and-certification/newsletters")} group`}
+              aria-current={pathname === "/training-and-certification/newsletters" ? "page" : undefined}
+            >
+              <span className="truncate max-w-[250px]">Latest Technology News</span>
+              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
+            </Link>
+
+            <Link
+              href="/training-and-certification/media-gallery"
+              onClick={handleNavClick}
+              className={`flex items-center justify-between ${navLinkClass("/training-and-certification/media-gallery")} group`}
+              aria-current={pathname === "/training-and-certification/media-gallery" ? "page" : undefined}
+            >
+              <span className="truncate max-w-[250px]">Training Media Gallery</span>
+              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
+            </Link>
+
+            <Link
+              href="/training-and-certification/certification"
+              onClick={handleNavClick}
+              className={`flex items-center justify-between ${navLinkClass("/training-and-certification/certification")} group`}
+              aria-current={pathname === "/training-and-certification/certification" ? "page" : undefined}
+            >
+              <span className="truncate max-w-[250px]">Skill Training & Certification</span>
               <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
             </Link>
 
