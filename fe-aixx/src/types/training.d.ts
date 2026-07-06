@@ -4,6 +4,11 @@ export interface TrainingFormData {
   slug?: string;
   type: string;
   description?: string;
+  duration?: string;
+  sub_modules?: string;
+  domestic_fee?: string;
+  international_fee?: string;
+  highlights?: string;
   is_active: boolean;
   image?: File | null;
 }
@@ -14,6 +19,11 @@ export interface TrainingTableData {
   slug: string;
   type: string;
   description?: string;
+  duration?: string;
+  sub_modules?: string;
+  domestic_fee?: string;
+  international_fee?: string;
+  highlights?: string;
   is_active: boolean;
   image?: {
     id: string;

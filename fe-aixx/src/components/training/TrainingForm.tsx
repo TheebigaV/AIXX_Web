@@ -50,6 +50,8 @@ export default function TrainingForm() {
         { value: "media_gallery", label: "Training Media Gallery" }
     ];
 
+    const showCourseDetails = formData.type === "courses";
+
     return (
         <ComponentCard title="Training Information">
             {serverError && <div className="mb-4 text-red-500">{serverError}</div>}
@@ -96,6 +98,65 @@ export default function TrainingForm() {
                         placeholder="Enter description"
                     />
                 </div>
+
+                {/* More info / program details */}
+                {showCourseDetails && (
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+                        <div className="mb-4">
+                            <Label>More info / program details</Label>
+                            <p className="mt-1 text-sm text-slate-600">
+                                Use this section to populate the details shown on the public “More info” page for this course.
+                            </p>
+                        </div>
+
+                        <div className="grid gap-6 md:grid-cols-2">
+                            <div>
+                                <Label>Duration</Label>
+                                <Input
+                                    value={formData.duration || ""}
+                                    type="text"
+                                    onChange={(e) => handleChange("duration", e.target.value)}
+                                    placeholder="e.g. Contact us for the schedule"
+                                />
+                            </div>
+                            <div>
+                                <Label>Domestic Fees</Label>
+                                <Input
+                                    value={formData.domestic_fee || ""}
+                                    type="text"
+                                    onChange={(e) => handleChange("domestic_fee", e.target.value)}
+                                    placeholder="e.g. Contact us for pricing"
+                                />
+                            </div>
+                            <div>
+                                <Label>International Fees</Label>
+                                <Input
+                                    value={formData.international_fee || ""}
+                                    type="text"
+                                    onChange={(e) => handleChange("international_fee", e.target.value)}
+                                    placeholder="e.g. Contact us for pricing"
+                                />
+                            </div>
+                            <div>
+                                <Label>Sub-modules</Label>
+                                <TextArea
+                                    value={formData.sub_modules || ""}
+                                    onChange={(value: string) => handleChange("sub_modules", value)}
+                                    placeholder="Enter one module per line"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="mt-6">
+                            <Label>Highlights</Label>
+                            <TextArea
+                                value={formData.highlights || ""}
+                                onChange={(value: string) => handleChange("highlights", value)}
+                                placeholder="Enter one highlight per line"
+                            />
+                        </div>
+                    </div>
+                )}
 
                 {/* Image */}
                     <div>
