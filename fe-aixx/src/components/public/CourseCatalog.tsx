@@ -139,23 +139,6 @@ const CourseCatalog = () => {
             ))}
           </div>
         )}
-
-        <div className="mt-12 rounded-[32px] bg-brand-600 px-8 py-8 text-white shadow-2xl sm:px-10">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm uppercase tracking-[0.3em] font-semibold text-brand-200">Ready to compare programs?</p>
-              <h3 className="mt-3 text-2xl font-semibold">Select the right course for your career path.</h3>
-            </div>
-            <div className="space-y-3 sm:space-y-0 sm:flex sm:items-center sm:gap-4">
-              <button className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-600 shadow-sm transition hover:bg-brand-50">
-                Request a proposal
-              </button>
-              <button className="inline-flex items-center justify-center rounded-full border border-white/25 bg-transparent px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10">
-                Speak with an advisor
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
