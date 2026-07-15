@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { FaGraduationCap, FaChalkboardTeacher, FaLaptopCode, FaCertificate, FaCheckCircle, FaNewspaper, FaImages, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChalkboardTeacher, FaLaptopCode, FaCertificate, FaCheckCircle, FaNewspaper, FaImages, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { fetchPublicTrainings } from '@/lib/training';
-import CourseCatalog from '@/components/public/CourseCatalog';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -13,7 +12,6 @@ import 'swiper/css/pagination';
 const tabs = [
   { id: 'seminars', label: 'Seminars', icon: FaChalkboardTeacher },
   { id: 'workshops', label: 'Workshops', icon: FaLaptopCode },
-  { id: 'courses', label: 'Courses', icon: FaGraduationCap },
   { id: 'certification', label: 'Skill Training & Certification', icon: FaCertificate },
   { id: 'newsletters', label: 'Latest Technology News', icon: FaNewspaper },
   { id: 'media_gallery', label: 'Training Media Gallery', icon: FaImages },
@@ -32,9 +30,10 @@ interface TrainingItem {
 
 interface TrainingContentProps {
   defaultTab?: string;
+  hideTabs?: boolean;
 }
 
-const TrainingContent = ({ defaultTab = tabs[0].id }: TrainingContentProps) => {
+const TrainingContent = ({ defaultTab = tabs[0].id, hideTabs = false }: TrainingContentProps) => {
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [trainings, setTrainings] = useState<TrainingItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -86,10 +85,6 @@ const TrainingContent = ({ defaultTab = tabs[0].id }: TrainingContentProps) => {
     }
 
     const currentTab = tabs.find(t => t.id === activeTab);
-
-    if (activeTab === 'courses') {
-      return <CourseCatalog />;
-    }
     
     if (activeTab === 'media_gallery') {
       const defaultGallery = [
@@ -157,7 +152,7 @@ const TrainingContent = ({ defaultTab = tabs[0].id }: TrainingContentProps) => {
         {trainings.length > 0 ? (
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             {trainings.map((item) => (
-              <div key={item.id} className="bg-brand-50 p-6 rounded-2xl border border-brand-100 flex items-start gap-4">
+              <div key={item.id} className="bg-brand-50 p-5 rounded-2xl border border-brand-100 flex flex-col sm:flex-row items-start gap-4">
                 {item.image?.url ? (
                   <img src={item.image.url} alt={item.name} className="w-12 h-12 rounded-xl object-cover shrink-0" />
                 ) : (
@@ -166,8 +161,8 @@ const TrainingContent = ({ defaultTab = tabs[0].id }: TrainingContentProps) => {
                   </div>
                 )}
                 <div>
-                  <h4 className="font-bold text-[#191E42] mb-2">{item.name}</h4>
-                  <p className="text-sm text-slate-600">{item.description}</p>
+                  <h4 className="font-bold text-[#191E42] mb-1.5">{item.name}</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">{item.description}</p>
                 </div>
               </div>
             ))}
@@ -197,29 +192,31 @@ const TrainingContent = ({ defaultTab = tabs[0].id }: TrainingContentProps) => {
         {/* Navigation Tabs - horizontal on top */}
         <div className="flex flex-col w-full mx-auto gap-6">
           {/* Horizontal tab bar */}
-          <div className="flex gap-4 overflow-x-auto pb-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-colors ${
-                    isActive
-                      ? 'bg-brand-50 text-brand-600 border border-brand-500 shadow-md'
-                      : 'bg-transparent text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  <Icon size={20} />
-                  <span className="font-medium">{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
+          {!hideTabs && (
+            <div className="flex gap-4 overflow-x-auto pb-2">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-colors ${
+                      isActive
+                        ? 'bg-brand-50 text-brand-600 border border-brand-500 shadow-md'
+                        : 'bg-transparent text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    <Icon size={20} />
+                    <span className="font-medium">{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {/* Content Area */}
-          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100 min-h-[500px]">
+          <div className="bg-white rounded-3xl p-4 sm:p-8 md:p-12 shadow-xl border border-slate-100 min-h-[500px]">
             {renderContent()}
           </div>
         </div>

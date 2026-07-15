@@ -13,7 +13,7 @@ const TrainingCertificationPage: React.FC = () => {
         subtitle="Credential preparation and certification pathways for AI professionals."
         bgImage="/images/training_banner.png"
       />
-      <TrainingContent defaultTab="certification" />
+      <TrainingContent defaultTab="certification" hideTabs={true} />
       <HomeContact />
     </div>
   );

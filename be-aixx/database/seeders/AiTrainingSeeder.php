@@ -39,19 +39,7 @@ class AiTrainingSeeder extends Seeder
                 'is_active' => true,
             ],
 
-            // Courses
-            [
-                'name' => 'AI for Business Leaders',
-                'description' => 'A comprehensive guide to implementing AI strategies in enterprise environments without writing code.',
-                'type' => 'courses',
-                'is_active' => true,
-            ],
-            [
-                'name' => 'Generative AI Masterclass',
-                'description' => 'Learn how to build, fine-tune, and deploy advanced generative AI models from scratch.',
-                'type' => 'courses',
-                'is_active' => true,
-            ],
+            // Courses are seeded via seed_course_catalog.php
 
             // Skill Training & Certification
             [
