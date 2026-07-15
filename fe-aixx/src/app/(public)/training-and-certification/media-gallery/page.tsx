@@ -13,7 +13,7 @@ const MediaGalleryPage: React.FC = () => {
         subtitle="Photos, certificates and event highlights from our programs."
         bgImage="/images/training_banner.png"
       />
-      <TrainingContent defaultTab="media_gallery" />
+      <TrainingContent defaultTab="media_gallery" hideTabs={true} />
       <HomeContact />
     </div>
   );

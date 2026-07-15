@@ -109,46 +109,46 @@ const Header = () => {
                     <span className="text-[10px] text-slate-500">▾</span>
                   </Link>
                 </div>
-                <div className="invisible absolute left-0 top-full z-40 mt-3 w-52 rounded-3xl border border-slate-200 bg-white p-4 shadow-xl transition-all duration-200 group-hover:visible group-hover:block">
+                <div className="invisible absolute left-0 top-full z-40 mt-3 w-max rounded-3xl border border-slate-200 bg-white p-4 shadow-xl transition-all duration-200 group-hover:visible group-hover:block">
                   <Link
                     href="/training-and-certification/seminars"
                     onClick={handleNavClick}
-                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100"
+                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100 whitespace-nowrap"
                   >
                     Seminars
                   </Link>
                   <Link
                     href="/training-and-certification/workshops"
                     onClick={handleNavClick}
-                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100"
+                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100 whitespace-nowrap"
                   >
                     Workshops
                   </Link>
                   <Link
-                    href="/training-and-certification/courses"
+                    href="/courses"
                     onClick={handleNavClick}
-                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100"
+                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100 whitespace-nowrap"
                   >
                     Courses
                   </Link>
                   <Link
                     href="/training-and-certification/newsletters"
                     onClick={handleNavClick}
-                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100"
+                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100 whitespace-nowrap"
                   >
                     Latest Technology News
                   </Link>
                   <Link
                     href="/training-and-certification/media-gallery"
                     onClick={handleNavClick}
-                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100"
+                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100 whitespace-nowrap"
                   >
                     Training Media Gallery
                   </Link>
                   <Link
                     href="/training-and-certification/certification"
                     onClick={handleNavClick}
-                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100"
+                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100 whitespace-nowrap"
                   >
                     Skill Training & Certification
                   </Link>
@@ -259,10 +259,10 @@ const Header = () => {
             </Link>
 
             <Link
-              href="/training-and-certification/courses"
+              href="/courses"
               onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/training-and-certification/courses")} group`}
-              aria-current={pathname === "/training-and-certification/courses" ? "page" : undefined}
+              className={`flex items-center justify-between ${navLinkClass("/courses")} group`}
+              aria-current={pathname === "/courses" ? "page" : undefined}
             >
               <span className="truncate max-w-[250px]">Courses</span>
               <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
