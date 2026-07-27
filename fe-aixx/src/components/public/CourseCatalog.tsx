@@ -6,6 +6,7 @@ import { FaGraduationCap, FaStar, FaRegBookmark, FaBookmark, FaSearch, FaTimes }
 import { fetchPublicTrainings } from '@/lib/training';
 import { storeInquiry } from '@/lib/public/inquiries';
 import { courses as fallbackCourses } from '@/components/public/courseCatalogData';
+import ELearningModule from '@/components/public/ELearningModule';
 
 interface CourseCardItem {
   id: string;
@@ -21,9 +22,13 @@ interface CourseCardItem {
   payableFee: string;
   discount: string;
   institution: string;
+  deliveryMethod?: string;
+}
+interface CourseCatalogProps {
+  onFilterChange?: (filter: string) => void;
 }
 
-const CourseCatalog = () => {
+const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [courses, setCourses] = useState<CourseCardItem[]>(() =>
     fallbackCourses.map((course) => ({
@@ -40,11 +45,13 @@ const CourseCatalog = () => {
       payableFee: course.payableFee,
       discount: course.discount,
       institution: course.institution,
+      deliveryMethod: (course as any).deliveryMethod || 'Live Virtual',
     }))
   );
   const [loading, setLoading] = useState(true);
   const [savedCourseIds, setSavedCourseIds] = useState<string[]>([]);
-  const [filterType, setFilterType] = useState<'all' | 'saved'>('all');
+  const [filterType, setFilterType] = useState<'all' | 'saved' | 'elearning'>('all');
+  const [deliveryMethodFilter, setDeliveryMethodFilter] = useState<string>('all');
 
   // Course Application Form States
   const [applyingCourse, setApplyingCourse] = useState<CourseCardItem | null>(null);
@@ -162,6 +169,7 @@ const CourseCatalog = () => {
               payableFee: item.international_fee || fallback.payableFee,
               discount: item.discount_badge || fallback.discount,
               institution: item.institution || fallback.institution,
+              deliveryMethod: item.delivery_method || (fallback as any).deliveryMethod || 'Live Virtual',
             };
           });
 
@@ -179,6 +187,7 @@ const CourseCatalog = () => {
           payableFee: course.payableFee,
           discount: course.discount,
           institution: course.institution,
+          deliveryMethod: (course as any).deliveryMethod || 'Live Virtual',
         })));
       } catch (error) {
         console.error('Failed to load public courses:', error);
@@ -197,6 +206,7 @@ const CourseCatalog = () => {
             payableFee: course.payableFee,
             discount: course.discount,
             institution: course.institution,
+            deliveryMethod: (course as any).deliveryMethod || 'Live Virtual',
           })));
         }
       } finally {
@@ -213,11 +223,21 @@ const CourseCatalog = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (onFilterChange) {
+      onFilterChange(filterType);
+    }
+  }, [filterType, onFilterChange]);
+
   const filteredCourses = useMemo(() => {
     let result = courses;
 
     if (filterType === 'saved') {
       result = result.filter((course) => savedCourseIds.includes(course.id));
+    }
+
+    if (deliveryMethodFilter !== 'all') {
+      result = result.filter((course) => course.deliveryMethod === deliveryMethodFilter);
     }
 
     const normalizedTerm = searchTerm.trim().toLowerCase();
@@ -234,30 +254,45 @@ const CourseCatalog = () => {
       const haystack = [course.title, course.description, subModulesStr, highlightsStr].join(' ').toLowerCase();
       return haystack.includes(normalizedTerm);
     });
-  }, [courses, searchTerm, filterType, savedCourseIds]);
+  }, [courses, searchTerm, filterType, savedCourseIds, deliveryMethodFilter]);
 
   return (
-    <section id="courses" className="bg-slate-50 py-16">
-      <div className="container mx-auto px-3 sm:px-5 md:px-6 xl:px-10 2xl:px-16">
+    <section id="courses" className="bg-slate-50 py-8 min-h-screen">
+      <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-brand-600">Explore programs</p>
             <h2 className="mt-2 text-3xl font-semibold text-slate-900">Find the right course for your goals</h2>
           </div>
-          <div className="relative w-full max-w-md md:w-auto">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search courses..."
-              className="w-full rounded-full border border-slate-200 bg-white pl-10 pr-4 py-3 text-sm text-slate-700 outline-none placeholder:text-slate-400 shadow-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all"
-            />
-            <FaSearch className="absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+          <div className="flex flex-col md:flex-row gap-3 w-full max-w-xl md:w-auto">
+            <div className="relative w-full md:w-56">
+              <select
+                value={deliveryMethodFilter}
+                onChange={(e) => setDeliveryMethodFilter(e.target.value)}
+                className="w-full rounded-full border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none shadow-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all cursor-pointer appearance-none pr-10"
+                style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundPosition: 'right 1rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1em' }}
+              >
+                <option value="all">All Delivery Methods</option>
+                <option value="Self-Paced E-Learning">Self-Paced E-Learning</option>
+                <option value="Live Virtual">Live Virtual</option>
+                <option value="In-Person Campus">In-Person Campus</option>
+              </select>
+            </div>
+            <div className="relative w-full md:w-64">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search courses..."
+                className="w-full rounded-full border border-slate-200 bg-white pl-10 pr-4 py-3 text-sm text-slate-700 outline-none placeholder:text-slate-400 shadow-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all"
+              />
+              <FaSearch className="absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+            </div>
           </div>
         </div>
 
         {/* Saved Items / All Courses Toggle Navigation */}
-        <div className="mb-8 flex gap-2 border-b border-slate-200 pb-4">
+        <div className="mb-8 flex flex-wrap gap-2 border-b border-slate-200 pb-4">
           <button
             onClick={() => setFilterType('all')}
             className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 ${
@@ -283,12 +318,21 @@ const CourseCatalog = () => {
             )}
             <span>Saved Courses ({savedCourseIds.length})</span>
           </button>
+          <button
+            onClick={() => setFilterType('elearning')}
+            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-1.5 ${
+              filterType === 'elearning'
+                ? 'bg-brand-500 text-white shadow-sm shadow-brand-100'
+                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+            }`}
+          >
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Interactive E-Learning</span>
+          </button>
         </div>
 
-        {loading ? (
-          <div className="rounded-[32px] border border-slate-200 bg-white p-10 text-center text-slate-600 shadow-sm">
-            Loading courses from the admin catalog...
-          </div>
+        {filterType === 'elearning' ? (
+          <ELearningModule />
         ) : filterType === 'saved' && filteredCourses.length === 0 ? (
           <div className="rounded-[32px] border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600 shadow-sm max-w-md mx-auto">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-50 text-slate-400 mx-auto mb-4">
@@ -321,9 +365,16 @@ const CourseCatalog = () => {
                   <div>
                     {/* Header Row: Institution & Save Bookmark Button */}
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                        {course.institution}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                          {course.institution}
+                        </span>
+                        {course.deliveryMethod && (
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-brand-50 text-brand-600 px-2 py-0.5 rounded-full border border-brand-100">
+                            {course.deliveryMethod}
+                          </span>
+                        )}
+                      </div>
                       <button
                         onClick={() => toggleSaveCourse(course.id)}
                         className="p-1.5 rounded-full hover:bg-slate-100 transition-colors focus:outline-none"
