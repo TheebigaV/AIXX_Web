@@ -44,7 +44,7 @@ const availableCourses = [
     id: 'gen-ai', 
     title: 'Generative AI Masterclass', 
     description: 'Comprehensive deep dive into LLMs, advanced prompt engineering, and GenAI applications.', 
-    extendedDescription: 'The course is further enhanced with a practical and hands-on approach that will introduce the learner to the most innovative tools and technologies in the industry, including OpenAI APIs, Midjourney, and advanced prompting techniques.',
+    extendedDescription: 'The course is further enhanced with a practical and hands-on approach that will introduce the learner to the most innovative tools and technologies in the industry, including OpenAI APIs, Claude, Midjourney, and advanced prompting techniques.',
     modules: 6, 
     duration: '4h 30m',
     icon: FaBrain,
@@ -1294,7 +1294,7 @@ export default function ELearningModule() {
             <div className="text-sm text-slate-600 space-y-4 mb-12">
               <p>{selectedCourse.description}</p>
               <p>{selectedCourse.extendedDescription}</p>
-              <p>Course content will be available for students at course enrollment and students are able to complete the lessons in a self-paced manner. To complete a lesson, you need to undertake a quiz and score more than 50%. You will receive a certificate of completion at the end of this course.</p>
+              <p>Course content will be available for students at course enrollment and students are able to complete the lessons in a self-paced manner. To complete a lesson, you need to undertake a quiz and score more than 50% (60% on the final exam). You will receive a certificate of completion at the end of this course.</p>
             </div>
 
             <div className="bg-[#FAF8F5] p-6 md:p-10 rounded-xl border border-gray-100">
