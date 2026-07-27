@@ -99,15 +99,14 @@ const Header = () => {
               </li>
               <li className="relative group">
                 <div className="inline-flex items-center gap-1">
-                  <Link
-                    href="/training-and-certification"
-                    onClick={handleNavClick}
-                    className={`${navLinkClass("/training-and-certification")} whitespace-nowrap inline-flex items-center gap-1`}
-                    aria-current={pathname === "/training-and-certification" ? "page" : undefined}
+                  <span
+                    className={`cursor-default whitespace-nowrap inline-flex items-center gap-1 hover:text-brand-500 transition-colors ${
+                      pathname?.startsWith("/training-and-certification") ? "text-brand-500 font-semibold" : ""
+                    }`}
                   >
                     AI Training
                     <span className="text-[10px] text-slate-500">▾</span>
-                  </Link>
+                  </span>
                 </div>
                 <div className="invisible absolute left-0 top-full z-40 mt-3 w-max rounded-3xl border border-slate-200 bg-white p-4 shadow-xl transition-all duration-200 group-hover:visible group-hover:block">
                   <Link
@@ -228,15 +227,9 @@ const Header = () => {
               <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
             </Link>
 
-            <Link
-              href="/training-and-certification"
-              onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/training-and-certification")} group`}
-              aria-current={pathname === "/training-and-certification" ? "page" : undefined}
-            >
-              <span className="truncate max-w-[250px]">AI Training</span>
-              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
-            </Link>
+            <span className={`font-semibold text-[#191E42] opacity-60 text-sm uppercase tracking-wide`}>
+              AI Training
+            </span>
 
             <Link
               href="/training-and-certification/seminars"

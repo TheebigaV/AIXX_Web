@@ -16,6 +16,7 @@ export interface CourseItem {
   payableFee: string;
   discount: string;
   institution: string;
+  deliveryMethod: string;
 }
 
 export const courses: CourseItem[] = [
@@ -41,6 +42,7 @@ export const courses: CourseItem[] = [
     payableFee: '$1,500.00',
     discount: '-$500',
     institution: 'AIXX ACADEMY',
+    deliveryMethod: 'Self-Paced E-Learning',
   },
   {
     id: 'artificial-intelligence-ai-for-boosting-productivity',
@@ -64,6 +66,7 @@ export const courses: CourseItem[] = [
     payableFee: '$225.00',
     discount: '-$75',
     institution: 'AIXX ACADEMY',
+    deliveryMethod: 'Live Virtual',
   },
   {
     id: 'introduction-to-ai-and-machine-learning',
@@ -87,6 +90,7 @@ export const courses: CourseItem[] = [
     payableFee: '$240.00',
     discount: '-$80',
     institution: 'AIXX ACADEMY',
+    deliveryMethod: 'In-Person Campus',
   },
   {
     id: 'introduction-to-artificial-intelligence-machine-learning',
@@ -110,6 +114,7 @@ export const courses: CourseItem[] = [
     payableFee: '$176.25',
     discount: '-$58.75',
     institution: 'AIXX ACADEMY',
+    deliveryMethod: 'Self-Paced E-Learning',
   },
   {
     id: 'harnessing-generative-artificial-intelligence',
@@ -134,6 +139,7 @@ export const courses: CourseItem[] = [
     payableFee: '$2,250.00',
     discount: '-$750',
     institution: 'AIXX ACADEMY',
+    deliveryMethod: 'Live Virtual',
   },
   {
     id: 'introduction-to-generative-artificial-intelligence-ai',
@@ -157,6 +163,7 @@ export const courses: CourseItem[] = [
     payableFee: '$525.00',
     discount: '-$175',
     institution: 'AIXX ACADEMY',
+    deliveryMethod: 'In-Person Campus',
   },
   {
     id: 'ai-for-business-leaders',
@@ -180,6 +187,7 @@ export const courses: CourseItem[] = [
     payableFee: '$300.00',
     discount: '-$100',
     institution: 'AIXX ACADEMY',
+    deliveryMethod: 'Self-Paced E-Learning',
   },
   {
     id: 'generative-ai-masterclass',
@@ -203,6 +211,7 @@ export const courses: CourseItem[] = [
     payableFee: '$2,100.00',
     discount: '-$700',
     institution: 'AIXX ACADEMY',
+    deliveryMethod: 'Live Virtual',
   },
   {
     id: 'prompt-engineering-masterclass',
@@ -225,6 +234,7 @@ export const courses: CourseItem[] = [
     payableFee: '$375.00',
     discount: '-$125',
     institution: 'AIXX ACADEMY',
+    deliveryMethod: 'In-Person Campus',
   },
   {
     id: 'ai-for-developers-data-analytics',
@@ -248,6 +258,7 @@ export const courses: CourseItem[] = [
     payableFee: '$480.00',
     discount: '-$160',
     institution: 'AIXX ACADEMY',
+    deliveryMethod: 'Self-Paced E-Learning',
   },
   {
     id: 'agentic-ai-systems',
@@ -271,6 +282,7 @@ export const courses: CourseItem[] = [
     payableFee: '$900.00',
     discount: '-$300',
     institution: 'AIXX ACADEMY',
+    deliveryMethod: 'Live Virtual',
   },
   {
     id: 'quantum-computing-for-ai-fundamentals',
@@ -294,5 +306,6 @@ export const courses: CourseItem[] = [
     payableFee: '$1,350.00',
     discount: '-$450',
     institution: 'AIXX ACADEMY',
+    deliveryMethod: 'In-Person Campus',
   },
 ];
