@@ -177,11 +177,11 @@ const TrainingContent = ({ defaultTab = tabs[0].id, hideTabs = false }: Training
   return (
     <section className="py-24 bg-white relative">
       <div className="absolute inset-0 bg-slate-50/50 pointer-events-none" />
-      <div className="w-full container mx-auto px-[16px] sm:px-[16px] md:px-[24px] lg:px-[28px] xl:px-[75px] 2xl:px-[240px] relative z-10">
+      <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 relative z-10">
         
         {/* Header Area */}
         <div className="text-center w-full mx-auto mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-[#191E42] mb-6 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#191E42] mb-4 tracking-tight">
             Strategic AI Training Designed for Business Outcomes
           </h2>
           <p className="text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto">
@@ -193,7 +193,7 @@ const TrainingContent = ({ defaultTab = tabs[0].id, hideTabs = false }: Training
         <div className="flex flex-col w-full mx-auto gap-6">
           {/* Horizontal tab bar */}
           {!hideTabs && (
-            <div className="flex gap-4 overflow-x-auto pb-2">
+            <div className="flex flex-wrap gap-2 pb-2">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;

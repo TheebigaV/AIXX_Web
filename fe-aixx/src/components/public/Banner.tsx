@@ -44,7 +44,7 @@ const Banner: React.FC<BannerProps> = ({
       )}
       {/* Content Container */}
       <div className="absolute bottom-0 left-0 w-full z-20">
-        <div className="mx-auto container px-4 sm:px-[16px] md:px-[24px] lg:px-[24px] xl:px-[60px] 2xl:px-[240px] pb-6 sm:pb-8 md:pb-12 lg:pb-16">
+        <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 pb-8 sm:pb-12 md:pb-16 lg:pb-20">
           <div className="text-white max-w-5xl space-y-4 sm:space-y-3">
 
             {/* Breadcrumb aligned right */}

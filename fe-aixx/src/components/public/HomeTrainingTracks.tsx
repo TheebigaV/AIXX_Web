@@ -45,13 +45,13 @@ const tracks = [
 
 const HomeTrainingTracks = () => {
   return (
-    <section className="w-full bg-[#F8FBFF] py-20">
-      <div className="container mx-auto px-4 sm:px-6 md:px-8 xl:px-16 2xl:px-24">
+    <section className="w-full bg-[#F8FBFF] py-12 lg:py-20">
+      <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40">
         <div className="max-w-3xl mx-auto text-center mb-12">
           <p className="text-sm uppercase tracking-[0.3em] text-brand-600 font-semibold mb-4">
             AI Training Tracks
           </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#0F172A] leading-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#0F172A] leading-tight">
             Learning pathways built for professionals and teams.
           </h2>
           <p className="mt-4 text-base sm:text-lg text-slate-600">
@@ -59,7 +59,7 @@ const HomeTrainingTracks = () => {
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lgmid:grid-cols-3">
           {tracks.map((track) => {
             const Icon = track.icon;
             return (

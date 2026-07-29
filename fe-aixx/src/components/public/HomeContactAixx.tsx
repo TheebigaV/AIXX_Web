@@ -32,10 +32,10 @@ const HomeContactAixx = () => {
   const subtitle = getSetting('home_contact_subtitle') || data?.subtitle || "Connect with AIXX for corporate AI training, certification tracks, executive workshops and developer bootcamps designed to build skills fast.";
 
   return (
-    <div className="w-full container mx-auto px-[16px] sm:px-[16px] md:px-[24px] lg:py-[50px] lg:px-[28px] xl:py-[60px] xl:px-[75px] 2xl:py-[60px] 2xl:px-[240px] py-[100px] bg-white">
+    <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 py-12 lg:py-20 bg-white">
       <div className="flex flex-col xlmid:flex-row xlmid:items-end items-center gap-8">
         <div className="w-full xlmid:w-auto flex justify-center xlmid:justify-start xlmid:flex-shrink-0 order-1 xlmid:order-1">
-          <div className="polygon-corner-bg2 relative w-full xlmid:w-[520px] h-[240px] sm:h-[280px] md:h-[320px] lg:h-[360px] xlmid:h-[380px] 2xl:w-[520px] 2xl:h-[380px]">
+          <div className="polygon-corner-bg2 relative w-full lg:w-[45%] h-[240px] sm:h-[280px] md:h-[320px] lg:h-[380px] xl:h-[420px] flex-shrink-0">
             <img
               src={bgImage}
               alt="AIXX Contact"
@@ -44,7 +44,7 @@ const HomeContactAixx = () => {
           </div>
         </div>
 
-        <div className="w-full xlmid:w-[920px] space-y-6 bg-[#FAFAFA] p-8 xlmid:p-12 rounded-[24px] shadow-sm">
+        <div className="w-full lg:flex-1 space-y-6 bg-[#FAFAFA] p-8 lg:p-12 rounded-[24px] shadow-sm">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
             {title}
           </h2>

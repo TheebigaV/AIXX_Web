@@ -1,322 +1,244 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { FiMenu, FiX } from "react-icons/fi";
+import React, { useState, useEffect, useRef } from "react";
+import { FiMenu, FiX, FiChevronDown } from "react-icons/fi";
 import { FaBolt } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useCategories from "@/hooks/public/useCategories";
 
+const NAV_LINKS = [
+  { label: "Home", href: "/" },
+  { label: "About Us", href: "/about-us" },
+  { label: "Technologies", href: "/services" },
+  { label: "Innovative Products", href: "/innovative-products" },
+];
+
+const AI_TRAINING_LINKS = [
+  { label: "Seminars", href: "/training-and-certification/seminars" },
+  { label: "Workshops", href: "/training-and-certification/workshops" },
+  { label: "Courses", href: "/courses" },
+  { label: "Latest Technology News", href: "/training-and-certification/newsletters" },
+  { label: "Training Media Gallery", href: "/training-and-certification/media-gallery" },
+  { label: "Skill Training & Certification", href: "/training-and-certification/certification" },
+];
+
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mobileProductDropdownOpen, setMobileProductDropdownOpen] = useState(false);
+  const [mobileTrainingOpen, setMobileTrainingOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-
-  const { categories, getAllCategories } = useCategories(); // dynamic categories
+  const { getAllCategories } = useCategories();
 
   useEffect(() => {
-    getAllCategories(); 
+    getAllCategories();
   }, []);
 
-  const toggleMenu = () => {
-    setMenuOpen((prev) => !prev);
-    setMobileProductDropdownOpen(false);
-  };
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  const closeMenu = () => {
+  // Close menu on route change
+  useEffect(() => {
     setMenuOpen(false);
-    setMobileProductDropdownOpen(false);
-  };
+    setMobileTrainingOpen(false);
+  }, [pathname]);
 
-  const toggleMobileProductDropdown = () => {
-    setMobileProductDropdownOpen((prev) => !prev);
-  };
+  const isActive = (href: string) =>
+    pathname === href ||
+    (href === "/training-and-certification" && pathname?.startsWith("/training-and-certification")) ||
+    (href === "/services" && pathname?.startsWith("/services")) ||
+    (href === "/innovative-products" && pathname?.startsWith("/innovative-products"));
 
-  const handleNavClick = () => closeMenu();
-
-  const navLinkClass = (href: string) =>
-    `hover:text-brand-500 transition-colors ${
-      pathname === href ||
-      (href === "/training-and-certification" && pathname?.startsWith("/training-and-certification")) ||
-      (href === "/product" && pathname?.startsWith("/product/"))
-        ? "text-brand-500 font-semibold"
-        : ""
-    }`;
+  const isTrainingActive = pathname?.startsWith("/training-and-certification") || pathname?.startsWith("/courses");
 
   return (
-    <header className="bg-white w-full z-50 border-b border-gray-200 shadow-sm fixed">
-      <div className=" w-full mx-auto container flex items-center justify-between px-4 sm:px-[16px] md:px-[24px] xl:px-[60px] 2xl:px-[240px] py-[12px]">
-        {/* Logo */}
+    <header
+      className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 ${scrolled
+          ? "bg-white/95 backdrop-blur-md shadow-md border-b border-gray-100"
+          : "bg-white border-b border-gray-200 shadow-sm"
+        }`}
+    >
+      {/* ── Main bar ── */}
+      <div className="w-full flex items-center justify-between px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 h-[72px]">
+
+        {/* ── Brand / Logo ── */}
         <Link
           href="/"
-          onClick={handleNavClick}
-          className="relative w-[124px] sm:w-[124px] md:w-[188px] h-[45px] sm:h-[45px] md:h-[68px] sm:mr-[] md:mr-[328px] lg:mr-[496px] xl:mr-[324px] 2xl:mr-[484px] "
+          className="flex items-center gap-3 group flex-shrink-0"
           aria-label="AIXX Home"
         >
-          <Image
-            src="/images/logo/logo.png"
-            alt="AIXX Logo"
-            fill
-            priority
-            className="object-contain"
-          />
+          <div className="relative w-[48px] h-[48px] flex-shrink-0">
+            <Image
+              src="/images/logo/logo.png"
+              alt="AIXX Logo"
+              fill
+              priority
+              className="object-contain object-left"
+            />
+          </div>
+          <div className="hidden sm:flex flex-col justify-center leading-tight">
+            <span className="text-[#191E42] font-extrabold text-base tracking-tight">
+              AIXX
+            </span>
+            <span className="text-gray-500 font-medium text-[11px] tracking-widest uppercase">
+              PTE LTD
+            </span>
+          </div>
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden xlmid:flex items-center space-x-[37px] h-[48px]">
-          <nav className="text-[#191E42] font-medium text-base sm:text-[16px]">
-            <ul className="flex space-x-[25px] xl:space-x-[66px] items-center">
-              <li>
-                <Link
-                  href="/"
-                  onClick={handleNavClick}
-                  className={`${navLinkClass("/")} whitespace-nowrap`}
-                  aria-current={pathname === "/" ? "page" : undefined}
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about-us"
-                  onClick={handleNavClick}
-                  className={`${navLinkClass("/about-us")} whitespace-nowrap`}
-                  aria-current={pathname === "/about-us" ? "page" : undefined}
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  onClick={handleNavClick}
-                  className={`${navLinkClass("/services")} whitespace-nowrap`}
-                  aria-current={pathname === "/services" ? "page" : undefined}
-                >
-                  Technologies
-                </Link>
-              </li>
-              <li className="relative group">
-                <div className="inline-flex items-center gap-1">
-                  <span
-                    className={`cursor-default whitespace-nowrap inline-flex items-center gap-1 hover:text-brand-500 transition-colors ${
-                      pathname?.startsWith("/training-and-certification") ? "text-brand-500 font-semibold" : ""
-                    }`}
-                  >
-                    AI Training
-                    <span className="text-[10px] text-slate-500">▾</span>
-                  </span>
-                </div>
-                <div className="invisible absolute left-0 top-full z-40 mt-3 w-max rounded-3xl border border-slate-200 bg-white p-4 shadow-xl transition-all duration-200 group-hover:visible group-hover:block">
-                  <Link
-                    href="/training-and-certification/seminars"
-                    onClick={handleNavClick}
-                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100 whitespace-nowrap"
-                  >
-                    Seminars
-                  </Link>
-                  <Link
-                    href="/training-and-certification/workshops"
-                    onClick={handleNavClick}
-                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100 whitespace-nowrap"
-                  >
-                    Workshops
-                  </Link>
-                  <Link
-                    href="/courses"
-                    onClick={handleNavClick}
-                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100 whitespace-nowrap"
-                  >
-                    Courses
-                  </Link>
-                  <Link
-                    href="/training-and-certification/newsletters"
-                    onClick={handleNavClick}
-                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100 whitespace-nowrap"
-                  >
-                    Latest Technology News
-                  </Link>
-                  <Link
-                    href="/training-and-certification/media-gallery"
-                    onClick={handleNavClick}
-                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100 whitespace-nowrap"
-                  >
-                    Training Media Gallery
-                  </Link>
-                  <Link
-                    href="/training-and-certification/certification"
-                    onClick={handleNavClick}
-                    className="block rounded-2xl px-4 py-3 text-sm text-slate-700 transition hover:bg-slate-100 whitespace-nowrap"
-                  >
-                    Skill Training & Certification
-                  </Link>
-                </div>
-              </li>
-              <li>
-                <Link
-                  href="/innovative-products"
-                  onClick={handleNavClick}
-                  className={`${navLinkClass("/innovative-products")} whitespace-nowrap`}
-                  aria-current={pathname === "/innovative-products" ? "page" : undefined}
-                >
-                  Innovative Products
-                </Link>
-              </li>
-            </ul>
-          </nav>
+        {/* ── Desktop Nav ── */}
+        <nav className="hidden lg:flex items-center gap-1">
+          {NAV_LINKS.map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 group
+                ${isActive(href)
+                  ? "text-brand-600"
+                  : "text-[#374151] hover:text-brand-600"
+                }`}
+            >
+              {label}
+              {/* animated underline */}
+              <span
+                className={`absolute bottom-0 left-4 right-4 h-[2px] rounded-full bg-brand-500 transition-all duration-300 origin-left
+                  ${isActive(href) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}
+              />
+            </Link>
+          ))}
 
-          {/* Desktop Contact Button */}
+          {/* AI Training dropdown */}
+          <div className="relative group">
+            <button
+              className={`relative flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200
+                ${isTrainingActive ? "text-brand-600" : "text-[#374151] hover:text-brand-600"}`}
+            >
+              AI Training
+              <FiChevronDown className="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" />
+              <span
+                className={`absolute bottom-0 left-4 right-4 h-[2px] rounded-full bg-brand-500 transition-all duration-300 origin-left
+                  ${isTrainingActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}
+              />
+            </button>
+
+            {/* Dropdown panel */}
+            <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-1 group-hover:translate-y-0 z-50">
+              <div className="w-64 bg-white rounded-2xl shadow-xl border border-gray-100 p-2 overflow-hidden">
+                {AI_TRAINING_LINKS.map(({ label, href }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className={`flex items-center gap-2 px-4 py-2.5 text-sm rounded-xl transition-colors duration-150
+                      ${pathname === href
+                        ? "bg-brand-50 text-brand-600 font-semibold"
+                        : "text-gray-700 hover:bg-gray-50 hover:text-brand-600"
+                      }`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-400 flex-shrink-0" />
+                    {label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        {/* ── Desktop CTA ── */}
+        <div className="hidden lg:flex items-center gap-3">
           <Link
             href="/contact"
-            onClick={handleNavClick}
-            className="beveled-corner group flex items-center space-x-2 bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 transition-colors"
-            aria-current={pathname === "/contact" ? "page" : undefined}
+            className="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
           >
-            <span>Contact Us</span>
-            <FaBolt className="text-white group-hover:rotate-12 transition-transform" />
+            Contact Us
+            <FaBolt className="w-3 h-3 transition-transform group-hover:rotate-12" />
           </Link>
         </div>
 
-        {/* Mobile Toggle */}
-        <div className="xlmid:hidden">
-          <button
-            onClick={toggleMenu}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-menu"
-            className="p-2 focus:outline-none"
-          >
-            {menuOpen ? <FiX className="w-7 h-7 text-[#191E42]" /> : <FiMenu className="w-7 h-7 text-[#191E42]" />}
-          </button>
-        </div>
+        {/* ── Mobile hamburger ── */}
+        <button
+          onClick={() => setMenuOpen((p) => !p)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
+          className="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+        >
+          {menuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
+        </button>
       </div>
 
-      {/* Mobile Navigation */}
-      {menuOpen && (
-        <div className="px-[12px] py-[6px]">
-        <div id="mobile-menu" className="xlmid:hidden w-full bg-[#F4F4F4] polygon-corner-bg1 shadow-md px-6 py-6 text-[#191E42] text-base ">
-          <nav className="flex flex-col space-y-6 font-medium">
+      {/* ── Mobile menu ── */}
+      <div
+        id="mobile-menu"
+        className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${menuOpen ? "max-h-[90vh] opacity-100" : "max-h-0 opacity-0"
+          }`}
+      >
+        <div className="bg-white border-t border-gray-100 px-6 py-4 space-y-1 shadow-lg">
+          {NAV_LINKS.map(({ label, href }) => (
             <Link
-              href="/"
-              onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/")} group`}
-              aria-current={pathname === "/" ? "page" : undefined}
+              key={href}
+              href={href}
+              className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors
+                ${isActive(href)
+                  ? "bg-brand-50 text-brand-600"
+                  : "text-gray-700 hover:bg-gray-50 hover:text-brand-600"
+                }`}
             >
-              <span>Home</span>
-              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
+              {label}
+              <span className="text-gray-400">›</span>
             </Link>
+          ))}
 
-            <Link
-              href="/about-us"
-              onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/about-us")} group`}
-              aria-current={pathname === "/about-us" ? "page" : undefined}
+          {/* Mobile AI Training accordion */}
+          <div>
+            <button
+              onClick={() => setMobileTrainingOpen((p) => !p)}
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors
+                ${isTrainingActive ? "bg-brand-50 text-brand-600" : "text-gray-700 hover:bg-gray-50"}`}
             >
-              <span>About Us</span>
-              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
-            </Link>
-
-            <Link
-              href="/services"
-              onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/services")} group`}
-              aria-current={pathname === "/services" ? "page" : undefined}
-            >
-              <span>Technologies</span>
-              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
-            </Link>
-
-            <span className={`font-semibold text-[#191E42] opacity-60 text-sm uppercase tracking-wide`}>
               AI Training
-            </span>
-
-            <Link
-              href="/training-and-certification/seminars"
-              onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/training-and-certification/seminars")} group`}
-              aria-current={pathname === "/training-and-certification/seminars" ? "page" : undefined}
+              <FiChevronDown
+                className={`w-4 h-4 transition-transform duration-200 ${mobileTrainingOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+            <div
+              className={`overflow-hidden transition-all duration-300 ${mobileTrainingOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                }`}
             >
-              <span className="truncate max-w-[250px]">Seminars</span>
-              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
-            </Link>
+              <div className="pl-4 pt-1 space-y-1">
+                {AI_TRAINING_LINKS.map(({ label, href }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm transition-colors
+                      ${pathname === href
+                        ? "bg-brand-50 text-brand-600 font-semibold"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-brand-600"
+                      }`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-400 flex-shrink-0" />
+                    {label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
 
-            <Link
-              href="/training-and-certification/workshops"
-              onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/training-and-certification/workshops")} group`}
-              aria-current={pathname === "/training-and-certification/workshops" ? "page" : undefined}
-            >
-              <span className="truncate max-w-[250px]">Workshops</span>
-              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
-            </Link>
-
-            <Link
-              href="/courses"
-              onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/courses")} group`}
-              aria-current={pathname === "/courses" ? "page" : undefined}
-            >
-              <span className="truncate max-w-[250px]">Courses</span>
-              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
-            </Link>
-
-            <Link
-              href="/training-and-certification/newsletters"
-              onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/training-and-certification/newsletters")} group`}
-              aria-current={pathname === "/training-and-certification/newsletters" ? "page" : undefined}
-            >
-              <span className="truncate max-w-[250px]">Latest Technology News</span>
-              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
-            </Link>
-
-            <Link
-              href="/training-and-certification/media-gallery"
-              onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/training-and-certification/media-gallery")} group`}
-              aria-current={pathname === "/training-and-certification/media-gallery" ? "page" : undefined}
-            >
-              <span className="truncate max-w-[250px]">Training Media Gallery</span>
-              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
-            </Link>
-
-            <Link
-              href="/training-and-certification/certification"
-              onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/training-and-certification/certification")} group`}
-              aria-current={pathname === "/training-and-certification/certification" ? "page" : undefined}
-            >
-              <span className="truncate max-w-[250px]">Skill Training & Certification</span>
-              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
-            </Link>
-
-            <Link
-              href="/innovative-products"
-              onClick={handleNavClick}
-              className={`flex items-center justify-between ${navLinkClass("/innovative-products")} group`}
-              aria-current={pathname === "/innovative-products" ? "page" : undefined}
-            >
-              <span>Innovative Products</span>
-              <span className="text-xl transition-transform group-hover:translate-x-1 -rotate-45">→</span>
-            </Link>
-
-            {/* Mobile Contact Button */}
+          {/* Mobile CTA */}
+          <div className="pt-3 pb-1">
             <Link
               href="/contact"
-              onClick={handleNavClick}
-              className={`beveled-corner w-full px-4 py-2 bg-brand-500 text-white flex items-center justify-center space-x-2 transition hover:bg-brand-600 ${
-                pathname === "/contact" ? "font-semibold" : ""
-              }`}
-              aria-current={pathname === "/contact" ? "page" : undefined}
+              className="flex items-center justify-center gap-2 w-full bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-5 py-3 rounded-xl transition-colors shadow-sm"
             >
-              <span>Contact Us</span>
-              <FaBolt className="text-white group-hover:rotate-12 transition-transform" />
+              Contact Us
+              <FaBolt className="w-3 h-3" />
             </Link>
-          </nav>
+          </div>
         </div>
-        </div>
-      )}
+      </div>
     </header>
   );
 };

@@ -101,3 +101,10 @@ Route::post('submit-contact-form', [\App\Http\Controllers\Guest\InquiryControlle
 Route::get('products', [App\Http\Controllers\Api\ProductController::class, 'index']);
 Route::get('products/{slug}/by-slug', [App\Http\Controllers\Api\ProductController::class, 'show']);
 Route::get('settings', [\App\Http\Controllers\SettingController::class, 'index']);
+
+// Free AI Knowledge Certificate Routes
+Route::post('certificate/register', [\App\Http\Controllers\Api\CertificateController::class, 'register']);
+Route::get('certificate/verify-token', [\App\Http\Controllers\Api\CertificateController::class, 'verifyToken']);
+Route::get('certificate/questions', [\App\Http\Controllers\Api\CertificateController::class, 'getQuestions']);
+Route::post('certificate/submit-test', [\App\Http\Controllers\Api\CertificateController::class, 'submitTest']);
+

@@ -49,7 +49,7 @@ const AboutUsBanner: React.FC = () => {
 
       {/* Content Container */}
       <div className="absolute bottom-0 left-0 w-full z-20">
-        <div className="mx-auto container px-[16px] sm:px-[16px] md:px-[24px] lg:px-[24px] xl:px-[60px] 2xl:px-[240px] pb-[64px] sm:pb-[64px] md:pb-[60px] lg:pb-[64px] xl:pb-[94.5px] 2xl:pb-[95.5px]">
+        <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 pb-10 sm:pb-14 md:pb-16 lg:pb-20 xl:pb-24">
           <div className="text-white ">
             
             {/* Breadcrumb aligned to right */}

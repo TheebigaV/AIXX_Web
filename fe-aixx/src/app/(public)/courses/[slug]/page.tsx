@@ -70,6 +70,8 @@ export default function CourseDetailPage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [countryCode, setCountryCode] = useState('+65');
   const [phone, setPhone] = useState('');
   const [inquiringFor, setInquiringFor] = useState<'myself' | 'team'>('myself');
   const [experience, setExperience] = useState('');
@@ -83,13 +85,15 @@ export default function CourseDetailPage() {
     setLastName('');
     setEmail('');
     setPhone('');
+    setCompanyName('');
+    setCountryCode('+65');
     setInquiringFor('myself');
     setExperience('');
   };
 
   const handleApplySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName || !lastName || !email || !phone || !experience || !course) {
+    if (!firstName || !lastName || !email || !phone || !experience || !course || !companyName) {
       alert('Please fill in all fields before submitting.');
       return;
     }
@@ -98,11 +102,11 @@ export default function CourseDetailPage() {
       await storeInquiry({
         customer_name: `${firstName} ${lastName}`,
         customer_email: email,
-        customer_phone: `+65 ${phone}`,
+        customer_phone: `${countryCode} ${phone}`,
         service_interest: 'AI Training & Certification',
         industry_type: `Inquiring For: ${inquiringFor === 'myself' ? 'Myself' : 'Team / Group'}`,
         budget_timeline: `Work Experience: ${experience === 'none' ? 'Less than 1 year' : experience + ' years'}`,
-        message: `Enrollment application for course: ${course.title} (ID: ${course.id})`,
+        message: `Company: ${companyName}\nEnrollment application for course: ${course.title} (ID: ${course.id})`,
       });
       setSubmitted(true);
       setTimeout(() => closeModal(), 3500);
@@ -400,13 +404,46 @@ export default function CourseDetailPage() {
                   />
                 </div>
 
+                {/* Company Name */}
+                <div>
+                  <label className="sr-only">Company Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Company Name"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-400"
+                  />
+                </div>
+
                 {/* Phone */}
                 <div>
                   <label className="sr-only">Phone Number</label>
                   <div className="flex rounded-xl border border-slate-200 overflow-hidden bg-white focus-within:border-brand-500 focus-within:ring-1 focus-within:ring-brand-500 transition-all">
-                    <div className="flex items-center gap-1 bg-slate-50 px-3 border-r border-slate-200">
-                      <span className="text-sm font-semibold text-slate-700">+65</span>
-                    </div>
+                    <select
+                      value={countryCode}
+                      onChange={(e) => setCountryCode(e.target.value)}
+                      className="bg-slate-50 px-3 border-r border-slate-200 text-sm font-semibold text-slate-700 outline-none cursor-pointer max-w-[120px]"
+                    >
+                      <option value="+65">🇸🇬 +65</option>
+                      <option value="+60">🇲🇾 +60</option>
+                      <option value="+62">🇮🇩 +62</option>
+                      <option value="+66">🇹🇭 +66</option>
+                      <option value="+63">🇵🇭 +63</option>
+                      <option value="+84">🇻🇳 +84</option>
+                      <option value="+91">🇮🇳 +91</option>
+                      <option value="+61">🇦🇺 +61</option>
+                      <option value="+44">🇬🇧 +44</option>
+                      <option value="+1">🇺🇸 +1</option>
+                      <option value="+86">🇨🇳 +86</option>
+                      <option value="+81">🇯🇵 +81</option>
+                      <option value="+82">🇰🇷 +82</option>
+                      <option value="+95">🇲🇲 +95</option>
+                      <option value="+855">🇰🇭 +855</option>
+                      <option value="+673">🇧🇳 +673</option>
+                      <option value="+856">🇱🇦 +856</option>
+                    </select>
                     <input
                       type="tel"
                       required

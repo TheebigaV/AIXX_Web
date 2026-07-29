@@ -58,6 +58,8 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [countryCode, setCountryCode] = useState('+65');
   const [phone, setPhone] = useState('');
   const [inquiringFor, setInquiringFor] = useState<'myself' | 'team'>('myself');
   const [experience, setExperience] = useState('');
@@ -66,7 +68,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
 
   const handleApplySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName || !lastName || !email || !phone || !experience || !applyingCourse) {
+    if (!firstName || !lastName || !email || !phone || !experience || !applyingCourse || !companyName) {
       alert('Please fill in all fields before submitting.');
       return;
     }
@@ -77,11 +79,11 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
       await storeInquiry({
         customer_name: `${firstName} ${lastName}`,
         customer_email: email,
-        customer_phone: `+65 ${phone}`,
+        customer_phone: `${countryCode} ${phone}`,
         service_interest: 'AI Training & Certification',
         industry_type: `Inquiring For: ${inquiringFor === 'myself' ? 'Myself' : 'Team / Group'}`,
         budget_timeline: `Work Experience: ${experience === 'none' ? 'Less than 1 year' : experience + ' years'}`,
-        message: `Enrollment application for course: ${applyingCourse.title} (ID: ${applyingCourse.id})`,
+        message: `Company: ${companyName}\nEnrollment application for course: ${applyingCourse.title} (ID: ${applyingCourse.id})`,
       });
 
       setSubmitted(true);
@@ -93,6 +95,8 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
         setLastName('');
         setEmail('');
         setPhone('');
+        setCompanyName('');
+        setCountryCode('+65');
         setInquiringFor('myself');
         setExperience('');
       }, 3000);
@@ -257,8 +261,83 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
   }, [courses, searchTerm, filterType, savedCourseIds, deliveryMethodFilter]);
 
   return (
-    <section id="courses" className="bg-slate-50 py-8 min-h-screen">
+    <section id="courses" className="bg-slate-50 min-h-screen">
+
+      {/* ── Hero / Promo Banner ── */}
+      <div className="relative overflow-hidden bg-[#00062A]">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-60"
+          style={{ backgroundImage: 'url("/images/courses_banner_bg.png")' }}
+        />
+
+        {/* Gradient Overlay for Text Readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#00062A] via-[#00062A]/80 to-[#00062A]/40 z-10" />
+
+        {/* Decorative blobs */}
+        <div className="pointer-events-none absolute -top-24 -right-24 w-[420px] h-[420px] rounded-full bg-brand-500/20 blur-3xl z-10" />
+        <div className="pointer-events-none absolute -bottom-20 -left-20 w-[320px] h-[320px] rounded-full bg-[#58b347]/10 blur-3xl z-10" />
+
+        {/* Grid texture overlay */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.06] z-10"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
+          }}
+        />
+
+        <div className="relative z-20 w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 py-16 sm:py-20 lg:py-24 text-center">
+          <div className="max-w-3xl mx-auto">
+            
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 bg-brand-500/20 border border-brand-400/30 rounded-full px-4 py-1.5 mb-6">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-500" />
+              </span>
+              <span className="text-brand-300 text-xs font-semibold uppercase tracking-widest">AIXX Academy — Now Enrolling</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white leading-tight mb-4">
+              Accelerate Your{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-emerald-300">
+                AI Career
+              </span>{' '}
+              Today
+            </h1>
+            <p className="text-slate-300 text-base sm:text-lg leading-relaxed mb-8 max-w-xl mx-auto">
+              Industry-certified AI training, workshops, and live bootcamps designed for professionals, teams, and executives across Southeast Asia.
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <a
+                href="#courses-list"
+                className="relative inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 text-sm group overflow-hidden"
+              >
+                <span className="relative z-10">Browse All Courses</span>
+                <svg className="w-4 h-4 relative z-10 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+                <div className="absolute inset-0 bg-gradient-to-r from-brand-400 to-brand-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </a>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 border border-white/20 text-white hover:bg-white/10 font-medium px-7 py-3.5 rounded-xl transition-all duration-200 text-sm backdrop-blur-sm"
+              >
+                Talk to an Advisor
+              </Link>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* ── Course Catalog ── */}
+      <div id="courses-list" className="py-8">
       <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40">
+
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-brand-600">Explore programs</p>
@@ -453,6 +532,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
           </div>
         )}
       </div>
+      </div>
 
       {applyingCourse && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/50 backdrop-blur-md p-4 animate-fadeIn">
@@ -532,11 +612,43 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
                 </div>
 
                 <div>
+                  <label className="sr-only">Company Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Company Name"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-400"
+                  />
+                </div>
+
+                <div>
                   <label className="sr-only">Phone Number</label>
                   <div className="flex rounded-xl border border-slate-200 overflow-hidden bg-white focus-within:border-brand-500 focus-within:ring-1 focus-within:ring-brand-500 transition-all">
-                    <div className="flex items-center gap-1 bg-slate-50 px-3 border-r border-slate-200">
-                      <span className="text-sm font-semibold text-slate-700">+65</span>
-                    </div>
+                    <select
+                      value={countryCode}
+                      onChange={(e) => setCountryCode(e.target.value)}
+                      className="bg-slate-50 px-3 border-r border-slate-200 text-sm font-semibold text-slate-700 outline-none cursor-pointer max-w-[120px]"
+                    >
+                      <option value="+65">🇸🇬 +65</option>
+                      <option value="+60">🇲🇾 +60</option>
+                      <option value="+62">🇮🇩 +62</option>
+                      <option value="+66">🇹🇭 +66</option>
+                      <option value="+63">🇵🇭 +63</option>
+                      <option value="+84">🇻🇳 +84</option>
+                      <option value="+91">🇮🇳 +91</option>
+                      <option value="+61">🇦🇺 +61</option>
+                      <option value="+44">🇬🇧 +44</option>
+                      <option value="+1">🇺🇸 +1</option>
+                      <option value="+86">🇨🇳 +86</option>
+                      <option value="+81">🇯🇵 +81</option>
+                      <option value="+82">🇰🇷 +82</option>
+                      <option value="+95">🇲🇲 +95</option>
+                      <option value="+855">🇰🇭 +855</option>
+                      <option value="+673">🇧🇳 +673</option>
+                      <option value="+856">🇱🇦 +856</option>
+                    </select>
                     <input
                       type="tel"
                       required

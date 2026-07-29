@@ -38,7 +38,7 @@ const ChooseUs: React.FC = () => {
 
   return (
     <section className="flex flex-col gap-10 bg-[#F9F9F9]">
-      <div className="mx-auto container px-4 sm:px-[16px] md:px-[24px] lg:px-[24px] xl:px-[60px] 2xl:px-[240px] py-12">
+      <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 py-12 lg:py-16">
         {/* Desktop Layout */}
         <div className="hidden xlmid:flex xl:gap-[76px] 2xl:gap-[188px]">
           {/* Left Side */}

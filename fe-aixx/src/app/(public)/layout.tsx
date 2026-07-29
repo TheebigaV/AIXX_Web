@@ -23,7 +23,7 @@ const PublicLayout = ({ children }: { children: React.ReactNode }) => {
     <div className={`${lato.variable} flex flex-col font-lato`}>
         <Header />
         <ToastContainer position="top-right" autoClose={3000} />
-        <main className="flex-1 pt-[67px] sm:pt-[67px] md:pt-[90px]">{children}</main>
+        <main className="flex-1 pt-[72px]">{children}</main>
         <Footer />
       </div>
       </div>
