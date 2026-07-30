@@ -126,7 +126,7 @@ const HomeServicesAixx: React.FC<HomeServicesProps> = ({ isHomePage = true }) =>
         </>
       )}
 
-      <div className="container mx-auto px-4 sm:px-[16px] md:px-[24px] lg:px-[24px] xl:px-[60px] 2xl:px-[120px] relative z-10">
+      <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 relative z-10">
 
         {/* ── HOME PAGE HEADER ── */}
         {isHomePage && (

@@ -66,8 +66,8 @@ const ProjectList: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className='container mx-auto px-[16px] sm:px-[16px] md:px-[24px] xl:px-[60px] 2xl:px-[240px] py-[40px]'>
-        <div className="grid gap-[16px] md:gap-[16px] lg:gap-[20px] sm:grid-cols-1 md:grid-cols-2 xlmid:grid-cols-3 2xl:grid-cols-4">
+        <div className='w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 py-10 lg:py-14'>
+        <div className="grid gap-4 lg:gap-5 grid-cols-1 sm:grid-cols-2 lgmid:grid-cols-3 2xl:grid-cols-4">
           {projects.map((project: ProjectTableData, index) => (
             <ProjectCard
               key={project.id || index}

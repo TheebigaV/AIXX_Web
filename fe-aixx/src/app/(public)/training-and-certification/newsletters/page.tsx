@@ -13,7 +13,7 @@ const NewslettersPage: React.FC = () => {
         subtitle="Curated news and insights on AI, ML, and emerging tech."
         bgImage="/images/training_banner.png"
       />
-      <TrainingContent defaultTab="newsletters" />
+      <TrainingContent defaultTab="newsletters" hideTabs={true} />
       <HomeContact />
     </div>
   );

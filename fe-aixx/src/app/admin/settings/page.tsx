@@ -4,7 +4,7 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import ComponentCard from "@/components/common/ComponentCard";
 import { useSettings } from "@/hooks/useSettings";
 
-type Tab = "general" | "home" | "about" | "contact";
+type Tab = "general" | "home" | "about" | "contact" | "smtp";
 
 export default function SettingsPage() {
   const { settings, loading, error, save, refresh } = useSettings(true);
@@ -19,7 +19,7 @@ export default function SettingsPage() {
     }
   }, [settings]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormState((prev) => ({
       ...prev,
@@ -52,6 +52,7 @@ export default function SettingsPage() {
     { id: "home", label: "Home Page" },
     { id: "about", label: "About Us Page" },
     { id: "contact", label: "Contact Us Page" },
+    { id: "smtp", label: "SMTP Mail Settings" },
   ];
 
   if (loading && Object.keys(formState).length === 0) {
@@ -448,7 +449,93 @@ export default function SettingsPage() {
               </ComponentCard>
             )}
 
-
+            {activeTab === "smtp" && (
+              <ComponentCard title="SMTP Mail Server Configurations">
+                <div className="space-y-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#00245A]">SMTP Host</label>
+                      <input
+                        type="text"
+                        name="mail_host"
+                        value={formState.mail_host || ""}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-gray-200 p-3 text-sm focus:border-brand-500 focus:outline-none"
+                        placeholder="smtp.gmail.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#00245A]">SMTP Port</label>
+                      <input
+                        type="text"
+                        name="mail_port"
+                        value={formState.mail_port || ""}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-gray-200 p-3 text-sm focus:border-brand-500 focus:outline-none"
+                        placeholder="587"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#00245A]">SMTP Username</label>
+                      <input
+                        type="text"
+                        name="mail_username"
+                        value={formState.mail_username || ""}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-gray-200 p-3 text-sm focus:border-brand-500 focus:outline-none"
+                        placeholder="your_email@gmail.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#00245A]">SMTP Password / App Password</label>
+                      <input
+                        type="password"
+                        name="mail_password"
+                        value={formState.mail_password || ""}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-gray-200 p-3 text-sm focus:border-brand-500 focus:outline-none"
+                        placeholder="••••••••••••••••"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#00245A]">SMTP Encryption</label>
+                      <select
+                        name="mail_encryption"
+                        value={formState.mail_encryption || "tls"}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-gray-200 p-3 text-sm focus:border-brand-500 focus:outline-none bg-white"
+                      >
+                        <option value="tls">TLS (Port 587)</option>
+                        <option value="ssl">SSL (Port 465)</option>
+                        <option value="none">None</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-semibold text-[#00245A]">Sender Email Address (From)</label>
+                      <input
+                        type="email"
+                        name="mail_from_address"
+                        value={formState.mail_from_address || ""}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-gray-200 p-3 text-sm focus:border-brand-500 focus:outline-none"
+                        placeholder="cs@aixx.com.sg"
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label className="mb-2 block text-sm font-semibold text-[#00245A]">Sender Name</label>
+                      <input
+                        type="text"
+                        name="mail_from_name"
+                        value={formState.mail_from_name || ""}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-gray-200 p-3 text-sm focus:border-brand-500 focus:outline-none"
+                        placeholder="AIXX Academy"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </ComponentCard>
+            )}
 
             <div className="flex justify-end">
               <button

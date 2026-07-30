@@ -7,7 +7,7 @@ import { useSettings } from "@/hooks/useSettings";
 const AboutContent: React.FC = () => {
   const { getSetting } = useSettings();
   return (
-    <section className="w-full mx-auto container px-[16px] sm:px-[16px] md:px-[24px] lg:px-[24px] xl:px-[60px] 2xl:px-[240px] py-[72px]">
+    <section className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 py-16 lg:py-20">
       <div className="">
       <div className="flex flex-col lg:flex-row items-start xlmid:gap-[35px] xl:gap-[56px]">
 

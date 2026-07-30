@@ -27,7 +27,7 @@ const Journey = () => {
 
   return (
     <div className="bg-white text-[#00062A] ">
-      <div className="mx-auto container py-10 px-4 sm:px-[16px] md:px-[24px] lg:px-[24px] xl:px-[60px] 2xl:px-[240px]">
+      <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 py-10 lg:py-14">
       {/* Heading Section */}
       <div className="mb-6">
         <p className="text-[20px] text-brand-500 font-normal">Our Journey So Far</p>

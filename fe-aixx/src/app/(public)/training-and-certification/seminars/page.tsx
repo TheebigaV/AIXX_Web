@@ -13,7 +13,7 @@ const TrainingSeminarsPage: React.FC = () => {
         subtitle="Focused seminar programs for rapid AI insight and strategy adoption."
         bgImage="/images/training_banner.png"
       />
-      <TrainingContent defaultTab="seminars" />
+      <TrainingContent defaultTab="seminars" hideTabs={true} />
       <HomeContact />
     </div>
   );

@@ -75,6 +75,13 @@ const navItems: NavItem[] = [
         permission: "inquiries-view",
         skipPermissionCheck: false,
     },
+    {
+        icon: <UserCircleIcon />,
+        name: "E-learning Registrants",
+        path: "/admin/certificate-registrations",
+        permission: "inquiries-view",
+        skipPermissionCheck: true,
+    },
 ];
 
 
