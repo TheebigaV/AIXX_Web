@@ -46,7 +46,7 @@ const TrainingHighlights = () => {
           {highlights.map((item) => {
             const Icon = item.icon;
             return (
-              <div key={item.title} className="rounded-[28px] border border-slate-200 bg-[#F8FBFF] p-8 text-center shadow-sm hover:shadow-lg transition-shadow duration-300">
+              <div key={item.title} className="rounded-[28px] border border-slate-200 bg-[#FAFAFA] p-8 text-center shadow-sm hover:shadow-lg transition-shadow duration-300">
                 <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-brand-50 text-brand-600 mb-5">
                   <Icon className="h-6 w-6" />
                 </div>

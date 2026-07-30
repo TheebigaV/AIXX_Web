@@ -344,19 +344,6 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
             <h2 className="mt-2 text-3xl font-semibold text-slate-900">Find the right course for your goals</h2>
           </div>
           <div className="flex flex-col md:flex-row gap-3 w-full max-w-xl md:w-auto">
-            <div className="relative w-full md:w-56">
-              <select
-                value={deliveryMethodFilter}
-                onChange={(e) => setDeliveryMethodFilter(e.target.value)}
-                className="w-full rounded-full border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none shadow-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all cursor-pointer appearance-none pr-10"
-                style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundPosition: 'right 1rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1em' }}
-              >
-                <option value="all">All Delivery Methods</option>
-                <option value="Self-Paced E-Learning">Self-Paced E-Learning</option>
-                <option value="Live Virtual">Live Virtual</option>
-                <option value="In-Person Campus">In-Person Campus</option>
-              </select>
-            </div>
             <div className="relative w-full md:w-64">
               <input
                 type="text"
@@ -406,7 +393,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
             }`}
           >
             <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Interactive E-Learning</span>
+            <span>E-Learning</span>
           </button>
         </div>
 
@@ -448,11 +435,6 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
                         <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
                           {course.institution}
                         </span>
-                        {course.deliveryMethod && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider bg-brand-50 text-brand-600 px-2 py-0.5 rounded-full border border-brand-100">
-                            {course.deliveryMethod}
-                          </span>
-                        )}
                       </div>
                       <button
                         onClick={() => toggleSaveCourse(course.id)}
@@ -481,10 +463,10 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
                   </div>
 
                   {/* Estimated Payable section (Single white card style) */}
-                  <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div className="space-y-2 sm:space-y-0 sm:flex sm:items-center sm:gap-6">
+                  <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 flex-wrap">
                       {/* Full course fee */}
-                      <div>
+                      <div className="shrink-0">
                         <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                           <span>Full course fee</span>
                           <span className="text-slate-400 cursor-pointer text-[10px]" title="Excludes applicable taxes">ⓘ</span>
@@ -493,16 +475,16 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
                       </div>
 
                       {/* AIXX Alumni Member Fee */}
-                      <div>
+                      <div className="shrink-0">
                         <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                           <span>AIXX Alumni Member Fee</span>
                           <span className="text-slate-400 cursor-pointer text-[10px]" title="Promo rate details">ⓘ</span>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <p className="text-xs font-semibold text-slate-500">
                             From <span className="text-lg font-black text-emerald-600">{course.payableFee}*</span>
                           </p>
-                          <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-600 border border-rose-100">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-600 border border-rose-100 shrink-0">
                             {course.discount} OFF
                           </span>
                         </div>
@@ -510,16 +492,16 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full lg:w-auto shrink-0 mt-2 lg:mt-0">
                       <Link
                         href={`/courses/${course.id}`}
-                        className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 text-xs font-semibold shadow-sm transition-all duration-200 text-center"
+                        className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 text-xs font-semibold shadow-sm transition-all duration-200 text-center whitespace-nowrap"
                       >
                         More info
                       </Link>
                       <button
                         onClick={() => setApplyingCourse(course)}
-                        className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 rounded-full bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 text-xs font-semibold shadow-sm hover:shadow-md transition-all duration-200 group/btn text-center"
+                        className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 rounded-full bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 text-xs font-semibold shadow-sm hover:shadow-md transition-all duration-200 group/btn text-center whitespace-nowrap"
                       >
                         <span>Apply</span>
                         <span className="group-hover/btn:translate-x-0.5 transition-transform">→</span>

@@ -963,5 +963,276 @@ export const courseQuestions: Record<number, QuizQuestion[]> = {
       options: ["Learning Rate (alpha)", "C Parameter", "Epochs count", "Top-P value"],
       correctAnswer: 1
     }
+  ],
+
+  // --- BASIC AI CERTIFICATE (400 series) ---
+  // Module 1 Quiz
+  403: [
+    {
+      question: "What is the primary difference between AI and traditional software?",
+      options: [
+        "AI requires no internet connection to operate",
+        "AI systems learn from patterns in data rather than just following rigid pre-written rules",
+        "Traditional software does not use databases",
+        "AI is only used in video games"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "Which of the following is an everyday example of AI at work?",
+      options: [
+        "A simple mechanical wall clock",
+        "A recommendation algorithm suggesting videos on YouTube",
+        "A calculator showing the sum of 2 + 2",
+        "A standard print copy of a book"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "Why do streaming platforms use recommendation engines?",
+      options: [
+        "To delete old movies automatically",
+        "To predict and suggest content you are likely to enjoy based on your past activity",
+        "To charge you extra monthly fees",
+        "To test your device's audio volume"
+      ],
+      correctAnswer: 1
+    }
+  ],
+  // Module 2 Quiz
+  405: [
+    {
+      question: "What is 'Generative AI'?",
+      options: [
+        "AI that only counts files on a server",
+        "AI capable of creating new text, images, or code based on user prompts",
+        "A system that prevents computers from turning off",
+        "A database backup system"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "What is an AI 'hallucination'?",
+      options: [
+        "When an AI system goes offline due to high traffic",
+        "When a generative AI model confidently presents false or fabricated information as fact",
+        "When a computer screen starts flickering",
+        "When a user inputs a prompt using emojis"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "Which of the following makes a prompt more effective?",
+      options: [
+        "Keeping it as short and vague as possible",
+        "Being specific, providing context, and defining formatting rules",
+        "Using capital letters for every word",
+        "Asking the AI to answer in another language only"
+      ],
+      correctAnswer: 1
+    }
+  ],
+  // Final Exam
+  406: [
+    {
+      question: "Which term describes systems that learn from data patterns to make predictions rather than following rigid pre-programmed rules?",
+      options: [
+        "Static scripting",
+        "Artificial Intelligence & Machine Learning",
+        "HTML rendering",
+        "Binary compilation"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "What do recommendation systems use to predict what products or media you might like?",
+      options: [
+        "Random guess selection",
+        "Your past viewing or purchasing history and behavior patterns",
+        "The device battery percentage",
+        "The time zone of your router"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "Which of these is a typical function of Generative AI?",
+      options: [
+        "Replacing computer CPUs physically",
+        "Creating new paragraphs of text or drawing images based on prompts",
+        "Backing up documents to local folders",
+        "Encrypting database passwords"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "What is an AI 'prompt'?",
+      options: [
+        "A system shutdown timer",
+        "The written instruction or input text you give to guide an AI's response",
+        "A database configuration key",
+        "An error code on screen"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "If a generative AI tool outputs a fact you plan to use in a professional report, you should:",
+      options: [
+        "Copy and paste it immediately without review",
+        "Verify the facts using trusted external sources before publishing",
+        "Delete the AI tool from your device",
+        "Write the report in bold characters"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "What is the phenomenon where an AI model confidently invents incorrect facts?",
+      options: [
+        "Data drift",
+        "Hallucination",
+        "Overclocking",
+        "Bit rot"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "To make a prompt more effective, which of the following should you include?",
+      options: [
+        "Vague instructions",
+        "Specific role context, clear constraints, and expected output formats",
+        "A database index command",
+        "No spaces between words"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "Which tool is an example of an AI-powered smart voice assistant?",
+      options: [
+        "Apple Siri",
+        "Windows Notepad",
+        "Microsoft Excel",
+        "Google Chrome Browser"
+      ],
+      correctAnswer: 0
+    },
+    {
+      question: "Which of the following is an ethical concern regarding AI development?",
+      options: [
+        "The color of the computer casing",
+        "Algorithmic bias and data privacy protections",
+        "The CPU fan noise speed",
+        "Using double quotes in text files"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "What does it mean for a course to be self-paced?",
+      options: [
+        "You must complete it in a single continuous session",
+        "You can study the materials and attempt quizzes whenever it is convenient for you",
+        "The course lessons are read to you by an audio assistant",
+        "You are not allowed to retake any quizzes"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "Which of the following is a primary goal of natural language processing (NLP)?",
+      options: [
+        "Speeding up hard disk writes",
+        "Enabling computers to understand, interpret, and generate human languages",
+        "Creating new graphics cards",
+        "Compiling programming languages to binary"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "What does CPU stand for, and why is it important in running AI systems?",
+      options: [
+        "Computer Pattern Utility; it stores data files",
+        "Central Processing Unit; it acts as the primary processor for general computer instructions",
+        "Cloud Process Unit; it runs vector search",
+        "Core Predictive Utility; it compiles CSS"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "Which type of AI model is specifically optimized to perform tasks in a specific domain, like diagnosing medical images?",
+      options: [
+        "Narrow or Weak AI",
+        "Artificial General Intelligence (AGI)",
+        "Super AI",
+        "Traditional calculator"
+      ],
+      correctAnswer: 0
+    },
+    {
+      question: "What is a key benefit of using cloud computing for AI model training?",
+      options: [
+        "It makes the internet connection completely free",
+        "It provides access to massive, scalable GPU and TPU processor resources on demand",
+        "It eliminates the need for prompt engineering",
+        "It automatically writes the training data labels"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "In AI, what does 'bias in training data' lead to?",
+      options: [
+        "Faster inference speeds",
+        "Unfair, inaccurate, or discriminatory AI predictions",
+        "Smaller model file sizes",
+        "Longer battery life for devices"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "Which of the following is a chatbot powered by a Large Language Model (LLM)?",
+      options: [
+        "Microsoft Word classic",
+        "ChatGPT",
+        "Adobe Photoshop",
+        "Windows Command Prompt"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "What is 'data privacy' in the context of AI tools?",
+      options: [
+        "Ensuring user input data is kept secure and not exposed or used without consent",
+        "Making all data public on search engines",
+        "Running models without saving files",
+        "Deleting user browser cache"
+      ],
+      correctAnswer: 0
+    },
+    {
+      question: "What does AGI stand for, representing a hypothetical AI with human-level general intelligence?",
+      options: [
+        "Automated General Indexer",
+        "Artificial General Intelligence",
+        "Analytical Graphic Interface",
+        "Applied Gradient Instance"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "Which technology allows autonomous cars to detect objects and pedestrians around them?",
+      options: [
+        "Text search indexing",
+        "Computer Vision and Sensor Fusion",
+        "Audio MP3 encoding",
+        "Linear regression spreadsheets"
+      ],
+      correctAnswer: 1
+    },
+    {
+      question: "Why is it important to have a human-in-the-loop when using AI to generate legal contracts?",
+      options: [
+        "To slow down the signing process",
+        "To review the output for hallucinations, legal accuracy, and local compliance",
+        "To double the compute cost",
+        "To format the document to PDF"
+      ],
+      correctAnswer: 1
+    }
   ]
 };

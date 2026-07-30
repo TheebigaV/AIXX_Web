@@ -45,7 +45,7 @@ const tracks = [
 
 const HomeTrainingTracks = () => {
   return (
-    <section className="w-full bg-[#F8FBFF] py-12 lg:py-20">
+    <section className="w-full bg-[#FAFAFA] py-12 lg:py-20">
       <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40">
         <div className="max-w-3xl mx-auto text-center mb-12">
           <p className="text-sm uppercase tracking-[0.3em] text-brand-600 font-semibold mb-4">

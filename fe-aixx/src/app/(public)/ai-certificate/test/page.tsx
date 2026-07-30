@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { api } from '@/lib/public/api';
 import Link from 'next/link';
@@ -12,7 +12,7 @@ interface Question {
     options: Record<string, string>;
 }
 
-export default function CertificateTestPage() {
+function TestPageContent() {
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
 
@@ -465,6 +465,19 @@ export default function CertificateTestPage() {
 
             </div>
         </div>
+    );
+}
+
+export default function CertificateTestPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center py-20">
+                <FaSpinner className="animate-spin text-brand-600 mb-4" size={40} />
+                <p className="text-slate-600 font-medium">Loading test resources...</p>
+            </div>
+        }>
+            <TestPageContent />
+        </Suspense>
     );
 }
 

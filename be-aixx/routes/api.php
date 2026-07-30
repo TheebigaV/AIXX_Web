@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\CertificateRegistrationController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\InquiryController;
@@ -82,6 +83,9 @@ Route::middleware('auth:sanctum')->group(function () {
         // Settings
         Route::get('settings', [SettingController::class, 'index']);
         Route::post('settings', [SettingController::class, 'update']);
+
+        // Certificate Registrations
+        Route::apiResource('certificate-registrations', CertificateRegistrationController::class)->only(['index', 'destroy']);
     });
 });
 

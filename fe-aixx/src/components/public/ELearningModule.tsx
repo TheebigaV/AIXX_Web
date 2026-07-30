@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaPlay, FaCheckCircle, FaLock, FaBookOpen, FaLaptopCode, FaArrowRight, FaArrowLeft, FaClock, FaLayerGroup, FaChartLine, FaBrain, FaNetworkWired, FaFileAlt, FaTimesCircle, FaTrophy, FaApple, FaFacebook, FaGoogle, FaLinkedin, FaCheck } from 'react-icons/fa';
+import { api } from '@/lib/public/api';
 import { courseQuestions } from './courseQuestions';
-
 // --- MOCK DATA ---
 
 interface QuizQuestion {
@@ -29,6 +29,17 @@ interface CurriculumSection {
 }
 
 const availableCourses = [
+  { 
+    id: 'basic-ai', 
+    title: 'Free AI Knowledge Certificate', 
+    description: 'Test your general AI literacy and earn a Free AI Knowledge Certificate by completing our 20-question MCQ assessment.', 
+    extendedDescription: 'This course provides a gentle, non-technical introduction to AI concepts. It is designed for everyone, regardless of industry or academic background. Validate your understanding of LLMs, everyday AI tools, and basic ethics with our 20 MCQ Knowledge Assessment.',
+    modules: 2, 
+    duration: '1h 00m',
+    icon: FaBrain,
+    theme: 'emerald',
+    price: 'Free'
+  },
   { 
     id: 'ai-productivity', 
     title: 'Enterprise AI & Productivity', 
@@ -64,7 +75,323 @@ const availableCourses = [
   }
 ];
 
+const countries = [
+  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
+  "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+  "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia",
+  "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+  "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia",
+  "Fiji", "Finland", "France",
+  "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guyana",
+  "Haiti", "Honduras", "Hungary",
+  "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy",
+  "Jamaica", "Japan", "Jordan",
+  "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan",
+  "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg",
+  "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar",
+  "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway",
+  "Oman",
+  "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal",
+  "Qatar",
+  "Romania", "Russia", "Rwanda",
+  "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria",
+  "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
+  "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan",
+  "Vanuatu", "Vatican City", "Venezuela", "Vietnam",
+  "Yemen",
+  "Zambia", "Zimbabwe"
+];
+
+const countryPhoneCodes = [
+  { country: "Singapore", code: "+65", flag: "🇸🇬" },
+  { country: "Malaysia", code: "+60", flag: "🇲🇾" },
+  { country: "Indonesia", code: "+62", flag: "🇮🇩" },
+  { country: "Thailand", code: "+66", flag: "🇹🇭" },
+  { country: "Philippines", code: "+63", flag: "🇵🇭" },
+  { country: "Vietnam", code: "+84", flag: "🇻🇳" },
+  { country: "India", code: "+91", flag: "🇮🇳" },
+  { country: "Australia", code: "+61", flag: "🇦🇺" },
+  { country: "United Kingdom", code: "+44", flag: "🇬🇧" },
+  { country: "United States", code: "+1", flag: "🇺🇸" },
+  { country: "Canada", code: "+1", flag: "🇨🇦" },
+  { country: "China", code: "+86", flag: "🇨🇳" },
+  { country: "Hong Kong", code: "+852", flag: "🇭🇰" },
+  { country: "Japan", code: "+81", flag: "🇯🇵" },
+  { country: "South Korea", code: "+82", flag: "🇰🇷" },
+  { country: "Taiwan", code: "+886", flag: "🇹🇼" },
+  { country: "New Zealand", code: "+64", flag: "🇳🇿" },
+  { country: "France", code: "+33", flag: "🇫🇷" },
+  { country: "Germany", code: "+49", flag: "🇩🇪" },
+  { country: "Italy", code: "+39", flag: "🇮🇹" },
+  { country: "Spain", code: "+34", flag: "🇪🇸" },
+  { country: "Netherlands", code: "+31", flag: "🇳🇱" },
+  { country: "Switzerland", code: "+41", flag: "🇨🇭" },
+  { country: "Sweden", code: "+46", flag: "🇸🇪" },
+  { country: "Norway", code: "+47", flag: "🇳🇴" },
+  { country: "Denmark", code: "+45", flag: "🇩🇰" },
+  { country: "Finland", code: "+358", flag: "🇫🇮" },
+  { country: "Russia", code: "+7", flag: "🇷🇺" },
+  { country: "Saudi Arabia", code: "+966", flag: "🇸🇦" },
+  { country: "UAE", code: "+971", flag: "🇦🇪" },
+  { country: "Qatar", code: "+974", flag: "🇶🇦" },
+  { country: "South Africa", code: "+27", flag: "🇿🇦" },
+  { country: "Egypt", code: "+20", flag: "🇪🇬" },
+  { country: "Turkey", code: "+90", flag: "🇹🇷" },
+  { country: "Brazil", code: "+55", flag: "🇧🇷" },
+  { country: "Argentina", code: "+54", flag: "🇦🇷" },
+  { country: "Mexico", code: "+52", flag: "🇲🇽" },
+  { country: "Pakistan", code: "+92", flag: "🇵🇰" },
+  { country: "Bangladesh", code: "+880", flag: "🇧🇩" },
+  { country: "Sri Lanka", code: "+94", flag: "🇱🇰" },
+  { country: "Myanmar", code: "+95", flag: "🇲🇲" },
+  { country: "Cambodia", code: "+855", flag: "🇰🇭" },
+  { country: "Brunei", code: "+673", flag: "🇧🇳" },
+  { country: "Laos", code: "+856", flag: "🇱🇦" }
+];
+
 const courseCurriculums: Record<string, CurriculumSection[]> = {
+  'basic-ai': [
+    {
+      id: 'intro',
+      sectionTitle: 'Course Introduction',
+      lessons: [
+        {
+          id: 401,
+          title: 'Introduction to Free AI Knowledge Certificate',
+          duration: '4 min read',
+          type: 'notes',
+          status: 'unlocked',
+          content: `
+            <div class="space-y-6 text-slate-700">
+              <p class="text-xl font-bold text-slate-900 font-serif">Welcome to the Free AI Knowledge Certificate!</p>
+              <p>This program is a comprehensive, non-technical introduction designed to build your core artificial intelligence literacy. As AI technologies integrate into search engines, enterprise software, and everyday life, knowing how they work has become an essential modern skill.</p>
+              
+              <div class="p-5 bg-emerald-50/60 border-l-4 border-emerald-500 text-emerald-900 rounded-r-xl space-y-2">
+                <strong class="text-base">Why AI Literacy Matters:</strong>
+                <p class="text-sm">Understanding AI is not just for computer scientists. It enables managers, writers, educators, and entrepreneurs to collaborate with smart systems, automate redundant tasks, and make informed choices about privacy and ethics.</p>
+              </div>
+
+              <h4 class="text-lg font-bold text-slate-900 font-serif">What You Will Study</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                  <h5 class="font-bold text-slate-900 mb-1 text-sm">Module 1: Everyday AI</h5>
+                  <p class="text-xs text-slate-500">Learn how predictive systems, recommendation engines, smart voice assistants, and search indexing affect your daily lifestyle.</p>
+                </div>
+                <div class="p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                  <h5 class="font-bold text-slate-900 mb-1 text-sm">Module 2: Generative AI</h5>
+                  <p class="text-xs text-slate-500">Understand the prompting frameworks for tools like ChatGPT and Claude, while learning about hallucinations and AI bias.</p>
+                </div>
+              </div>
+
+              <h4 class="text-lg font-bold text-slate-900 font-serif">Assessment Requirements</h4>
+              <p class="text-sm">This curriculum concludes with a <strong>20-question final exam</strong>. To receive your digital completion certificate, you must score at least <strong>80% (16/20 correct answers)</strong>. You can retry the exam as many times as necessary to pass.</p>
+            </div>
+          `
+        }
+      ]
+    },
+    {
+      id: 'module1',
+      sectionTitle: 'Module 1: AI in Everyday Life',
+      lessons: [
+        {
+          id: 402,
+          title: 'What is AI and How Does it Work?',
+          duration: '10 min read',
+          type: 'notes',
+          status: 'unlocked',
+          content: `
+            <div class="space-y-6 text-slate-700">
+              <p>Artificial Intelligence (AI) refers to computer systems designed to perform tasks that typically require human intelligence. This includes reasoning, learning from past experiences, and understanding natural language.</p>
+              
+              <h4 class="text-xl font-bold text-slate-900 font-serif">Core AI Technologies Explained Simply</h4>
+              <div class="space-y-4">
+                <div class="border-b border-gray-100 pb-4">
+                  <h5 class="font-bold text-slate-900 text-sm">1. Machine Learning (ML)</h5>
+                  <p class="text-sm text-slate-600 mt-1">Instead of writing code that describes every step, we show a computer millions of examples. The computer learns to identify patterns from these examples and applies them to new data.</p>
+                </div>
+                <div class="border-b border-gray-100 pb-4">
+                  <h5 class="font-bold text-slate-900 text-sm">2. Deep Learning & Neural Networks</h5>
+                  <p class="text-sm text-slate-600 mt-1">Inspired by biological brain structures, deep learning uses layers of artificial neurons to process information. Each layer refines the decision (e.g., one layer detects simple lines, the next detects shapes, and the final layer identifies a human face).</p>
+                </div>
+                <div class="border-b border-gray-100 pb-4">
+                  <h5 class="font-bold text-slate-900 text-sm">3. Natural Language Processing (NLP)</h5>
+                  <p class="text-sm text-slate-600 mt-1">Enables computers to read, translate, and extract meaning from human language. This technology drives automated voice translations and smart document summaries.</p>
+                </div>
+                <div>
+                  <h5 class="font-bold text-slate-900 text-sm">4. Computer Vision</h5>
+                  <p class="text-sm text-slate-600 mt-1">Allows machines to "see" and interpret visual data from cameras. Autonomous vehicles use computer vision to detect lane markings, traffic lights, and pedestrians in real-time.</p>
+                </div>
+              </div>
+
+              <h4 class="text-xl font-bold text-slate-900 font-serif">Everyday Examples of AI</h4>
+              <ul class="list-disc pl-5 space-y-3">
+                <li><strong>Recommendation Systems:</strong> Streaming services like Netflix or music platforms like Spotify analyze your past choices to suggest new movies or songs.</li>
+                <li><strong>Smart Assistants:</strong> Voice-activated helpers like Siri, Alexa, or Google Assistant translate your voice commands into actions.</li>
+                <li><strong>Search Engines:</strong> Google and Bing use AI to predict what you are searching for and deliver the most relevant websites.</li>
+              </ul>
+
+              <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl">
+                <h5 class="font-bold text-slate-900 mb-2 font-serif text-sm">AI vs. Traditional Computer Programming</h5>
+                <p class="text-sm">In traditional programming, the developer writes explicit rules: <code>Inputs + Rules = Answers</code>. In Machine Learning, the system creates the rules: <code>Inputs + Answers = Rules</code>. This allows computers to solve complex problems that are too difficult for humans to write rules for.</p>
+              </div>
+            </div>
+          `
+        },
+        {
+          id: 403,
+          title: 'Module 1 Knowledge Check',
+          duration: '3 Questions',
+          type: 'quiz',
+          status: 'unlocked',
+          questions: [
+            {
+              question: "What is the primary difference between AI and traditional software?",
+              options: ["AI requires no internet connection to operate", "AI systems learn from patterns in data rather than just following rigid pre-written rules", "Traditional software does not use databases", "AI is only used in video games"],
+              correctAnswer: 1
+            },
+            {
+              question: "Which of the following is an everyday example of AI at work?",
+              options: ["A simple mechanical wall clock", "A recommendation algorithm suggesting videos on YouTube", "A calculator showing the sum of 2 + 2", "A standard print copy of a book"],
+              correctAnswer: 1
+            },
+            {
+              question: "Why do streaming platforms use recommendation engines?",
+              options: ["To delete old movies automatically", "To predict and suggest content you are likely to enjoy based on your past activity", "To charge you extra monthly fees", "To test your device's audio volume"],
+              correctAnswer: 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'module2',
+      sectionTitle: 'Module 2: Generative AI & Ethics',
+      lessons: [
+        {
+          id: 404,
+          title: 'Understanding Generative AI & Prompting',
+          duration: '15 min read',
+          type: 'notes',
+          status: 'unlocked',
+          content: `
+            <div class="space-y-6 text-slate-700">
+              <p>Generative AI is a subset of artificial intelligence capable of generating new text, images, videos, audio, or code from scratch when given a simple natural language request. Popular examples include ChatGPT, Claude, and Midjourney.</p>
+
+              <h4 class="text-xl font-bold text-slate-900 font-serif">How Large Language Models (LLMs) Work</h4>
+              <p class="text-sm">Large Language Models (like GPT-4 or Claude) are trained on massive libraries of text. Under the hood, they act like highly sophisticated autocomplete engines. They do not "think" or feel like humans; instead, they analyze the words you have written and calculate the most statistically probable next words to complete your sentence.</p>
+
+              <h4 class="text-xl font-bold text-slate-900 font-serif">The Prompt Engineering Framework: R-T-C-F</h4>
+              <p class="text-sm">A <strong>prompt</strong> is the text instruction you write to command a generative AI model. Use the <strong>R-T-C-F</strong> layout to get premium results:</p>
+              <ul class="list-disc pl-5 space-y-2 text-sm text-slate-600">
+                <li><strong>R - Role:</strong> Tell the AI who it should pretend to be (e.g., "Act as a senior marketing specialist...").</li>
+                <li><strong>T - Task:</strong> State the primary output required (e.g., "...write a weekly newsletter header...").</li>
+                <li><strong>C - Context:</strong> Give additional background details (e.g., "...for a community garden project that is starting a winter program...").</li>
+                <li><strong>F - Format:</strong> Specify structure (e.g., "...format as 3 bullet points, under 50 words each.").</li>
+              </ul>
+
+              <h4 class="text-xl font-bold text-slate-900 font-serif">Ethics, Hallucinations, and Safety</h4>
+              <p class="text-sm">Because LLMs predict probable next words rather than retrieving raw facts, they sometimes experience <strong>hallucinations</strong>—confidently asserting statements or statistics that are completely made up. Other critical ethical considerations include:</p>
+              <ul class="list-disc pl-5 space-y-2 text-sm text-slate-600">
+                <li><strong>Algorithmic Bias:</strong> If training data is biased or represents only a subset of people, the AI predictions will reinforce those unfair biases.</li>
+                <li><strong>Data Privacy:</strong> Public AI tools often save your prompts to retrain their models. Never share confidential business reports, personal numbers, or password keys.</li>
+                <li><strong>Human-in-the-loop:</strong> Professional outputs must always be reviewed by human experts to ensure safety, accuracy, and legal compliance.</li>
+              </ul>
+            </div>
+          `
+        },
+        {
+          id: 405,
+          title: 'Module 2 Knowledge Check',
+          duration: '3 Questions',
+          type: 'quiz',
+          status: 'unlocked',
+          questions: [
+            {
+              question: "What is 'Generative AI'?",
+              options: ["AI that only counts files on a server", "AI capable of creating new text, images, or code based on user prompts", "A system that prevents computers from turning off", "A database backup system"],
+              correctAnswer: 1
+            },
+            {
+              question: "What is an AI 'hallucination'?",
+              options: ["When an AI system goes offline due to high traffic", "When a generative AI model confidently presents false or fabricated information as fact", "When a computer screen starts flickering", "When a user inputs a prompt using emojis"],
+              correctAnswer: 1
+            },
+            {
+              question: "Which of the following makes a prompt more effective?",
+              options: ["Keeping it as short and vague as possible", "Being specific, providing context, and defining formatting rules", "Using capital letters for every word", "Asking the AI to answer in another language only"],
+              correctAnswer: 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'certification',
+      sectionTitle: 'Final Certification',
+      lessons: [
+        {
+          id: 406,
+          title: 'Final Certification Exam',
+          duration: '10 Questions',
+          type: 'quiz',
+          status: 'unlocked',
+          questions: [
+            {
+              question: "Which term describes systems that learn from data patterns to make predictions rather than following rigid pre-programmed rules?",
+              options: ["Static scripting", "Artificial Intelligence & Machine Learning", "HTML rendering", "Binary compilation"],
+              correctAnswer: 1
+            },
+            {
+              question: "What do recommendation systems use to predict what products or media you might like?",
+              options: ["Random guess selection", "Your past viewing or purchasing history and behavior patterns", "The device battery percentage", "The time zone of your router"],
+              correctAnswer: 1
+            },
+            {
+              question: "Which of these is a typical function of Generative AI?",
+              options: ["Replacing computer CPUs physically", "Creating new paragraphs of text or drawing images based on prompts", "Backing up documents to local folders", "Encrypting database passwords"],
+              correctAnswer: 1
+            },
+            {
+              question: "What is an AI 'prompt'?",
+              options: ["A system shutdown timer", "The written instruction or input text you give to guide an AI's response", "A database configuration key", "An error code on screen"],
+              correctAnswer: 1
+            },
+            {
+              question: "If a generative AI tool outputs a fact you plan to use in a professional report, you should:",
+              options: ["Copy and paste it immediately without review", "Verify the facts using trusted external sources before publishing", "Delete the AI tool from your device", "Write the report in bold characters"],
+              correctAnswer: 1
+            },
+            {
+              question: "What is the phenomenon where an AI model confidently invents incorrect facts?",
+              options: ["Data drift", "Hallucination", "Overclocking", "Bit rot"],
+              correctAnswer: 1
+            },
+            {
+              question: "To make a prompt more effective, which of the following should you include?",
+              options: ["Vague instructions", "Specific role context, clear constraints, and expected output formats", "A database index command", "No spaces between words"],
+              correctAnswer: 1
+            },
+            {
+              question: "Which tool is an example of an AI-powered smart voice assistant?",
+              options: ["Apple Siri", "Windows Notepad", "Microsoft Excel", "Google Chrome Browser"],
+              correctAnswer: 0
+            },
+            {
+              question: "Which of the following is an ethical concern regarding AI development?",
+              options: ["The color of the computer casing", "Algorithmic bias and data privacy protections", "The CPU fan noise speed", "Using double quotes in text files"],
+              correctAnswer: 1
+            },
+            {
+              question: "What does it mean for a course to be self-paced?",
+              options: ["You must complete it in a single continuous session", "You can study the materials and attempt quizzes whenever it is convenient for you", "The course lessons are read to you by an audio assistant", "You are not allowed to retake any quizzes"],
+              correctAnswer: 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
   'ai-productivity': [
     {
       id: 'intro',
@@ -1106,6 +1433,39 @@ export default function ELearningModule() {
   const [userAnswers, setUserAnswers] = useState<Record<number, number>>({});
   const [certName, setCertName] = useState("");
   const [isCertGenerated, setIsCertGenerated] = useState(false);
+
+  // Enrollment detailed states
+  const [enrollFormSubmitted, setEnrollFormSubmitted] = useState(false);
+  const [loadingForm, setLoadingForm] = useState(false);
+  const [enrollFormData, setEnrollFormData] = useState({
+    fullName: '',
+    gender: '',
+    companyName: '',
+    phone: '',
+    email: '',
+    country: 'Singapore'
+  });
+
+  // Dynamic certificate scaling ref & observer
+  const certContainerRef = useRef<HTMLDivElement>(null);
+  const [certScale, setCertScale] = useState(1);
+
+  useEffect(() => {
+    if (!certContainerRef.current) return;
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const parentWidth = entry.contentRect.width;
+        const certWidth = 650;
+        if (parentWidth < certWidth) {
+          setCertScale(parentWidth / certWidth);
+        } else {
+          setCertScale(1);
+        }
+      }
+    });
+    resizeObserver.observe(certContainerRef.current);
+    return () => resizeObserver.disconnect();
+  }, [isCertGenerated]);
   
   // Accordion state for player
   const [expandedTopics, setExpandedTopics] = useState<string[]>(['intro']);
@@ -1128,8 +1488,10 @@ export default function ELearningModule() {
   const currentCurriculum = courseCurriculums[selectedCourse.id] || courseCurriculums['ai-productivity'];
   const allLessons = currentCurriculum.flatMap(section => section.lessons);
   const activeLesson = allLessons.find((l) => l.id === activeLessonId) || allLessons[0];
-  const currentQuestions = courseQuestions[activeLessonId] || [];
+  const currentQuestions = courseQuestions[activeLessonId] || activeLesson.questions || [];
   const isFinalExam = allLessons.length > 0 && activeLessonId === allLessons[allLessons.length - 1].id;
+  const passingPercentage = selectedCourse.id === 'basic-ai' ? 0.8 : 0.6;
+  const passingScoreRequired = Math.ceil(currentQuestions.length * passingPercentage);
   
   const progressPercentage = allLessons.length > 0 
     ? Math.round((completedLessonIds.length / allLessons.length) * 100) 
@@ -1149,20 +1511,31 @@ export default function ELearningModule() {
   // --- HANDLERS ---
 
   const handleEnrollClick = () => {
-    setEnrollmentStatus('enrolled');
-    // Set active lesson to the first lesson of this course's curriculum
-    const firstLessonId = currentCurriculum[0]?.lessons[0]?.id || 101;
-    setActiveLessonId(firstLessonId);
-    // Expand the first topic
-    const firstTopicId = currentCurriculum[0]?.id || 'intro';
-    setExpandedTopics([firstTopicId]);
-    // Clear completed lessons
-    setCompletedLessonIds([]);
+    setEnrollmentStatus('enrolling');
+    setEnrollFormSubmitted(false);
   };
 
-  const handleSimulateSignup = (e: React.FormEvent) => {
+  const handleSimulateSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    setEnrollmentStatus('enrolled');
+    if (loadingForm) return;
+    setLoadingForm(true);
+    try {
+      await api.post('api/certificate/register', {
+        full_name: enrollFormData.fullName,
+        gender: enrollFormData.gender,
+        company_name: enrollFormData.companyName,
+        phone: enrollFormData.phone,
+        email: enrollFormData.email,
+        country: enrollFormData.country
+      });
+      setEnrollFormSubmitted(true);
+      setToastMessage('Success: Registration complete. You may now begin the test!');
+    } catch (err: any) {
+      console.error('Registration failed:', err);
+      setToastMessage(err.response?.data?.message || 'Failed to submit registration. Please check your details and try again.');
+    } finally {
+      setLoadingForm(false);
+    }
   };
 
   const toggleTopic = (topicId: string) => {
@@ -1359,6 +1732,44 @@ export default function ELearningModule() {
 
   // VIEW 2: ENROLLMENT FORM (Image 2)
   if (enrollmentStatus === 'enrolling') {
+    if (enrollFormSubmitted) {
+      return (
+        <div className="w-full bg-white text-slate-900 animate-fade-in-up p-6 md:p-12 max-w-xl mx-auto border border-gray-100 rounded-2xl shadow-lg mt-8 text-center flex flex-col items-center justify-center space-y-6">
+          <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center animate-bounce shadow-sm">
+            <FaCheckCircle size={40} />
+          </div>
+          <h3 className="text-2xl font-bold text-slate-900 leading-tight">Access Link Dispatched!</h3>
+          <p className="text-slate-600 text-sm max-w-md leading-relaxed">
+            Thank you, <strong className="text-slate-900">{enrollFormData.fullName}</strong>. We have sent a unique test access link to your email <strong className="text-slate-900">{enrollFormData.email}</strong>.
+          </p>
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-500 text-left w-full space-y-1">
+            <h5 className="font-bold text-slate-700 mb-1">Simulated Link Details:</h5>
+            <p>• Access Link: <span className="text-blue-600 font-mono">https://aixx.com.sg/ai-certificate/test?token=AIXX-DEMO</span></p>
+            <p>• Verification: Sent to {enrollFormData.email} (Handphone: {enrollFormData.phone})</p>
+          </div>
+          <button 
+            onClick={() => {
+              setEnrollmentStatus('enrolled');
+              setEnrollFormSubmitted(false);
+              // Set active lesson to the first lesson of this course's curriculum
+              const firstLessonId = currentCurriculum[0]?.lessons[0]?.id || 101;
+              setActiveLessonId(firstLessonId);
+              // Expand the first topic
+              const firstTopicId = currentCurriculum[0]?.id || 'intro';
+              setExpandedTopics([firstTopicId]);
+              // Clear completed lessons
+              setCompletedLessonIds([]);
+              // Set the certificate name to the entered full name automatically!
+              setCertName(enrollFormData.fullName);
+            }}
+            className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-md transition-colors text-sm uppercase tracking-wider"
+          >
+            Start Test / Course Now
+          </button>
+        </div>
+      );
+    }
+
     return (
       <div className="w-full bg-white text-slate-900 animate-fade-in-up p-4 md:p-8 max-w-5xl mx-auto border border-gray-100 rounded-2xl shadow-sm mt-8">
         <button 
@@ -1388,45 +1799,120 @@ export default function ELearningModule() {
             </p>
           </div>
 
-          {/* Right: Sign Up Form */}
+          {/* Right: Detailed Registration Form */}
           <div className="flex-1 max-w-md w-full mx-auto">
-            <h2 className="text-2xl md:text-3xl font-serif text-[#4A5568] mb-8">Sign up to enroll</h2>
+            <h2 className="text-2xl md:text-3xl font-serif text-[#4A5568] mb-6">Enroll in course</h2>
             
-            <div className="flex items-center gap-4 mb-8">
-              <span className="text-sm text-slate-600 whitespace-nowrap">Sign in with</span>
-              <div className="flex gap-2">
-                <button onClick={handleSimulateSignup} className="w-full px-4 h-10 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-50 transition-colors text-slate-700 bg-white shadow-sm gap-2 font-medium" title="Sign up with Google (Simulation)">
-                  <FaGoogle className="text-red-500" size={18} /> Google
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 mb-8">
-              <div className="h-px bg-gray-200 flex-1"></div>
-              <span className="text-sm text-gray-400 font-medium uppercase tracking-widest">or</span>
-              <div className="h-px bg-gray-200 flex-1"></div>
-            </div>
-
-            <form onSubmit={handleSimulateSignup} className="space-y-5">
-              <h3 className="font-bold text-slate-800 text-lg mb-4">Account info</h3>
-              
+            <form onSubmit={handleSimulateSignup} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Email <span className="text-red-500">*</span></label>
-                <input required type="email" placeholder="Email" className="w-full px-4 py-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-slate-900" />
+                <label className="block text-xs font-bold text-slate-600 mb-1">Full Name <span className="text-red-500">*</span></label>
+                <input 
+                  required 
+                  type="text" 
+                  value={enrollFormData.fullName}
+                  onChange={(e) => setEnrollFormData({...enrollFormData, fullName: e.target.value})}
+                  placeholder="Full Name" 
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-slate-900" 
+                />
               </div>
               
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">First name <span className="text-red-500">*</span></label>
-                <input required type="text" placeholder="First name" className="w-full px-4 py-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-slate-900" />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Last name <span className="text-red-500">*</span></label>
-                <input required type="text" placeholder="Last name" className="w-full px-4 py-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-slate-900" />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Gender <span className="text-red-500">*</span></label>
+                  <select 
+                    required 
+                    value={enrollFormData.gender}
+                    onChange={(e) => setEnrollFormData({...enrollFormData, gender: e.target.value})}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-slate-900 appearance-none cursor-pointer"
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Company Name <span className="text-red-500">*</span></label>
+                  <input 
+                    required 
+                    type="text" 
+                    value={enrollFormData.companyName}
+                    onChange={(e) => setEnrollFormData({...enrollFormData, companyName: e.target.value})}
+                    placeholder="Company Name" 
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-slate-900" 
+                  />
+                </div>
               </div>
 
-              <button type="submit" className="w-full py-3.5 bg-[#4285F4] hover:bg-[#3367D6] text-white font-bold rounded transition-colors shadow-sm mt-6 flex justify-center items-center">
-                Sign up
+              <div>
+                <label className="block text-xs font-bold text-slate-600 mb-1">Mobile Number <span className="text-red-500">*</span></label>
+                <div className="flex border border-gray-200 rounded-xl overflow-hidden bg-slate-50 focus-within:ring-2 focus-within:ring-brand-500 focus-within:bg-white transition-all">
+                  <select
+                    value={enrollFormData.country}
+                    onChange={(e) => setEnrollFormData({...enrollFormData, country: e.target.value})}
+                    className="bg-slate-50 px-3 border-r border-gray-200 text-xs font-semibold text-slate-700 outline-none cursor-pointer max-w-[120px]"
+                  >
+                    {countryPhoneCodes.map((item) => (
+                      <option key={item.country} value={item.country}>
+                        {item.flag} {item.code}
+                      </option>
+                    ))}
+                  </select>
+                  <input 
+                    required 
+                    type="tel" 
+                    value={enrollFormData.phone}
+                    onChange={(e) => setEnrollFormData({...enrollFormData, phone: e.target.value})}
+                    placeholder="Mobile Number" 
+                    className="w-full px-4 py-2.5 bg-transparent outline-none text-slate-900 text-sm" 
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-600 mb-1">Email Address <span className="text-red-500">*</span></label>
+                <input 
+                  required 
+                  type="email" 
+                  value={enrollFormData.email}
+                  onChange={(e) => setEnrollFormData({...enrollFormData, email: e.target.value})}
+                  placeholder="johndoe@email.com" 
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-slate-900" 
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-600 mb-1">Country <span className="text-red-500">*</span></label>
+                <select 
+                  required 
+                  value={enrollFormData.country}
+                  onChange={(e) => setEnrollFormData({...enrollFormData, country: e.target.value})}
+                  className="w-full px-4 py-2.5 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-slate-900 appearance-none cursor-pointer"
+                >
+                  <option value="">Select Country</option>
+                  {countries.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+
+              <button 
+                type="submit" 
+                disabled={loadingForm}
+                className="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow-md transition-colors mt-6 flex justify-center items-center text-sm uppercase tracking-wider disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {loadingForm ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Processing...
+                  </span>
+                ) : (
+                  "Enroll & Request Test Link"
+                )}
               </button>
             </form>
           </div>
@@ -1438,7 +1924,7 @@ export default function ELearningModule() {
   // VIEW 3: LEARNING PLAYER (Image 3)
   return (
     <>
-    <div className="flex flex-col md:flex-row h-auto md:h-[85vh] min-h-[500px] md:min-h-[750px] w-full bg-gray-100 border border-gray-300 rounded-xl overflow-hidden shadow-xl z-20 animate-fade-in-up my-4 relative">
+    <div className="flex flex-col md:flex-row h-[680px] sm:h-[750px] md:h-[85vh] min-h-[500px] md:min-h-[750px] w-full bg-gray-100 border border-gray-300 rounded-xl overflow-hidden shadow-xl z-20 animate-fade-in-up my-4 relative">
       
       {/* Sidebar Navigation */}
       <div className={`w-full md:w-[320px] bg-white border-r border-gray-200 flex flex-col shrink-0 z-30 ${isMobileSidebarOpen ? 'absolute inset-0 md:relative md:flex' : 'hidden md:flex'}`}>
@@ -1586,8 +2072,8 @@ export default function ELearningModule() {
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-6 md:p-12 custom-scrollbar relative">
-          <div className="max-w-3xl mx-auto pb-10">
+        <div className="flex-1 overflow-y-auto p-4 md:p-12 custom-scrollbar relative">
+          <div className="max-w-3xl mx-auto pb-28">
             {activeLesson.type === 'notes' ? (
               <div className="animate-fade-in-up">
                 <div className={`rounded-xl overflow-hidden mb-6 shadow-md flex items-center justify-center p-6 h-28 md:h-36 relative border border-gray-100 bg-gradient-to-br ${selectedCourse.theme === 'emerald' ? 'from-emerald-900 to-slate-900' : selectedCourse.theme === 'blue' ? 'from-blue-900 to-slate-900' : 'from-brand-900 to-slate-900'}`}>
@@ -1620,7 +2106,7 @@ export default function ELearningModule() {
                <div className="animate-fade-in-up bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm">
                   {isQuizCompleted ? (
                     isFinalExam ? (
-                      quizScore >= 6 ? (
+                      quizScore >= passingScoreRequired ? (
                         !isCertGenerated ? (
                           <div className="flex flex-col items-center justify-center text-center py-8 w-full max-w-md mx-auto animate-fade-in-up">
                             <FaTrophy className="text-6xl text-yellow-500 mb-6 animate-bounce" />
@@ -1665,75 +2151,105 @@ export default function ELearningModule() {
                         ) : (
                           <div className="flex flex-col items-center justify-center py-6 w-full animate-fade-in-up">
                             
-                            {/* Scroll container for mobile landscape/portrait scaling */}
-                            <div className="w-full overflow-x-auto py-2 custom-scrollbar">
-                              {/* Printable Certificate Frame */}
-                              <div id="aixx-certificate" className="min-w-[600px] w-full max-w-2xl aspect-[1.414/1] bg-[#FDFBF7] p-8 md:p-10 rounded-lg border-[10px] border-double border-slate-800 shadow-xl relative flex flex-col justify-between text-center font-serif">
-                                
-                                {/* Decorative corner blocks */}
-                                <div className="absolute top-2 left-2 w-6 h-6 border-t-2 border-l-2 border-slate-500"></div>
-                                <div className="absolute top-2 right-2 w-6 h-6 border-t-2 border-r-2 border-slate-500"></div>
-                                <div className="absolute bottom-2 left-2 w-6 h-6 border-b-2 border-l-2 border-slate-500"></div>
-                                <div className="absolute bottom-2 right-2 w-6 h-6 border-b-2 border-r-2 border-slate-500"></div>
-                                
-                                {/* Background watermark */}
-                                <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none z-0">
-                                  <span className="text-[100px] font-bold tracking-widest font-sans">AIXX</span>
-                                </div>
-                                
-                                {/* Content */}
-                                <div className="relative z-10 space-y-4 flex flex-col justify-between h-full">
-                                  
-                                  {/* Certificate Header */}
-                                  <div className="space-y-1">
-                                    <div className="text-[10px] font-sans font-bold tracking-[0.3em] text-[#191E42] uppercase">AIXX Academy & Intelligence Systems</div>
-                                    <div className="w-12 h-[2px] bg-emerald-500 mx-auto"></div>
-                                  </div>
-                                  
-                                  {/* Main Certificate Title */}
-                                  <div className="space-y-1">
-                                    <h2 className="text-2xl md:text-3xl font-extrabold tracking-wide text-slate-800 font-serif italic">Certificate of Completion</h2>
-                                    <p className="text-[10px] font-sans text-slate-500 uppercase tracking-widest">This is proudly presented to</p>
-                                  </div>
-                                  
-                                  {/* Student Name */}
-                                  <div>
-                                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#191E42] underline decoration-emerald-500/30 underline-offset-8 font-serif">{certName}</h1>
-                                  </div>
-                                  
-                                  {/* Course completion message */}
-                                  <div className="max-w-md mx-auto space-y-1">
-                                    <p className="text-[11px] md:text-xs text-slate-600 leading-relaxed font-sans">
-                                      for successfully demonstrating mastery and completing all requirements for the professional curriculum in
-                                    </p>
-                                    <h3 className="text-base md:text-lg font-bold text-slate-800 uppercase tracking-wide font-sans">{selectedCourse.title}</h3>
-                                  </div>
-                                  
-                                  {/* Signatures & Date */}
-                                  <div className="flex justify-between items-end pt-3 border-t border-slate-200/60 font-sans text-left">
-                                    <div className="space-y-0.5">
-                                      <div className="text-[10px] font-bold text-slate-800">Date of Issue</div>
-                                      <div className="text-[9px] text-slate-500 font-medium">{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                            {/* Dynamically scaled container for mobile responsiveness */}
+                            <div ref={certContainerRef} className="w-full flex justify-center items-start overflow-hidden py-4">
+                              <div 
+                                style={{ 
+                                  width: '650px', 
+                                  height: `${460 * certScale}px`,
+                                  overflow: 'hidden',
+                                }}
+                                className="flex justify-center items-start transition-all duration-300"
+                              >
+                                <div 
+                                  style={{ 
+                                    width: '650px', 
+                                    height: '460px',
+                                    transform: `scale(${certScale})`,
+                                    transformOrigin: 'top center',
+                                  }}
+                                  className="shrink-0"
+                                >
+                                  {/* Printable Certificate Frame */}
+                                  <div id="aixx-certificate" className="w-full h-full bg-[#FDFBF7] p-8 md:p-10 rounded-lg border-[10px] border-double border-slate-800 shadow-xl relative flex flex-col justify-between text-center font-serif">
+                                    
+                                    {/* Decorative corner blocks */}
+                                    <div className="absolute top-2 left-2 w-6 h-6 border-t-2 border-l-2 border-slate-500"></div>
+                                    <div className="absolute top-2 right-2 w-6 h-6 border-t-2 border-r-2 border-slate-500"></div>
+                                    <div className="absolute bottom-2 left-2 w-6 h-6 border-b-2 border-l-2 border-slate-500"></div>
+                                    <div className="absolute bottom-2 right-2 w-6 h-6 border-b-2 border-r-2 border-slate-500"></div>
+                                    
+                                    {/* Background watermark */}
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none z-0">
+                                      <span className="text-[100px] font-bold tracking-widest font-sans">AIXX</span>
                                     </div>
-                                    <div className="w-16 h-16 flex items-center justify-center shrink-0">
-                                      {/* Seal Graphic */}
-                                      <div className="w-12 h-12 rounded-full border-4 border-double border-emerald-600 flex flex-col items-center justify-center text-[7px] font-bold text-emerald-600 uppercase tracking-widest bg-emerald-50 shadow-inner rotate-12">
-                                        <span>AIXX</span>
-                                        <span className="text-[5px]">SEAL</span>
+                                    
+                                    {/* Content */}
+                                    <div className="relative z-10 space-y-4 flex flex-col justify-between h-full">
+                                      
+                                      {/* Certificate Header */}
+                                      <div className="space-y-1">
+                                        <div className="text-[10px] font-sans font-bold tracking-[0.3em] text-[#191E42] uppercase">AIXX Academy & Intelligence Systems</div>
+                                        <div className="w-12 h-[2px] bg-emerald-500 mx-auto"></div>
                                       </div>
-                                    </div>
-                                    <div className="space-y-0.5 text-right">
-                                      <div className="text-[10px] font-bold text-slate-800 italic underline decoration-slate-400">T. S. Viga</div>
-                                      <div className="text-[9px] text-slate-500 font-medium">Director, AIXX Training Board</div>
+                                      
+                                      {/* Main Certificate Title */}
+                                      <div className="space-y-1">
+                                        <h2 className="text-2xl md:text-3xl font-extrabold tracking-wide text-slate-800 font-serif italic">Certificate of Completion</h2>
+                                        <p className="text-[10px] font-sans text-slate-500 uppercase tracking-widest">This is proudly presented to</p>
+                                      </div>
+                                      
+                                      {/* Student Name */}
+                                      <div>
+                                        <h1 className="text-2xl md:text-3xl font-extrabold text-[#191E42] underline decoration-emerald-500/30 underline-offset-8 font-serif">{certName}</h1>
+                                      </div>
+                                      
+                                      {/* Course completion message */}
+                                      <div className="max-w-md mx-auto space-y-1">
+                                        <p className="text-[11px] md:text-xs text-slate-600 leading-relaxed font-sans">
+                                          for successfully demonstrating mastery and completing all requirements for the professional curriculum in
+                                        </p>
+                                        <h3 className="text-base md:text-lg font-bold text-slate-800 uppercase tracking-wide font-sans">{selectedCourse.title}</h3>
+                                      </div>
+                                      
+                                      {/* Signatures & Date */}
+                                      <div className="flex justify-between items-end pt-3 border-t border-slate-200/60 font-sans text-left">
+                                        <div className="space-y-0.5">
+                                          <div className="text-[10px] font-bold text-slate-800">Date of Issue</div>
+                                          <div className="text-[9px] text-slate-500 font-medium">{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                                        </div>
+                                        <div className="w-16 h-16 flex items-center justify-center shrink-0">
+                                          {/* Seal Graphic */}
+                                          <div className="w-12 h-12 rounded-full border-4 border-double border-emerald-600 flex flex-col items-center justify-center text-[7px] font-bold text-emerald-600 uppercase tracking-widest bg-emerald-50 shadow-inner rotate-12">
+                                            <span>AIXX</span>
+                                            <span className="text-[5px]">SEAL</span>
+                                          </div>
+                                        </div>
+                                        <div className="space-y-0.5 text-right">
+                                          <div className="text-[10px] font-bold text-slate-800 italic underline decoration-slate-400">T. S. Viga</div>
+                                          <div className="text-[9px] text-slate-500 font-medium">Director, AIXX Training Board</div>
+                                        </div>
+                                      </div>
+                                      
                                     </div>
                                   </div>
-                                  
                                 </div>
                               </div>
                             </div>
                             
                             {/* Action buttons */}
                             <div className="flex gap-4 mt-6 w-full justify-center">
+                              <style dangerouslySetInnerHTML={{ __html: `
+                                @media print {
+                                  #aixx-certificate {
+                                    transform: none !important;
+                                    margin: 0 !important;
+                                    width: 100% !important;
+                                    height: auto !important;
+                                    aspect-ratio: 1.414/1 !important;
+                                  }
+                                }
+                              `}} />
                               <button 
                                 onClick={() => {
                                   window.print();
@@ -1766,7 +2282,7 @@ export default function ELearningModule() {
                             </div>
                             <div className="bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl text-center">
                               <div className="text-xs text-slate-800 font-semibold uppercase">Passing Score</div>
-                              <div className="text-xl font-bold text-slate-700">60% (6/10)</div>
+                              <div className="text-xl font-bold text-slate-700">{passingPercentage * 100}% ({passingScoreRequired}/{currentQuestions.length})</div>
                             </div>
                           </div>
 
@@ -1928,7 +2444,11 @@ export default function ELearningModule() {
           .animate-toast { animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         `}} />
         <div className="fixed top-6 right-6 z-[9999] bg-slate-900 text-white px-5 py-4 rounded-xl shadow-2xl border border-slate-800 font-sans font-semibold text-xs md:text-sm flex items-center gap-3 animate-toast max-w-sm">
-          <FaTimesCircle className="shrink-0 text-red-500 text-lg md:text-xl" />
+          {toastMessage.startsWith('Success') ? (
+            <div className="shrink-0 w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">✓</div>
+          ) : (
+            <FaTimesCircle className="shrink-0 text-red-500 text-lg md:text-xl" />
+          )}
           <span className="flex-1 leading-snug">{toastMessage}</span>
           <button onClick={() => setToastMessage(null)} className="text-white/60 hover:text-white font-bold text-xs uppercase tracking-wider pl-2 transition-colors">
             ✕

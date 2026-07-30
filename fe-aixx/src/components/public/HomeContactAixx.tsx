@@ -34,7 +34,7 @@ const HomeContactAixx = () => {
   return (
     <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 py-12 lg:py-20 bg-white">
       <div className="flex flex-col xlmid:flex-row xlmid:items-end items-center gap-8">
-        <div className="w-full xlmid:w-auto flex justify-center xlmid:justify-start xlmid:flex-shrink-0 order-1 xlmid:order-1">
+        <div className="w-full xlmid:w-auto flex justify-center xlmid:justify-end xlmid:flex-shrink-0 order-1 xlmid:order-2">
           <div className="polygon-corner-bg2 relative w-full lg:w-[45%] h-[240px] sm:h-[280px] md:h-[320px] lg:h-[380px] xl:h-[420px] flex-shrink-0">
             <img
               src={bgImage}
@@ -44,7 +44,7 @@ const HomeContactAixx = () => {
           </div>
         </div>
 
-        <div className="w-full lg:flex-1 space-y-6 bg-[#FAFAFA] p-8 lg:p-12 rounded-[24px] shadow-sm">
+        <div className="w-full lg:flex-1 space-y-6 bg-[#FAFAFA] p-8 lg:p-12 rounded-[24px] shadow-sm order-2 xlmid:order-1">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
             {title}
           </h2>
