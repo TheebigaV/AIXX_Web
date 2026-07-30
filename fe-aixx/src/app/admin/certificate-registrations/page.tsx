@@ -11,6 +11,7 @@ import ConfirmDeleteModal from "@/components/ui/modal/ConfirmDeleteModal";
 
 interface Registrant {
   id: number;
+  registration_id?: string;
   full_name: string;
   gender: string;
   company_name: string | null;
@@ -21,9 +22,10 @@ interface Registrant {
   passed: boolean;
   passed_at: string | null;
   created_at: string;
+  uuid: string;
 }
 
-type SortField = "full_name" | "email" | "company_name" | "phone" | "country" | "test_score" | "passed" | "created_at";
+type SortField = "full_name" | "email" | "registration_id" | "company_name" | "phone" | "country" | "test_score" | "passed" | "created_at";
 type SortOrder = "asc" | "desc";
 
 export default function CertificateRegistrations() {
@@ -178,6 +180,9 @@ export default function CertificateRegistrations() {
               <table className="min-w-full table-auto border-collapse">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-100 text-slate-500 text-xs font-semibold uppercase">
+                    <th onClick={() => handleSort("registration_id")} className="cursor-pointer px-6 py-4 text-left hover:text-gray-800 transition-colors">
+                      Registration ID {renderSortIcon("registration_id")}
+                    </th>
                     <th onClick={() => handleSort("full_name")} className="cursor-pointer px-6 py-4 text-left hover:text-gray-800 transition-colors">
                       Candidate Name {renderSortIcon("full_name")}
                     </th>
@@ -208,7 +213,7 @@ export default function CertificateRegistrations() {
                 <tbody className="divide-y divide-gray-100 text-sm text-gray-700">
                   {loading ? (
                     <tr>
-                      <td colSpan={9} className="text-center py-12 text-gray-400">
+                      <td colSpan={10} className="text-center py-12 text-gray-400">
                         <div className="flex justify-center items-center gap-2">
                           <div className="h-5 w-5 animate-spin rounded-full border-2 border-brand-500 border-t-transparent" />
                           <span>Loading registrants...</span>
@@ -217,13 +222,18 @@ export default function CertificateRegistrations() {
                     </tr>
                   ) : registrants.length === 0 ? (
                     <tr>
-                      <td colSpan={9} className="text-center py-12 text-gray-400">
+                      <td colSpan={10} className="text-center py-12 text-gray-400">
                         No registrations found.
                       </td>
                     </tr>
                   ) : (
                     registrants.map((registrant) => (
                       <tr key={registrant.id} className="hover:bg-slate-50/50 transition-colors">
+                        {/* Registration ID */}
+                        <td className="px-6 py-4 font-mono text-xs font-bold text-slate-900">
+                          {registrant.registration_id || <span className="text-gray-400 font-normal italic">N/A</span>}
+                        </td>
+
                         {/* Candidate Name & Gender */}
                         <td className="px-6 py-4">
                           <div className="font-semibold text-gray-900">{registrant.full_name}</div>
@@ -324,8 +334,13 @@ export default function CertificateRegistrations() {
               </span>
               <Pagination
                 currentPage={page}
-                totalPages={pagination.last_page}
+                perPage={perPage}
+                totalItems={pagination.total}
                 onPageChange={(p) => setPage(p)}
+                onPerPageChange={(pp) => {
+                  setPerPage(pp);
+                  setPage(1);
+                }}
               />
             </div>
           )}
@@ -338,8 +353,7 @@ export default function CertificateRegistrations() {
         onClose={() => setShowDeleteModal(false)}
         onConfirm={confirmDelete}
         title="Delete Registration"
-        description="Are you sure you want to delete this registrant? This action is permanent and cannot be undone."
-        isLoading={deleting}
+        message="Are you sure you want to delete this registrant? This action is permanent and cannot be undone."
       />
     </div>
   );

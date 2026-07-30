@@ -69,6 +69,7 @@ const FreeCertificateTabContent: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [testToken, setTestToken] = useState('');
+  const [regId, setRegId] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -83,7 +84,12 @@ const FreeCertificateTabContent: React.FC = () => {
     try {
       const response = await api.post('api/certificate/register', formData);
       const uuid = response.data?.uuid || response.data?.data?.uuid || '';
+      const registration_id = response.data?.registration_id || '';
       setTestToken(uuid);
+      setRegId(registration_id);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('aixx_certificate_token', uuid);
+      }
       setSuccess(true);
     } catch (err: any) {
       console.error('Registration failed:', err);
@@ -138,9 +144,25 @@ const FreeCertificateTabContent: React.FC = () => {
                 <FaCheckCircle size={48} />
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-slate-900">Registration Successful!</h3>
-              <p className="text-slate-650 text-sm max-w-sm leading-relaxed">
-                Thank you, <strong className="text-slate-950 font-bold">{formData.full_name}</strong>. Your registration is complete. We have prepared interactive study lessons covering NLP, RAG, and Security models to help you pass the MCQ test.
+              <p className="text-slate-650 text-sm max-w-sm leading-relaxed font-medium">
+                Thank you, <strong className="text-slate-950 font-bold">{formData.full_name}</strong>. Please copy and save your unique Registration ID below:
               </p>
+
+              {/* Login Credentials Box */}
+              <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 w-full text-left shadow-inner">
+                <div>
+                  <label className="text-[10px] uppercase tracking-wider font-extrabold text-slate-455 block">Your Registration ID</label>
+                  <div className="flex items-center justify-between mt-1">
+                    <strong className="text-base font-mono text-slate-900 select-all">{regId}</strong>
+                    <button
+                      onClick={() => navigator.clipboard.writeText(regId)}
+                      className="text-[11px] font-bold text-brand-600 hover:text-brand-700 bg-white border border-slate-200 hover:border-brand-300 rounded-md px-2.5 py-1 transition cursor-pointer"
+                    >
+                      Copy ID
+                    </button>
+                  </div>
+                </div>
+              </div>
 
               <div className="w-full">
                 <Link

@@ -19,9 +19,10 @@ import {
 interface StudyGuideProps {
   token: string;
   candidateName: string;
+  candidateRegId?: string;
 }
 
-export default function StudyGuide({ token, candidateName }: StudyGuideProps) {
+export default function StudyGuide({ token, candidateName, candidateRegId }: StudyGuideProps) {
   const [activeTab, setActiveTab] = useState(0);
   const [completedLessons, setCompletedLessons] = useState<Record<number, boolean>>({});
 
@@ -304,6 +305,20 @@ export default function StudyGuide({ token, candidateName }: StudyGuideProps) {
       {/* Left Sidebar Layout (30% on desktop) */}
       <div className="w-full lg:w-[30%] bg-slate-100/70 border border-slate-200/50 rounded-3xl p-5 sm:p-6 flex flex-col justify-between space-y-6">
         <div className="space-y-5">
+          {/* Candidate Card */}
+          <div className="bg-white border border-slate-200/60 rounded-2xl p-4 space-y-2 shadow-sm">
+            <div>
+              <span className="text-[9px] uppercase tracking-wider font-extrabold text-slate-400 block">Logged Candidate</span>
+              <strong className="text-sm font-bold text-slate-800 leading-tight block">{candidateName}</strong>
+            </div>
+            {candidateRegId && (
+              <div className="border-t border-slate-100 pt-2">
+                <span className="text-[9px] uppercase tracking-wider font-extrabold text-slate-400 block">Registration ID</span>
+                <strong className="text-xs font-mono font-black text-brand-600 block">{candidateRegId}</strong>
+              </div>
+            )}
+          </div>
+
           <div className="border-b border-slate-200/80 pb-3">
             <h6 className="font-black text-slate-900 text-sm uppercase tracking-wider">
               Study Modules Outline

@@ -108,6 +108,7 @@ Route::get('settings', [\App\Http\Controllers\SettingController::class, 'index']
 
 // Free AI Knowledge Certificate Routes
 Route::post('certificate/register', [\App\Http\Controllers\Api\CertificateController::class, 'register']);
+Route::post('certificate/login', [\App\Http\Controllers\Api\CertificateController::class, 'login']);
 Route::get('certificate/verify-token', [\App\Http\Controllers\Api\CertificateController::class, 'verifyToken']);
 Route::get('certificate/questions', [\App\Http\Controllers\Api\CertificateController::class, 'getQuestions']);
 Route::post('certificate/submit-test', [\App\Http\Controllers\Api\CertificateController::class, 'submitTest']);

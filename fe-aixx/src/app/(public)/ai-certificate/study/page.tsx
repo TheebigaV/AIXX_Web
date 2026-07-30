@@ -4,41 +4,76 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { api } from '@/lib/public/api';
 import Link from 'next/link';
-import { FaTimesCircle, FaSpinner, FaBookOpen, FaChevronRight, FaGraduationCap } from 'react-icons/fa';
+import { 
+  FaTimesCircle, 
+  FaSpinner, 
+  FaBookOpen, 
+  FaChevronRight, 
+  FaGraduationCap, 
+  FaUser, 
+  FaLock, 
+  FaKey 
+} from 'react-icons/fa';
 import StudyGuide from '@/components/public/StudyGuide';
 
 function StudyPageContent() {
     const searchParams = useSearchParams();
-    const token = searchParams.get('token');
+    const tokenFromUrl = searchParams.get('token');
 
+    const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [tokenError, setTokenError] = useState('');
     const [candidateName, setCandidateName] = useState('');
+    const [candidateRegId, setCandidateRegId] = useState('');
     const [alreadyPassed, setAlreadyPassed] = useState(false);
 
+    // Login Form State
+    const [loginId, setLoginId] = useState('');
+    const [loginLoading, setLoginLoading] = useState(false);
+    const [loginError, setLoginError] = useState('');
+
+    // On mount, check URL query parameters and local storage
     useEffect(() => {
-        if (!token) {
-            setTokenError('Missing token. Please access this page using the link provided upon registration.');
+        const storedToken = typeof window !== 'undefined' ? localStorage.getItem('aixx_certificate_token') : null;
+        if (tokenFromUrl) {
+            setToken(tokenFromUrl);
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('aixx_certificate_token', tokenFromUrl);
+            }
+        } else if (storedToken) {
+            setToken(storedToken);
+        } else {
             setLoading(false);
-            return;
         }
+    }, [tokenFromUrl]);
+
+    // Verify token validity when token state changes
+    useEffect(() => {
+        if (!token) return;
 
         const verifyToken = async () => {
+            setLoading(true);
             try {
                 const response = await api.get(`api/certificate/verify-token?token=${token}`);
                 const data = response.data;
 
                 setCandidateName(data.full_name);
+                setCandidateRegId(data.registration_id || '');
 
                 if (data.already_passed) {
                     setAlreadyPassed(true);
-                    setLoading(false);
                 } else {
-                    setLoading(false);
+                    setAlreadyPassed(false);
                 }
+                setTokenError('');
             } catch (err: any) {
                 console.error('Verification failed:', err);
-                setTokenError(err.response?.data?.message || 'Invalid or expired token.');
+                if (typeof window !== 'undefined') {
+                    localStorage.removeItem('aixx_certificate_token');
+                }
+                setToken(null);
+                setTokenError('Your session token has expired or is invalid. Please log in again.');
+            } finally {
                 setLoading(false);
             }
         };
@@ -46,29 +81,113 @@ function StudyPageContent() {
         verifyToken();
     }, [token]);
 
+    const handleLoginSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoginLoading(true);
+        setLoginError('');
+        try {
+            const response = await api.post('api/certificate/login', {
+                registration_id: loginId
+            });
+            const newToken = response.data.token;
+            if (newToken) {
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('aixx_certificate_token', newToken);
+                }
+                setToken(newToken);
+            }
+        } catch (err: any) {
+            setLoginError(err.response?.data?.message || 'Invalid Registration ID or password.');
+        } finally {
+            setLoginLoading(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center py-20">
                 <FaSpinner className="animate-spin text-brand-600 mb-4" size={40} />
-                <p className="text-slate-600 font-medium">Verifying access token and loading study materials...</p>
+                <p className="text-slate-655 font-bold">Verifying credentials and loading portal...</p>
             </div>
         );
     }
 
-    if (tokenError) {
+    // Render Login Page if no token is active
+    if (!token) {
         return (
-            <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-6 py-20 text-center">
-                <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-6">
-                    <FaTimesCircle size={32} />
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-20">
+                <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200/80 shadow-2xl space-y-6">
+                    <div className="text-center space-y-2">
+                        <div className="w-14 h-14 bg-brand-500/10 text-brand-600 rounded-full flex items-center justify-center mx-auto border border-brand-500/20">
+                            <FaLock size={20} />
+                        </div>
+                        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Access Portal Login</h2>
+                        <p className="text-xs text-slate-500 max-w-xs mx-auto">
+                            Enter your Registration ID to unlock the study lessons and digital certificate.
+                        </p>
+                    </div>
+
+                    {loginError && (
+                        <div className="bg-red-50 border border-red-200 text-red-655 rounded-xl p-3 text-xs font-bold flex items-center gap-2">
+                            <FaTimesCircle className="text-red-500 flex-shrink-0" size={14} />
+                            <span>{loginError}</span>
+                        </div>
+                    )}
+
+                    {tokenError && !loginError && (
+                        <div className="bg-amber-50 border border-amber-200 text-amber-850 rounded-xl p-3 text-xs font-bold flex items-center gap-2">
+                            <FaTimesCircle className="text-amber-500 flex-shrink-0" size={14} />
+                            <span>{tokenError}</span>
+                        </div>
+                    )}
+
+                    <form onSubmit={handleLoginSubmit} className="space-y-4">
+                        {/* Registration ID Input */}
+                        <div>
+                            <label className="text-xs font-extrabold text-slate-600 block mb-1">Registration ID</label>
+                            <div className="relative">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                                    <FaUser size={12} />
+                                </span>
+                                <input
+                                    type="text"
+                                    required
+                                    value={loginId}
+                                    onChange={(e) => setLoginId(e.target.value)}
+                                    placeholder="AIXX-REG-1"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-xs sm:text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all font-mono"
+                                />
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={loginLoading}
+                            className="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-xl text-xs sm:text-sm transition-all shadow-md shadow-brand-100 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                        >
+                            {loginLoading ? (
+                                <>
+                                    <FaSpinner className="animate-spin" size={14} />
+                                    <span>Verifying Access...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <span>Verify & Unlock Portal</span>
+                                    <FaChevronRight size={10} />
+                                </>
+                            )}
+                        </button>
+                    </form>
+
+                    <div className="text-center pt-2">
+                        <Link
+                            href="/courses?view=free-certificate"
+                            className="text-xs text-slate-455 hover:text-slate-700 underline font-medium"
+                        >
+                            Don&apos;t have an account? Register Here
+                        </Link>
+                    </div>
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900 mb-2">Access Denied</h2>
-                <p className="text-slate-600 max-w-md mb-8">{tokenError}</p>
-                <Link
-                    href="/ai-certificate"
-                    className="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 rounded-xl transition"
-                >
-                    Return to Registration
-                </Link>
             </div>
         );
     }
@@ -85,7 +204,7 @@ function StudyPageContent() {
                 </p>
                 <Link
                     href={`/ai-certificate/test?token=${token}`}
-                    className="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 rounded-xl transition"
+                    className="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 rounded-xl transition cursor-pointer"
                 >
                     View Your Certificate
                 </Link>
@@ -123,7 +242,7 @@ function StudyPageContent() {
 
                 {/* Full-width Study Guide Lessons */}
                 <div className="w-full">
-                    <StudyGuide token={token || ''} candidateName={candidateName} />
+                    <StudyGuide token={token || ''} candidateName={candidateName} candidateRegId={candidateRegId} />
                 </div>
             </div>
         </div>

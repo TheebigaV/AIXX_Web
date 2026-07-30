@@ -11,6 +11,8 @@ class CertificateRegistration extends Model
 
     protected $fillable = [
         'uuid',
+        'registration_id',
+        'password',
         'full_name',
         'gender',
         'company_name',
