@@ -151,7 +151,7 @@ const Header = () => {
         <div className="hidden lg:flex items-center gap-3">
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+            className="beveled-corner group inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white text-sm font-semibold px-5 py-2.5 transition-all duration-200 shadow-sm hover:shadow-md"
           >
             Contact Us
             <FaBolt className="w-3 h-3 transition-transform group-hover:rotate-12" />
@@ -231,10 +231,10 @@ const Header = () => {
           <div className="pt-3 pb-1">
             <Link
               href="/contact"
-              className="flex items-center justify-center gap-2 w-full bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-5 py-3 rounded-xl transition-colors shadow-sm"
+              className="beveled-corner group flex items-center justify-center gap-2 w-full bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-5 py-3 transition-colors shadow-sm"
             >
               Contact Us
-              <FaBolt className="w-3 h-3" />
+              <FaBolt className="w-3 h-3 transition-transform group-hover:rotate-12" />
             </Link>
           </div>
         </div>

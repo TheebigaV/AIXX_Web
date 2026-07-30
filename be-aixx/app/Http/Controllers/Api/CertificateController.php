@@ -262,16 +262,16 @@ class CertificateController extends Controller
             'country' => $validated['country'],
         ]);
 
-        // Send Email Link using Notifications
-        Notification::route('mail', $validated['email'])
-            ->notify(new CertificateTestLinkNotification([
-                'name' => $validated['full_name'],
-                'email' => $validated['email'],
-                'uuid' => $uuid,
-            ]));
+        // Send Email Link using Notifications - Disabled as per request
+        // Notification::route('mail', $validated['email'])
+        //     ->notify(new CertificateTestLinkNotification([
+        //         'name' => $validated['full_name'],
+        //         'email' => $validated['email'],
+        //         'uuid' => $uuid,
+        //     ]));
 
         return response()->json([
-            'message' => 'Registration successful! The test access link has been sent to your email address.',
+            'message' => 'Registration successful!',
             'uuid' => $uuid
         ], 201);
     }

@@ -67,6 +67,32 @@ export default function CourseDetailPage() {
 
   // Apply Modal State
   const [showApplyModal, setShowApplyModal] = useState(false);
+  
+  // Promo Modal State
+  const [showPromoModal, setShowPromoModal] = useState(false);
+
+  useEffect(() => {
+    // Show after 1 second delay
+    const timer = setTimeout(() => {
+      const shown = sessionStorage.getItem('aixx_promo_shown');
+      if (!shown) {
+        setShowPromoModal(true);
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleClosePromo = () => {
+    setShowPromoModal(false);
+    sessionStorage.setItem('aixx_promo_shown', 'true');
+  };
+
+  const handleGetPromoCertificate = () => {
+    setShowPromoModal(false);
+    sessionStorage.setItem('aixx_promo_shown', 'true');
+    window.location.href = '/courses?view=free-certificate';
+  };
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -528,6 +554,66 @@ export default function CourseDetailPage() {
                 </button>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {showPromoModal && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950/40 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="relative w-full max-w-[90vw] sm:max-w-lg md:max-w-xl rounded-[32px] bg-white text-slate-800 p-6 sm:p-10 shadow-2xl border border-slate-100 flex flex-col items-center text-center overflow-hidden transition-all duration-300">
+            {/* Close Button */}
+            <button
+              onClick={handleClosePromo}
+              className="absolute right-5 top-5 rounded-full p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition duration-200 z-20"
+              aria-label="Close promotion"
+            >
+              <XIcon />
+            </button>
+
+            {/* Certificate Preview Image */}
+            <div className="relative z-10 w-full aspect-[2/1] mb-6 mt-2 rounded-2xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50 flex items-center justify-center">
+              <img 
+                src="/images/gallery/certificate.png" 
+                alt="AIXX Certificate" 
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
+            </div>
+
+            {/* Badge */}
+            <span className="relative z-10 inline-flex items-center gap-1.5 rounded-full bg-rose-50 border border-rose-100 px-4 py-1.5 text-xs sm:text-sm font-bold text-rose-600 uppercase tracking-widest mb-4">
+              ⏰ Limited Time Announcement
+            </span>
+
+            {/* Content */}
+            <h3 className="relative z-10 text-2xl sm:text-3xl font-black tracking-tight text-slate-900 mb-3">
+              Free AI Certification Ending!
+            </h3>
+            <p className="relative z-10 text-slate-600 text-sm sm:text-base leading-relaxed mb-8 max-w-md">
+              Free certificates are going to end on <strong className="text-rose-600 font-extrabold">September 30th</strong>. Get your Free AI Knowledge Certificate now before the deadline!
+            </p>
+
+            {/* Buttons */}
+            <div className="relative z-10 flex flex-col gap-2.5 w-full">
+              <button
+                type="button"
+                onClick={handleGetPromoCertificate}
+                className="w-full relative inline-flex items-center justify-center gap-2.5 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white font-bold py-4 px-8 rounded-2xl text-sm sm:text-base transition-all duration-200 shadow-md shadow-brand-100"
+              >
+                <span>Get it freely</span>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </button>
+              
+              <button
+                type="button"
+                onClick={handleClosePromo}
+                className="w-full text-xs sm:text-sm text-slate-400 hover:text-slate-600 py-2 transition duration-200"
+              >
+                Maybe later
+              </button>
+            </div>
           </div>
         </div>
       )}

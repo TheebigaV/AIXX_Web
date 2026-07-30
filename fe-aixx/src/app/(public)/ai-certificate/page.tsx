@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { api } from '@/lib/public/api';
 import Banner from '@/components/public/Banner';
 import { FaGraduationCap, FaPaperPlane, FaSpinner, FaCheckCircle, FaUser, FaBuilding, FaPhone, FaEnvelope, FaGlobe, FaVenusMars } from 'react-icons/fa';
+import StudyGuide from '@/components/public/StudyGuide';
 
 const countries = [
   "Singapore", "Malaysia", "Indonesia", "Thailand", "Philippines", "Vietnam", "India", "Australia",
@@ -47,6 +49,7 @@ export default function AICertificateLanding() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
+    const [testToken, setTestToken] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -59,7 +62,9 @@ export default function AICertificateLanding() {
         setErrorMsg('');
 
         try {
-            await api.post('api/certificate/register', formData);
+            const response = await api.post('api/certificate/register', formData);
+            const uuid = response.data?.uuid || response.data?.data?.uuid || '';
+            setTestToken(uuid);
             setSuccess(true);
         } catch (err: any) {
             console.error('Registration failed:', err);
@@ -119,21 +124,23 @@ export default function AICertificateLanding() {
                     {/* Right Column — Registration Card */}
                     <div className="lg:w-1/2 bg-white rounded-3xl shadow-xl border border-slate-100 p-8 flex flex-col justify-between">
                         {success ? (
-                            <div className="flex flex-col items-center justify-center py-12 text-center space-y-6 h-full">
+                            <div className="flex flex-col items-center justify-center py-12 text-center space-y-6 h-full font-sans">
                                 <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center animate-bounce">
                                     <FaCheckCircle size={48} />
                                 </div>
-                                <h3 className="text-2xl font-bold text-slate-900">Access Link Dispatched!</h3>
-                                <p className="text-slate-600 text-sm max-w-sm leading-relaxed">
-                                    Thank you, <strong className="text-slate-900">{formData.full_name}</strong>. We have sent a unique test access link to your email <strong className="text-slate-900">{formData.email}</strong>.
+                                <h3 className="text-2xl font-bold text-slate-900">Registration Successful!</h3>
+                                <p className="text-slate-650 text-sm max-w-sm leading-relaxed">
+                                    Thank you, <strong className="text-slate-950 font-bold">{formData.full_name}</strong>. Your registration is complete. We have prepared interactive study lessons covering NLP, RAG, and Security models to help you pass the MCQ test.
                                 </p>
-                                <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 text-xs text-slate-500 text-left w-full">
-                                    <h5 className="font-bold text-slate-700 mb-1">Next Steps:</h5>
-                                    <ol className="list-decimal pl-4 space-y-1">
-                                        <li>Check your email inbox (and spam/promotions folder).</li>
-                                        <li>Click the unique test link to open the test page.</li>
-                                        <li>Complete the 20-question MCQ test to claim your certificate.</li>
-                                    </ol>
+
+                                <div className="w-full">
+                                    <Link
+                                        href={`/ai-certificate/study?token=${testToken}`}
+                                        className="w-full relative inline-flex items-center justify-center gap-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-md shadow-brand-100"
+                                    >
+                                        <span>Go to Study Portal & Lessons</span>
+                                        <FaPaperPlane size={14} />
+                                    </Link>
                                 </div>
                             </div>
                         ) : (

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { api } from '@/lib/public/api';
 import Link from 'next/link';
-import { FaCheckCircle, FaTimesCircle, FaHourglassHalf, FaAward, FaArrowRight, FaArrowLeft, FaPrint, FaDownload, FaSpinner, FaChevronRight } from 'react-icons/fa';
+import { FaCheckCircle, FaTimesCircle, FaHourglassHalf, FaAward, FaArrowRight, FaArrowLeft, FaPrint, FaDownload, FaSpinner, FaChevronRight, FaLock } from 'react-icons/fa';
 
 interface Question {
     id: number;
@@ -222,31 +222,44 @@ function TestPageContent() {
                         </p>
                     </div>
 
-                    {/* Certificate Display Area */}
-                    <div className="w-full flex justify-center">
-                        <CertificateTemplate
-                            ref={certificateRef}
-                            name={candidateName}
-                            score={savedScore}
-                            date={passedAt}
-                            uuid={token || 'AIXX-DEMO'}
-                        />
+                    {/* Certificate Display Area (Blurred and Locked) */}
+                    <div className="w-full flex justify-center relative">
+                        <div className="w-full flex justify-center filter blur-md select-none pointer-events-none opacity-40">
+                            <CertificateTemplate
+                                ref={certificateRef}
+                                name={candidateName}
+                                score={savedScore}
+                                date={passedAt}
+                                uuid={token || 'AIXX-DEMO'}
+                            />
+                        </div>
+
+                        {/* Lock Overlay Shield */}
+                        <div className="absolute inset-0 flex items-center justify-center z-30 p-4">
+                            <div className="bg-slate-950/85 border border-white/10 rounded-3xl p-6 sm:p-8 max-w-md text-center space-y-4 backdrop-blur-md shadow-2xl">
+                                <div className="w-14 h-14 bg-brand-500/20 text-brand-400 rounded-full flex items-center justify-center mx-auto border border-brand-500/30 animate-pulse">
+                                    <FaLock size={20} />
+                                </div>
+                                <h3 className="text-xl font-bold text-white">Certificate Locked</h3>
+                                <p className="text-xs sm:text-sm text-slate-350 leading-relaxed font-medium">
+                                    Congratulations on passing the assessment! To unlock your verified PDF/PNG certificate, verify your details, or request print options, please contact AIXX Support.
+                                </p>
+                                <a
+                                    href={`mailto:cs@aixx.com.sg?subject=Unlock AI Knowledge Certificate - Token: ${token || ''}`}
+                                    className="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-6 rounded-xl text-xs sm:text-sm transition-all"
+                                >
+                                    <span>Contact cs@aixx.com.sg</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Download & Print CTAs */}
-                    <div className="flex flex-wrap gap-4 justify-center">
-                        <button
-                            onClick={handleDownloadPNG}
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all flex items-center gap-2 cursor-pointer"
-                        >
-                            <FaDownload /> Download PNG Image
-                        </button>
-                        <button
-                            onClick={handlePrint}
-                            className="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 px-8 rounded-xl border border-slate-700 transition-all flex items-center gap-2 cursor-pointer"
-                        >
-                            <FaPrint /> Print Certificate
-                        </button>
+                    {/* Locked Actions Placeholder */}
+                    <div className="flex flex-col items-center gap-3">
+                        <div className="text-xs text-slate-450 font-semibold flex items-center gap-1.5 bg-slate-800/40 px-4.5 py-2 rounded-full border border-slate-700/50">
+                            <FaLock size={10} className="text-amber-500 animate-pulse" />
+                            <span>Downloads & Printing are disabled until unlocked</span>
+                        </div>
                     </div>
 
                     <Link
@@ -282,29 +295,44 @@ function TestPageContent() {
                                 </p>
                             </div>
 
-                            <div className="w-full flex justify-center">
-                                <CertificateTemplate
-                                    ref={certificateRef}
-                                    name={testResult.full_name}
-                                    score={testResult.score}
-                                    date={testResult.passed_at}
-                                    uuid={token || 'AIXX-DEMO'}
-                                />
+                            {/* Certificate Display Area (Blurred and Locked) */}
+                            <div className="w-full flex justify-center relative">
+                                <div className="w-full flex justify-center filter blur-md select-none pointer-events-none opacity-40">
+                                    <CertificateTemplate
+                                        ref={certificateRef}
+                                        name={testResult.full_name}
+                                        score={testResult.score}
+                                        date={testResult.passed_at}
+                                        uuid={token || 'AIXX-DEMO'}
+                                    />
+                                </div>
+
+                                {/* Lock Overlay Shield */}
+                                <div className="absolute inset-0 flex items-center justify-center z-30 p-4">
+                                    <div className="bg-slate-950/85 border border-white/10 rounded-3xl p-6 sm:p-8 max-w-md text-center space-y-4 backdrop-blur-md shadow-2xl">
+                                        <div className="w-14 h-14 bg-brand-500/20 text-brand-400 rounded-full flex items-center justify-center mx-auto border border-brand-500/30 animate-pulse">
+                                            <FaLock size={20} />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-white">Certificate Locked</h3>
+                                        <p className="text-xs sm:text-sm text-slate-350 leading-relaxed font-medium">
+                                            Congratulations on passing the assessment! To unlock your verified PDF/PNG certificate, verify your details, or request print options, please contact AIXX Support.
+                                        </p>
+                                        <a
+                                            href={`mailto:cs@aixx.com.sg?subject=Unlock AI Knowledge Certificate - Token: ${token || ''}`}
+                                            className="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-6 rounded-xl text-xs sm:text-sm transition-all"
+                                        >
+                                            <span>Contact cs@aixx.com.sg</span>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="flex flex-wrap gap-4 justify-center">
-                                <button
-                                    onClick={handleDownloadPNG}
-                                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all flex items-center gap-2 cursor-pointer"
-                                >
-                                    <FaDownload /> Download PNG Image
-                                </button>
-                                <button
-                                    onClick={handlePrint}
-                                    className="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 px-8 rounded-xl border border-slate-700 transition-all flex items-center gap-2 cursor-pointer"
-                                >
-                                    <FaPrint /> Print Certificate
-                                </button>
+                            {/* Locked Actions Placeholder */}
+                            <div className="flex flex-col items-center gap-3">
+                                <div className="text-xs text-slate-450 font-semibold flex items-center gap-1.5 bg-slate-800/40 px-4.5 py-2 rounded-full border border-slate-700/50">
+                                    <FaLock size={10} className="text-amber-500 animate-pulse" />
+                                    <span>Downloads & Printing are disabled until unlocked</span>
+                                </div>
                             </div>
                         </>
                     ) : (
