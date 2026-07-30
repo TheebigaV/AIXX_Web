@@ -9,7 +9,7 @@ export const courseQuestions: Record<number, QuizQuestion[]> = {
   // Module 1 Quiz (Ecosystem)
   103: [
     {
-      question: "Which tool is specifically designed for enterprise-wide integration with Microsoft 365 services?",
+      question: "Which tool is specifically designed for enterprise-wide integration with Microsoft 365 services natively?",
       options: ["ChatGPT Free", "Microsoft Copilot", "Midjourney", "Google Gemini Free"],
       correctAnswer: 1
     },
