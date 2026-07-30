@@ -23,6 +23,7 @@ class CertificateRegistrationController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('registration_id', 'like', "%{$search}%")
                   ->orWhere('company_name', 'like', "%{$search}%")
                   ->orWhere('phone', 'like', "%{$search}%")
                   ->orWhere('country', 'like', "%{$search}%");
@@ -34,7 +35,7 @@ class CertificateRegistrationController extends Controller
         $sortOrder = $request->get('sort_order', 'desc'); // last entry first by default
         
         // Safety checking for allowed sort columns
-        $allowedSort = ['full_name', 'email', 'company_name', 'phone', 'country', 'test_score', 'passed', 'created_at'];
+        $allowedSort = ['full_name', 'email', 'registration_id', 'company_name', 'phone', 'country', 'test_score', 'passed', 'created_at'];
         if (in_array($sortBy, $allowedSort)) {
             $query->orderBy($sortBy, $sortOrder);
         } else {

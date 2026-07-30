@@ -7,6 +7,7 @@ use App\Models\CertificateRegistration;
 use App\Notifications\CertificateTestLinkNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -260,20 +261,42 @@ class CertificateController extends Controller
             'phone' => $validated['phone'],
             'email' => $validated['email'],
             'country' => $validated['country'],
+            'password' => '', // Password disabled per request
         ]);
 
-        // Send Email Link using Notifications - Disabled as per request
-        // Notification::route('mail', $validated['email'])
-        //     ->notify(new CertificateTestLinkNotification([
-        //         'name' => $validated['full_name'],
-        //         'email' => $validated['email'],
-        //         'uuid' => $uuid,
-        //     ]));
+        $registrationId = 'AIXX-REG-' . $registration->id;
+        $registration->update([
+            'registration_id' => $registrationId
+        ]);
 
         return response()->json([
             'message' => 'Registration successful!',
-            'uuid' => $uuid
+            'uuid' => $uuid,
+            'registration_id' => $registrationId,
         ], 201);
+    }
+
+    /**
+     * Login candidate with Registration ID
+     */
+    public function login(Request $request)
+    {
+        $validated = $request->validate([
+            'registration_id' => 'required|string',
+        ]);
+
+        $candidate = CertificateRegistration::where('registration_id', $validated['registration_id'])->first();
+
+        if (!$candidate) {
+            return response()->json(['message' => 'Invalid Registration ID.'], 401);
+        }
+
+        return response()->json([
+            'message' => 'Login successful!',
+            'token' => $candidate->uuid,
+            'full_name' => $candidate->full_name,
+            'registration_id' => $candidate->registration_id,
+        ], 200);
     }
 
     /**
@@ -298,6 +321,7 @@ class CertificateController extends Controller
                 'message' => 'Test already completed successfully.',
                 'already_passed' => true,
                 'full_name' => $candidate->full_name,
+                'registration_id' => $candidate->registration_id,
                 'score' => $candidate->test_score,
                 'passed_at' => $candidate->passed_at ? $candidate->passed_at->format('d M Y') : ''
             ], 200);
@@ -307,6 +331,7 @@ class CertificateController extends Controller
             'message' => 'Token verified successfully.',
             'already_passed' => false,
             'full_name' => $candidate->full_name,
+            'registration_id' => $candidate->registration_id,
         ], 200);
     }
 
