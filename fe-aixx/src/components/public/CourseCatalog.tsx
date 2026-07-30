@@ -2,11 +2,315 @@
 
 import Link from 'next/link';
 import React, { useEffect, useMemo, useState } from 'react';
-import { FaGraduationCap, FaStar, FaRegBookmark, FaBookmark, FaSearch, FaTimes } from 'react-icons/fa';
+import { 
+  FaGraduationCap, 
+  FaStar, 
+  FaRegBookmark, 
+  FaBookmark, 
+  FaSearch, 
+  FaTimes,
+  FaBuilding,
+  FaPhone,
+  FaEnvelope,
+  FaGlobe,
+  FaVenusMars,
+  FaPaperPlane,
+  FaSpinner,
+  FaCheckCircle,
+  FaUser
+} from 'react-icons/fa';
 import { fetchPublicTrainings } from '@/lib/training';
 import { storeInquiry } from '@/lib/public/inquiries';
 import { courses as fallbackCourses } from '@/components/public/courseCatalogData';
 import ELearningModule from '@/components/public/ELearningModule';
+import StudyGuide from './StudyGuide';
+import { api } from '@/lib/public/api';
+
+const countries = [
+  "Singapore", "Malaysia", "Indonesia", "Thailand", "Philippines", "Vietnam", "India", "Australia",
+  "United Kingdom", "United States", "China", "Japan", "South Korea",
+  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Austria", "Azerbaijan",
+  "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+  "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia",
+  "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+  "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia",
+  "Fiji", "Finland", "France",
+  "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guyana",
+  "Haiti", "Honduras", "Hungary",
+  "Iceland", "Iran", "Iraq", "Ireland", "Israel", "Italy",
+  "Jamaica", "Jordan",
+  "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan",
+  "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg",
+  "Madagascar", "Malawi", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar",
+  "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway",
+  "Oman",
+  "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Poland", "Portugal",
+  "Qatar",
+  "Romania", "Russia", "Rwanda",
+  "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria",
+  "Taiwan", "Tajikistan", "Tanzania", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
+  "Uganda", "Ukraine", "United Arab Emirates", "Uruguay", "Uzbekistan",
+  "Vanuatu", "Vatican City", "Venezuela",
+  "Yemen",
+  "Zambia", "Zimbabwe"
+];
+
+const FreeCertificateTabContent: React.FC = () => {
+  const [formData, setFormData] = useState({
+    full_name: '',
+    gender: '',
+    company_name: '',
+    phone: '',
+    email: '',
+    country: 'Singapore'
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [testToken, setTestToken] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errorMsg) setErrorMsg('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMsg('');
+
+    try {
+      const response = await api.post('api/certificate/register', formData);
+      const uuid = response.data?.uuid || response.data?.data?.uuid || '';
+      setTestToken(uuid);
+      setSuccess(true);
+    } catch (err: any) {
+      console.error('Registration failed:', err);
+      setErrorMsg(err.response?.data?.message || 'Something went wrong. Please check your details and try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="w-full py-8 px-4 sm:px-6 lg:px-8 bg-slate-50 rounded-[32px] border border-slate-200/60 shadow-inner">
+      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-stretch gap-8 lg:gap-12">
+        {/* Left Column — Info */}
+        <div className="lg:w-[45%] flex flex-col justify-center space-y-6">
+          <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-600 rounded-full px-4 py-1.5 w-fit">
+            <FaGraduationCap size={16} className="text-blue-500 animate-bounce" />
+            <span className="text-xs font-semibold uppercase tracking-wider">Professional Credential</span>
+          </div>
+
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
+            Free AI Knowledge Certificate
+          </h2>
+
+          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+            Test your general AI literacy and earn a Free AI Knowledge Certificate by completing our 20-question MCQ assessment.
+          </p>
+
+          <div className="space-y-4">
+            {[
+              { title: '20 Question Assessment', desc: 'Comprehensive multiple-choice questions covering generative AI theories and implementations.' },
+              { title: 'Passing Grade: 80%', desc: 'Demonstrate competency by scoring at least 80% (16/20 correct answers).' },
+              { title: 'Verifiable Digital Certificate', desc: 'Receive a uniquely serialized digital certificate suitable for resume integration and LinkedIn sharing.' }
+            ].map((item, idx) => (
+              <div key={idx} className="flex gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
+                  {idx + 1}
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-950 text-sm sm:text-base">{item.title}</h4>
+                  <p className="text-slate-500 text-xs sm:text-sm mt-0.5">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Column — Registration Card */}
+        <div className="lg:w-[55%] bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-8 flex flex-col justify-between">
+          {success ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center space-y-6 h-full animate-fadeIn">
+              <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center animate-bounce">
+                <FaCheckCircle size={48} />
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900">Registration Successful!</h3>
+              <p className="text-slate-650 text-sm max-w-sm leading-relaxed">
+                Thank you, <strong className="text-slate-950 font-bold">{formData.full_name}</strong>. Your registration is complete. We have prepared interactive study lessons covering NLP, RAG, and Security models to help you pass the MCQ test.
+              </p>
+
+              <div className="w-full">
+                <Link
+                  href={`/ai-certificate/study?token=${testToken}`}
+                  className="w-full relative inline-flex items-center justify-center gap-2.5 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white font-bold py-4 px-8 rounded-2xl text-sm sm:text-base transition-all duration-200 shadow-md shadow-brand-100"
+                >
+                  <span>Go to Study Portal & Lessons</span>
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <h3 className="text-lg sm:text-xl font-bold text-slate-900">Registration Form</h3>
+                <p className="text-xs text-slate-500 mt-1">Please provide valid contact details. The test link will be sent to the email provided.</p>
+              </div>
+
+              {errorMsg && (
+                <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl p-3 text-xs font-semibold">
+                  {errorMsg}
+                </div>
+              )}
+
+              {/* Full Name */}
+              <div className="relative">
+                <label className="text-xs font-bold text-slate-600 block mb-1">Full Name</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                    <FaUser size={14} />
+                  </span>
+                  <input
+                    type="text"
+                    name="full_name"
+                    required
+                    value={formData.full_name}
+                    onChange={handleChange}
+                    placeholder="John Doe"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
+
+              {/* Gender */}
+              <div>
+                <label className="text-xs font-bold text-slate-600 block mb-1">Gender</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                    <FaVenusMars size={14} />
+                  </span>
+                  <select
+                    name="gender"
+                    required
+                    value={formData.gender}
+                    onChange={handleChange}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Company Name */}
+              <div>
+                <label className="text-xs font-bold text-slate-600 block mb-1">Company Name</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                    <FaBuilding size={14} />
+                  </span>
+                  <input
+                    type="text"
+                    name="company_name"
+                    required
+                    value={formData.company_name}
+                    onChange={handleChange}
+                    placeholder="Company Ltd"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
+
+              {/* Mobile Number */}
+              <div>
+                <label className="text-xs font-bold text-slate-600 block mb-1">Mobile Number</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                    <FaPhone size={14} />
+                  </span>
+                  <input
+                    type="tel"
+                    name="phone"
+                    required
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+65 9123 4567"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
+
+              {/* Email Address */}
+              <div>
+                <label className="text-xs font-bold text-slate-600 block mb-1">Email Address</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                    <FaEnvelope size={14} />
+                  </span>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="johndoe@email.com"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
+
+              {/* Country */}
+              <div>
+                <label className="text-xs font-bold text-slate-600 block mb-1">Country</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                    <FaGlobe size={14} />
+                  </span>
+                  <select
+                    name="country"
+                    required
+                    value={formData.country}
+                    onChange={handleChange}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all appearance-none cursor-pointer"
+                  >
+                    {countries.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-md shadow-brand-100 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <>
+                    <FaSpinner className="animate-spin" size={16} />
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Register & Get Test Link</span>
+                    <FaPaperPlane className="group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform" size={14} />
+                  </>
+                )}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface CourseCardItem {
   id: string;
@@ -50,8 +354,35 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
   );
   const [loading, setLoading] = useState(true);
   const [savedCourseIds, setSavedCourseIds] = useState<string[]>([]);
-  const [filterType, setFilterType] = useState<'all' | 'saved' | 'elearning'>('all');
+  const [filterType, setFilterType] = useState<'all' | 'saved' | 'elearning' | 'free-certificate'>('all');
   const [deliveryMethodFilter, setDeliveryMethodFilter] = useState<string>('all');
+
+  // Catalog Promo Announcement Modal State
+  const [showCatalogPromoModal, setShowCatalogPromoModal] = useState(false);
+
+  useEffect(() => {
+    // Show after 500ms delay on mount
+    const timer = setTimeout(() => {
+      setShowCatalogPromoModal(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleCloseCatalogPromo = () => {
+    setShowCatalogPromoModal(false);
+  };
+
+  const handleGetCatalogPromoCertificate = () => {
+    setShowCatalogPromoModal(false);
+    setFilterType('free-certificate');
+    // Scroll to the courses section
+    setTimeout(() => {
+      const element = document.getElementById('courses-list');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
 
   // Course Application Form States
   const [applyingCourse, setApplyingCourse] = useState<CourseCardItem | null>(null);
@@ -108,12 +439,22 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
     }
   };
 
-  // Check URL query parameters for view=saved on mount
+  // Check URL query parameters for view=saved or free-certificate on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('view') === 'saved') {
+      const view = params.get('view') || params.get('tab');
+      if (view === 'saved') {
         setFilterType('saved');
+      } else if (view === 'free-certificate') {
+        setFilterType('free-certificate');
+        // Scroll to the courses section
+        setTimeout(() => {
+          const element = document.getElementById('courses-list');
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 300);
       }
     }
   }, []);
@@ -395,9 +736,22 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
             <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>E-Learning</span>
           </button>
+          <button
+            onClick={() => setFilterType('free-certificate')}
+            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-1.5 ${
+              filterType === 'free-certificate'
+                ? 'bg-brand-500 text-white shadow-sm shadow-brand-100'
+                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+            }`}
+          >
+            <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+            <span>Free Certificate</span>
+          </button>
         </div>
 
-        {filterType === 'elearning' ? (
+        {filterType === 'free-certificate' ? (
+          <FreeCertificateTabContent />
+        ) : filterType === 'elearning' ? (
           <ELearningModule />
         ) : filterType === 'saved' && filteredCourses.length === 0 ? (
           <div className="rounded-[32px] border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600 shadow-sm max-w-md mx-auto">
@@ -710,6 +1064,66 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
                 </button>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {showCatalogPromoModal && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950/40 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="relative w-full max-w-[90vw] sm:max-w-lg md:max-w-xl rounded-[32px] bg-white text-slate-800 p-6 sm:p-10 shadow-2xl border border-slate-100 flex flex-col items-center text-center overflow-hidden transition-all duration-300">
+            {/* Close Button */}
+            <button
+              onClick={handleCloseCatalogPromo}
+              className="absolute right-5 top-5 rounded-full p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition duration-200 z-20"
+              aria-label="Close promotion"
+            >
+              <FaTimes className="h-4 w-4" />
+            </button>
+
+            {/* Certificate Preview Image */}
+            <div className="relative z-10 w-full aspect-[2/1] mb-6 mt-2 rounded-2xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50 flex items-center justify-center">
+              <img 
+                src="/images/gallery/certificate.png" 
+                alt="AIXX Certificate" 
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
+            </div>
+
+            {/* Badge */}
+            <span className="relative z-10 inline-flex items-center gap-1.5 rounded-full bg-rose-50 border border-rose-100 px-4 py-1.5 text-xs sm:text-sm font-bold text-rose-600 uppercase tracking-widest mb-4">
+              ⏰ Limited Time Announcement
+            </span>
+
+            {/* Content */}
+            <h3 className="relative z-10 text-2xl sm:text-3xl font-black tracking-tight text-slate-900 mb-3">
+              Free AI Certification Ending!
+            </h3>
+            <p className="relative z-10 text-slate-600 text-sm sm:text-base leading-relaxed mb-8 max-w-md">
+              Free certificates are going to end on <strong className="text-rose-600 font-extrabold">September 30th</strong>. Get your Free AI Knowledge Certificate now before the deadline!
+            </p>
+
+            {/* Buttons */}
+            <div className="relative z-10 flex flex-col gap-2.5 w-full">
+              <button
+                type="button"
+                onClick={handleGetCatalogPromoCertificate}
+                className="w-full relative inline-flex items-center justify-center gap-2.5 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white font-bold py-4 px-8 rounded-2xl text-sm sm:text-base transition-all duration-200 shadow-md shadow-brand-100"
+              >
+                <span>Get it freely</span>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </button>
+              
+              <button
+                type="button"
+                onClick={handleCloseCatalogPromo}
+                className="w-full text-xs sm:text-sm text-slate-400 hover:text-slate-600 py-2 transition duration-200"
+              >
+                Maybe later
+              </button>
+            </div>
           </div>
         </div>
       )}

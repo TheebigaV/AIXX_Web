@@ -30,17 +30,6 @@ interface CurriculumSection {
 
 const availableCourses = [
   { 
-    id: 'basic-ai', 
-    title: 'Free AI Knowledge Certificate', 
-    description: 'Test your general AI literacy and earn a Free AI Knowledge Certificate by completing our 20-question MCQ assessment.', 
-    extendedDescription: 'This course provides a gentle, non-technical introduction to AI concepts. It is designed for everyone, regardless of industry or academic background. Validate your understanding of LLMs, everyday AI tools, and basic ethics with our 20 MCQ Knowledge Assessment.',
-    modules: 2, 
-    duration: '1h 00m',
-    icon: FaBrain,
-    theme: 'emerald',
-    price: 'Free'
-  },
-  { 
     id: 'ai-productivity', 
     title: 'Enterprise AI & Productivity', 
     description: 'Master enterprise-grade AI tools to optimize workflows and drive organizational efficiency.', 
