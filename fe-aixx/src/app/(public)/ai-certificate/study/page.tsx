@@ -181,8 +181,8 @@ function StudyPageContent() {
 
                     <div className="text-center pt-2">
                         <Link
-                            href="/courses?view=free-certificate"
-                            className="text-xs text-slate-455 hover:text-slate-700 underline font-medium"
+                            href="/#latest-news"
+                            className="text-xs text-slate-500 hover:text-brand-600 underline font-medium"
                         >
                             Don&apos;t have an account? Register Here
                         </Link>

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import HomeBanner from '@/components/public/HomeBanner';
+import HomeLatestNewsCertificate from '@/components/public/HomeLatestNewsCertificate';
 
 import HomeAbout from '@/components/public/HomeAbout';
 import HomeServices from '@/components/public/HomeServicesAixx';
@@ -14,7 +15,9 @@ const HomePage: React.FC = () => {
     <div className="w-full">
       {/* Full-width banner */}
       <HomeBanner />
-        
+
+      {/* Latest News & Free AI Certificate Section */}
+      <HomeLatestNewsCertificate />
 
       {/* Other sections (content has its own padding) */}
       <div className="w-full">
