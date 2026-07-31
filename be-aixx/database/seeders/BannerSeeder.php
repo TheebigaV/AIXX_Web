@@ -17,7 +17,7 @@ class BannerSeeder extends Seeder
         Banner::create([
             'title_1' => 'Intelligent Solutions for Tomorrow',
             'title_2' => 'Driving Intelligent Digital Transformation',
-            'subtitle' => 'We deliver AI-powered innovation and modern solutions that help businesses grow, adapt, and succeed.',
+            'subtitle' => 'We deliver AI-powered innovation and modern solutions that help businesses grow, adapt, thrive, and succeed.',
             'link' => null,
             'is_active' => true,
         ]);
