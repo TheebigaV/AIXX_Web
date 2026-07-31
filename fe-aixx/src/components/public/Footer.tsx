@@ -29,9 +29,14 @@ const Footer = () => {
               </div>
 
              {/* Paragraph */}
+             <div className="space-y-1">
                <p className="text-white text-sm leading-6 font-normal text-left max-w-sm">
                 {getSetting('footer_text', 'AIXX brings next-generation AI, quantum, and autonomous systems together to help organizations build resilient, intelligent operations for a shared future.')}
               </p>
+              <p className="text-gray-400 text-xs font-semibold text-left">
+                AIXX PTE LTD, SINGAPORE.
+              </p>
+             </div>
             </div>
 
             {/* Right Section - Columns */}
