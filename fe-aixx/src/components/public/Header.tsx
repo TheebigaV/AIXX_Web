@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { FiMenu, FiX, FiChevronDown } from "react-icons/fi";
-import { FaBolt } from "react-icons/fa";
+import { FaBolt, FaFire, FaGraduationCap } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,13 +13,15 @@ const NAV_LINKS = [
   { label: "About Us", href: "/about-us" },
   { label: "Technologies", href: "/services" },
   { label: "Innovative Products", href: "/innovative-products" },
+  { label: "Latest News", href: "/latest-news" },
 ];
 
 const AI_TRAINING_LINKS = [
+  { label: "Free AI Knowledge Certificate", href: "/latest-news" },
   { label: "Seminars", href: "/training-and-certification/seminars" },
   { label: "Workshops", href: "/training-and-certification/workshops" },
   { label: "Courses", href: "/courses" },
-  { label: "Latest Technology News", href: "/training-and-certification/newsletters" },
+  { label: "Latest Technology News", href: "/latest-news" },
   { label: "Training Media Gallery", href: "/training-and-certification/media-gallery" },
   { label: "Skill Training & Certification", href: "/training-and-certification/certification" },
 ];
@@ -94,7 +96,7 @@ const Header = () => {
         <nav className="hidden lg:flex items-center gap-1">
           {NAV_LINKS.map(({ label, href }) => (
             <Link
-              key={href}
+              key={label}
               href={href}
               className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 group
                 ${isActive(href)
@@ -130,7 +132,7 @@ const Header = () => {
               <div className="w-64 bg-white rounded-2xl shadow-xl border border-gray-100 p-2 overflow-hidden">
                 {AI_TRAINING_LINKS.map(({ label, href }) => (
                   <Link
-                    key={href}
+                    key={label}
                     href={href}
                     className={`flex items-center gap-2 px-4 py-2.5 text-sm rounded-xl transition-colors duration-150
                       ${pathname === href
@@ -179,7 +181,7 @@ const Header = () => {
         <div className="bg-white border-t border-gray-100 px-6 py-4 space-y-1 shadow-lg">
           {NAV_LINKS.map(({ label, href }) => (
             <Link
-              key={href}
+              key={label}
               href={href}
               className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-colors
                 ${isActive(href)
@@ -211,7 +213,7 @@ const Header = () => {
               <div className="pl-4 pt-1 space-y-1">
                 {AI_TRAINING_LINKS.map(({ label, href }) => (
                   <Link
-                    key={href}
+                    key={label}
                     href={href}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm transition-colors
                       ${pathname === href
