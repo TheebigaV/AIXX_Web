@@ -39,6 +39,56 @@ class AiTrainingSeeder extends Seeder
                 'is_active' => true,
             ],
 
+            // E-Learning Modules
+            [
+                'name' => 'Enterprise AI & Productivity',
+                'description' => 'Master enterprise-grade AI tools to optimize workflows and drive organizational efficiency.',
+                'type' => 'elearning',
+                'duration' => '2h 15m',
+                'sub_modules' => "4 Topics: Copilot, ChatGPT Enterprise, Workflow Solutions, Automation",
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Generative AI Masterclass',
+                'description' => 'Comprehensive deep dive into LLMs, advanced prompt engineering, and GenAI applications.',
+                'type' => 'elearning',
+                'duration' => '4h 30m',
+                'sub_modules' => "6 Topics: LLMs, OpenAI APIs, Claude, Midjourney, Advanced Prompting, RAG Systems",
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Machine Learning Foundations',
+                'description' => 'Understand the architectural concepts of ML and neural networks for real-world modeling.',
+                'type' => 'elearning',
+                'duration' => '3h 45m',
+                'sub_modules' => "5 Topics: TensorFlow, PyTorch, Scikit-learn, Neural Networks, Predictive Modeling",
+                'is_active' => true,
+            ],
+
+            // Free Certificates & Knowledge Programs
+            [
+                'name' => 'Free AI Knowledge Certificate Program',
+                'description' => 'Global AI Literacy initiative offering a 100% free online assessment, study materials, and verifiable digital certificate.',
+                'type' => 'free_courses',
+                'duration' => 'Self-Paced (20 Questions Assessment)',
+                'sub_modules' => "Module 1: Prompt Engineering & LLM Architecture\nModule 2: Generative Models & RAG Systems\nModule 3: AI Automation & Enterprise Workflows\nModule 4: Responsible AI, Copyright & Governance",
+                'domestic_fee' => 'Free ($0.00)',
+                'international_fee' => 'Free ($0.00)',
+                'highlights' => "100% Free Access & Digital Badge\n20 MCQ Assessment & Instant Grading\nLinkedIn Shareable Verified Credential",
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Free AI Fundamentals Certificate',
+                'description' => 'Foundational certificate program covering core AI principles, machine learning basics, and everyday workplace productivity.',
+                'type' => 'free_courses',
+                'duration' => 'Self-Paced',
+                'sub_modules' => "AI Concepts & Terminology\nWorkplace Automation Essentials\nPrompting Best Practices",
+                'domestic_fee' => 'Free ($0.00)',
+                'international_fee' => 'Free ($0.00)',
+                'highlights' => "Foundational AI Assessment\nFree Study Guide Included\nInstant Digital Certificate",
+                'is_active' => true,
+            ],
+
             // Courses are seeded via seed_course_catalog.php
 
             // Skill Training & Certification
@@ -78,7 +128,7 @@ class AiTrainingSeeder extends Seeder
 
         foreach ($trainings as $training) {
             $training['slug'] = Str::slug($training['name']);
-            Training::firstOrCreate(['slug' => $training['slug']], $training);
+            Training::updateOrCreate(['slug' => $training['slug']], $training);
         }
     }
 }

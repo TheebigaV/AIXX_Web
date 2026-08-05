@@ -40,10 +40,12 @@ class RoleAndPermissionSeeder extends Seeder
         $role = Role::updateOrCreate(['name' => 'Super Admin']);
         $role->givePermissionTo(Permission::all());
 
-        // Assign to first user
-        $user = User::where('email', 'admin@example.com')->first();
-        if ($user) {
-            $user->assignRole($role);
+        // Assign to all admin users
+        foreach (['admin@example.com', 'admin@gmail.com'] as $email) {
+            $user = User::where('email', $email)->first();
+            if ($user) {
+                $user->assignRole($role);
+            }
         }
     }
 }

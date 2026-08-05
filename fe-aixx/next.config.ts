@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
 
   reactStrictMode: false,
 
+  // Enable compression for all responses
+  compress: true,
+
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -12,6 +15,11 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    // Output formats — AVIF is smallest, WebP is broad support fallback
+    formats: ['image/avif', 'image/webp'],
+    // Common device widths for responsive images
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     remotePatterns: [
       {
         protocol: 'https',
@@ -44,12 +52,9 @@ const nextConfig: NextConfig = {
     ],
     // Allow SVG images
     dangerouslyAllowSVG: true,
-    // Use inline disposition for external images
     contentDispositionType: 'inline',
-    // Disable strict CSP for image optimization
     contentSecurityPolicy: "default-src 'self' https://via.placeholder.com;",
-    // Let Next.js handle external images without optimization
-    unoptimized: true,
+    // ✅ Image optimization ENABLED — do NOT set unoptimized: true
   },
 
   webpack(config) {

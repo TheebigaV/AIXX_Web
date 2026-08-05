@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\CertificateRegistration;
+use App\Models\Student;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class CertificateRegistrationController extends Controller
         $perPage = (int) $request->get('per_page', 10);
         $search = $request->get('search');
         
-        $query = CertificateRegistration::query();
+        $query = Student::query();
         
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -52,7 +52,7 @@ class CertificateRegistrationController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
-        $registration = CertificateRegistration::findOrFail($id);
+        $registration = Student::findOrFail($id);
         $registration->delete();
 
         return response()->json([

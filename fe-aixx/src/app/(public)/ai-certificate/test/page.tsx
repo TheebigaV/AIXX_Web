@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { api } from '@/lib/public/api';
 import Link from 'next/link';
-import { FaCheckCircle, FaTimesCircle, FaHourglassHalf, FaAward, FaArrowRight, FaArrowLeft, FaPrint, FaDownload, FaSpinner, FaChevronRight, FaLock, FaUser, FaKey } from 'react-icons/fa';
+import { FaCheckCircle, FaTimesCircle, FaHourglassHalf, FaAward, FaArrowRight, FaArrowLeft, FaPrint, FaDownload, FaSpinner, FaChevronRight, FaLock, FaUser, FaKey, FaTimes, FaBookOpen } from 'react-icons/fa';
+import { CertificatePortalForm } from '@/components/public/CertificatePortalForm';
 
 interface Question {
     id: number;
@@ -23,6 +24,7 @@ function TestPageContent() {
     const [alreadyPassed, setAlreadyPassed] = useState(false);
     const [passedAt, setPassedAt] = useState('');
     const [savedScore, setSavedScore] = useState(0);
+    const [studyGuideVisited, setStudyGuideVisited] = useState(true); // default true to avoid flash
 
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -40,15 +42,21 @@ function TestPageContent() {
     } | null>(null);
 
     // Login Form State
+    const [loginEmail, setLoginEmail] = useState('');
     const [loginId, setLoginId] = useState('');
     const [loginLoading, setLoginLoading] = useState(false);
     const [loginError, setLoginError] = useState('');
 
+    // Registration Modal State
+    const [showRegisterModal, setShowRegisterModal] = useState(false);
+
     const certificateRef = useRef<SVGSVGElement>(null);
 
-    // On mount, check URL query parameters and local storage
+    // On mount, check URL query parameters, local storage and study guide visit
     useEffect(() => {
         const storedToken = typeof window !== 'undefined' ? localStorage.getItem('aixx_certificate_token') : null;
+        const visited = typeof window !== 'undefined' ? !!localStorage.getItem('aixx_study_guide_visited') : true;
+        setStudyGuideVisited(visited);
         if (tokenFromUrl) {
             setToken(tokenFromUrl);
             if (typeof window !== 'undefined') {
@@ -105,17 +113,22 @@ function TestPageContent() {
         setLoginError('');
         try {
             const response = await api.post('api/certificate/login', {
+                email: loginEmail,
                 registration_id: loginId
             });
             const newToken = response.data.token;
             if (newToken) {
                 if (typeof window !== 'undefined') {
                     localStorage.setItem('aixx_certificate_token', newToken);
+                    localStorage.setItem('aixx_candidate_name', response.data.full_name || '');
+                    localStorage.setItem('aixx_candidate_email', response.data.email || loginEmail);
+                    localStorage.setItem('aixx_candidate_reg_id', response.data.registration_id || loginId);
+                    window.dispatchEvent(new Event('aixx-auth-change'));
                 }
                 setToken(newToken);
             }
         } catch (err: any) {
-            setLoginError(err.response?.data?.message || 'Invalid Registration ID or password.');
+            setLoginError(err.response?.data?.message || 'Invalid Registered Email or Registration ID.');
         } finally {
             setLoginLoading(false);
         }
@@ -232,18 +245,57 @@ function TestPageContent() {
         );
     }
 
+    // ── Study Guide Gate: must visit study guide before taking test ──────────────
+    if (token && !studyGuideVisited) {
+        return (
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-20">
+                <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200/80 shadow-2xl space-y-6 text-center">
+                    <div className="w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto border border-amber-200">
+                        <FaLock size={28} />
+                    </div>
+                    <div className="space-y-2">
+                        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Study Guide First</h2>
+                        <p className="text-sm text-slate-500 max-w-xs mx-auto leading-relaxed">
+                            You need to complete the <strong className="text-slate-800">Study Guide</strong> before you can take the certification test. This ensures you're fully prepared.
+                        </p>
+                    </div>
+                    <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-xs text-amber-800 text-left flex items-start gap-2">
+                        <FaLock size={11} className="text-amber-500 mt-0.5 flex-shrink-0" />
+                        <span>The test will unlock automatically after you visit the Study Guide.</span>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                        <Link
+                            href={`/ai-certificate/study?token=${token}`}
+                            className="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl transition text-sm flex items-center justify-center gap-2"
+                        >
+                            <FaBookOpen size={14} />
+                            Go to Study Guide
+                        </Link>
+                        <Link
+                            href="/courses?view=free-certificate"
+                            className="text-xs text-slate-400 hover:text-slate-600 font-medium transition"
+                        >
+                            ← Back to Free Certificate
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     // Render Login Page if no token is active
     if (!token) {
         return (
+            <>
             <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-20">
                 <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200/80 shadow-2xl space-y-6">
                     <div className="text-center space-y-2">
                         <div className="w-14 h-14 bg-brand-500/10 text-brand-600 rounded-full flex items-center justify-center mx-auto border border-brand-500/20">
                             <FaLock size={20} />
                         </div>
-                        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Access Portal Login</h2>
+                        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Student Portal Login</h2>
                         <p className="text-xs text-slate-500 max-w-xs mx-auto">
-                            Enter your Registration ID to unlock the study lessons and digital certificate.
+                            Please log in with your registered email and Registration ID to unlock the assessment and digital certificate.
                         </p>
                     </div>
 
@@ -262,19 +314,37 @@ function TestPageContent() {
                     )}
 
                     <form onSubmit={handleLoginSubmit} className="space-y-4">
-                        {/* Registration ID Input */}
+                        {/* Registered Email Input */}
                         <div>
-                            <label className="text-xs font-extrabold text-slate-600 block mb-1">Registration ID</label>
+                            <label className="text-xs font-extrabold text-slate-600 block mb-1">Registered Email Address <span className="text-brand-600">*</span></label>
                             <div className="relative">
                                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                                     <FaUser size={12} />
+                                </span>
+                                <input
+                                    type="email"
+                                    required
+                                    value={loginEmail}
+                                    onChange={(e) => setLoginEmail(e.target.value)}
+                                    placeholder="student@example.com"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-xs sm:text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Registration ID Input */}
+                        <div>
+                            <label className="text-xs font-extrabold text-slate-600 block mb-1">Registration ID <span className="text-brand-600">*</span></label>
+                            <div className="relative">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                                    <FaKey size={12} />
                                 </span>
                                 <input
                                     type="text"
                                     required
                                     value={loginId}
                                     onChange={(e) => setLoginId(e.target.value)}
-                                    placeholder="AIXX-REG-1"
+                                    placeholder="e.g. AIXX-REG-1"
                                     className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-xs sm:text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all font-mono"
                                 />
                             </div>
@@ -288,11 +358,11 @@ function TestPageContent() {
                             {loginLoading ? (
                                 <>
                                     <FaSpinner className="animate-spin" size={14} />
-                                    <span>Verifying Access...</span>
+                                    <span>Authenticating &amp; Unlocking...</span>
                                 </>
                             ) : (
                                 <>
-                                    <span>Verify & Unlock Portal</span>
+                                    <span>Log In &amp; Unlock Portal</span>
                                     <FaChevronRight size={10} />
                                 </>
                             )}
@@ -300,15 +370,39 @@ function TestPageContent() {
                     </form>
 
                     <div className="text-center pt-2">
-                        <Link
-                            href="/courses?view=free-certificate"
-                            className="text-xs text-slate-455 hover:text-slate-700 underline font-medium"
+                        <button
+                            type="button"
+                            onClick={() => setShowRegisterModal(true)}
+                            className="text-xs text-slate-455 hover:text-slate-700 underline font-medium cursor-pointer"
                         >
                             Don&apos;t have an account? Register Here
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>
+
+            {/* Registration Modal */}
+            {showRegisterModal && (
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+                    <div className="relative w-full max-w-lg md:max-w-3xl bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-2xl text-slate-900 space-y-6 max-h-[90vh] overflow-y-auto">
+                        <button
+                            onClick={() => setShowRegisterModal(false)}
+                            className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 p-2 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+                            aria-label="Close"
+                        >
+                            <FaTimes size={18} />
+                        </button>
+                        <CertificatePortalForm
+                            onClose={() => setShowRegisterModal(false)}
+                            onSuccess={(studentData) => {
+                                setShowRegisterModal(false);
+                                setToken(studentData.token);
+                            }}
+                        />
+                    </div>
+                </div>
+            )}
+            </>
         );
     }
 

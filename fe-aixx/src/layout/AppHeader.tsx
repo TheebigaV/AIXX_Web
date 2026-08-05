@@ -2,6 +2,7 @@
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import NotificationDropdown from "@/components/header/NotificationDropdown";
 import UserDropdown from "@/components/header/UserDropdown";
+import CandidateDropdown from "@/components/header/CandidateDropdown";
 import { useSidebar } from "@/context/SidebarContext";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +12,31 @@ import "react-toastify/dist/ReactToastify.css";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
+  const [candidateName, setCandidateName] = useState<string | null>(null);
+  const [candidateRegId, setCandidateRegId] = useState<string | null>(null);
+  const [candidateEmail, setCandidateEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkCandidateLogin = () => {
+      setCandidateName(localStorage.getItem("aixx_candidate_name"));
+      setCandidateRegId(localStorage.getItem("aixx_candidate_reg_id"));
+    };
+
+    checkCandidateLogin();
+
+    window.addEventListener("aixx-auth-change", checkCandidateLogin as EventListener);
+    return () => {
+      window.removeEventListener("aixx-auth-change", checkCandidateLogin as EventListener);
+    };
+  }, []);
+
+  const handleCandidateLogout = () => {
+    localStorage.removeItem("aixx_student_token");
+    localStorage.removeItem("aixx_certificate_token");
+    localStorage.removeItem("aixx_candidate_name");
+    localStorage.removeItem("aixx_candidate_reg_id");
+    window.dispatchEvent(new Event("aixx-auth-change"));
+  };
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
@@ -86,21 +112,22 @@ const AppHeader: React.FC = () => {
             {/* Cross Icon */}
           </button>
 
-          <Link href="/" className="lg:hidden">
+          <Link href="/admin" className="lg:hidden flex items-center gap-2">
             <Image
-              width={154}
-              height={32}
-              className="dark:hidden"
+              width={36}
+              height={36}
+              className="object-contain w-9 h-9"
               src="/images/logo/logo.png"
-              alt="Logo"
+              alt="AIXX Logo"
             />
-            <Image
-              width={154}
-              height={32}
-              className="hidden dark:block"
-              src="/images/logo/logo.png"
-              alt="Logo"
-            />
+            <div className="flex flex-col justify-center">
+              <span className="text-lg font-extrabold tracking-tight text-[#00062A] dark:text-white leading-tight font-sans">
+                AI<span className="text-brand-500 font-extrabold">XX</span>
+              </span>
+              <span className="text-[8px] font-bold uppercase tracking-[0.18em] text-slate-500 leading-none">
+                PTE LTD
+              </span>
+            </div>
           </Link>
 
           <button
@@ -172,7 +199,15 @@ const AppHeader: React.FC = () => {
             {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}
-          <UserDropdown /> 
+          {candidateName && candidateRegId ? (
+            <CandidateDropdown 
+              candidateName={candidateName} 
+              candidateRegId={candidateRegId} 
+              onLogout={handleCandidateLogout} 
+            />
+          ) : (
+            <UserDropdown /> 
+          )}
     
         </div>
       </div>

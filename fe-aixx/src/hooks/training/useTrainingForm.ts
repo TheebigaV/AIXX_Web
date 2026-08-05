@@ -26,7 +26,7 @@ export const useTrainingForm = (trainingId?: string, onSuccess?: () => void) => 
   const [serverError, setServerError] = useState("");
   const [existingImageUrl, setExistingImageUrl] = useState<string>("");
 
-  // Load existing training for edit
+  // Load existing training for edit or set initial type from URL
   useEffect(() => {
     if (trainingId) {
       setLoading(true);
@@ -40,6 +40,12 @@ export const useTrainingForm = (trainingId?: string, onSuccess?: () => void) => 
           })
           .catch(() => setServerError("Failed to fetch training"))
           .finally(() => setLoading(false));
+    } else if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const urlType = params.get("type");
+      if (urlType) {
+        setFormData((prev) => ({ ...prev, type: urlType }));
+      }
     }
   }, [trainingId]);
 

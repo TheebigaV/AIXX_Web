@@ -79,17 +79,33 @@ const HomeBanner: React.FC = () => {
 
   return (
     <section className="relative w-full h-[420px] sm:h-[520px] md:h-[580px] lg:h-[660px] xl:h-[720px]">
-      {/* Background Image */}
-      <img
-        src={bgImage}
-        alt="AIXX Future Banner"
-        className="object-cover absolute w-full h-full inset-0"
-        style={{ objectPosition: 'center top' }}
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          target.src = '/images/home/premium_home_banner.png';
-        }}
-      />
+      {/* Background Image — priority=true triggers preload (fixes LCP) */}
+      {bgImage.startsWith('http') ? (
+        // External API images: use img with fetchpriority for LCP boost
+        <img
+          src={bgImage}
+          alt="AIXX Academy Banner"
+          className="object-cover absolute w-full h-full inset-0"
+          style={{ objectPosition: 'center top' }}
+          fetchPriority="high"
+          decoding="async"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = '/images/home/premium_home_banner.png';
+          }}
+        />
+      ) : (
+        // Local images: use next/image with priority for optimization
+        <Image
+          src={bgImage}
+          alt="AIXX Academy Banner"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+          style={{ objectPosition: 'center top' }}
+        />
+      )}
 
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#00062A] via-[#00062A]/60 to-[#00062A]/20 z-10" />

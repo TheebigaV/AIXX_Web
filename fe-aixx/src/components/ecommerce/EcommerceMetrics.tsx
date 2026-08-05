@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import { BoxIconLine, GroupIcon } from "@/icons";
 import { useSettings } from "@/hooks/useSettings";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useAuth } from "@/context/AuthContext";
-import { hasPermission } from "@/hooks/usePermission";
 
 export const EcommerceMetrics = () => {
   const { user } = useAuth();
@@ -13,7 +13,6 @@ export const EcommerceMetrics = () => {
 
   const loading = dashLoading || setLoading;
 
-  
   const getIcon = (iconType: string) => {
     switch (iconType) {
       case "group":
@@ -27,8 +26,8 @@ export const EcommerceMetrics = () => {
 
   if (loading) {
     return (
-      <div className="w-full px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        {[...Array(4)].map((_, i) => (
+      <div className="w-full px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 md:gap-6">
+        {[...Array(6)].map((_, i) => (
           <div
             key={i}
             className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6 animate-pulse"
@@ -67,43 +66,38 @@ export const EcommerceMetrics = () => {
     );
   }
 
-  const metricsArray = [
-    { label: "Products", value: metrics.products?.value || 0, icon: "box", permission: "products-viewany", link: "/admin/products" },
-    { label: "Enquiries", value: metrics.enquiries?.value || 0, icon: "group", permission: "inquiries-view", link: "/admin/inquiries" },
-    { label: "Categories", value: metrics.categories?.value || 0, icon: "box", permission: "categories-view", link: "/admin/categories" },
-    { label: "Banners", value: metrics.banners?.value || 0, icon: "box", permission: "banners-viewany", link: "/admin/banners" },
-    { label: "Users", value: metrics.users?.value || 0, icon: "group", permission: "users-view", link: "/admin/users" },
-    { label: "Trainings", value: metrics.trainings?.value || 0, icon: "box", permission: "training-view", link: "/admin/training" },
+  const metricsArray: Array<{ label: string; value: number | string; icon: string; link: string }> = [
+    { label: "Products", value: metrics.products?.value || 0, icon: "box", link: "/admin/products" },
+    { label: "Enquiries", value: metrics.enquiries?.value || 0, icon: "group", link: "/admin/inquiries" },
+    { label: "Categories", value: metrics.categories?.value || 0, icon: "box", link: "/admin/categories" },
+    { label: "Banners", value: metrics.banners?.value || 0, icon: "box", link: "/admin/banners" },
+    { label: "Users", value: metrics.users?.value || 0, icon: "group", link: "/admin/users" },
+    { label: "Trainings", value: metrics.trainings?.value || 0, icon: "box", link: "/admin/training" },
   ];
 
   return (
-    <div className="w-full px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 md:gap-6">
-
+    <div className="w-full px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 md:gap-6">
       {metricsArray.map((metric, index) => {
-        const canAccess = hasPermission(user, metric.permission);
-        
-        if (!canAccess) return null;
-        
         return (
-          <a key={index} href={metric.link} className="block">
+          <Link key={index} href={metric.link} className="block group">
             <div
-              className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6 hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-700 cursor-pointer transition-all"
+              className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6 hover:shadow-xl hover:border-brand-500/50 dark:hover:border-brand-500/50 cursor-pointer transition-all duration-200 transform hover:-translate-y-1"
             >
-              <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
+              <div className="flex items-center justify-center w-12 h-12 bg-brand-50 text-brand-600 rounded-xl dark:bg-brand-900/30 dark:text-brand-400 group-hover:bg-brand-600 group-hover:text-white transition-colors">
                 {getIcon(metric.icon)}
               </div>
               <div className="flex items-end justify-between mt-5">
                 <div>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                  <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">
                     {metric.label}
                   </span>
-                  <h4 className={`mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90 ${metric.value === 'Active' ? 'text-green-500' : metric.value === 'Inactive' ? 'text-gray-400' : ''}`}>
+                  <h4 className={`mt-2 font-black text-gray-900 text-title-sm dark:text-white/90 ${String(metric.value) === 'Active' ? 'text-green-500' : String(metric.value) === 'Inactive' ? 'text-gray-400' : ''}`}>
                     {formatValue(metric.value)}
                   </h4>
                 </div>
               </div>
             </div>
-          </a>
+          </Link>
         );
       })}
     </div>

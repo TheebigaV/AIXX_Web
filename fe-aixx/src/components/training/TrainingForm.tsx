@@ -26,7 +26,7 @@ export default function TrainingForm() {
         handleSubmit,
     } = useTrainingForm(trainingId as string, () => {
         toast.success("Training saved successfully!");
-        router.push("/admin/training");
+        router.push(formData.type === "courses" ? "/admin/training" : `/admin/training?type=${formData.type}`);
     });
 
     const [imagePreview, setImagePreview] = useState<string>("");
@@ -42,15 +42,17 @@ export default function TrainingForm() {
     };
 
     const typeOptions = [
+        { value: "courses", label: "Courses & E-Learning" },
+        { value: "free_courses", label: "Free Courses & Certificates" },
+        { value: "elearning", label: "E-Learning Modules" },
         { value: "seminars", label: "Seminars" },
         { value: "workshops", label: "Workshops" },
-        { value: "courses", label: "Courses" },
         { value: "certification", label: "Skill Training & Certification" },
         { value: "newsletters", label: "Latest Technology News" },
         { value: "media_gallery", label: "Training Media Gallery" }
     ];
 
-    const showCourseDetails = formData.type === "courses";
+    const showCourseDetails = ["courses", "free_courses", "elearning", "workshops", "seminars", "certification"].includes(formData.type);
 
     return (
         <ComponentCard title="Training Information">

@@ -1,4 +1,3 @@
-import { Outfit, Lato } from 'next/font/google';
 import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
@@ -7,29 +6,43 @@ import { ThemeProvider } from '@/context/ThemeContext';
 
 import Script from "next/script";
 
-const outfit = Outfit({
-  subsets: ['latin'],
-});
-
 import type { Metadata } from 'next';
 
-const lato = Lato({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-});
-
 export const metadata: Metadata = {
-  title: 'AIXX',
-  description: 'AIXX Platform',
+  title: {
+    default: 'AIXX | Enterprise AI & Productivity Academy',
+    template: '%s | AIXX',
+  },
+  description: 'AIXX Academy — Master enterprise-grade AI tools, generative AI, machine learning, and quantum computing to optimize workflows and drive organizational efficiency.',
   icons: {
-    icon: '/images/logo/logo-icon.svg',
+    icon: '/images/logo/logo.png',
+    shortcut: '/images/logo/logo.png',
+    apple: '/images/logo/logo.png',
+  },
+  openGraph: {
+    title: 'AIXX | Enterprise AI & Productivity Academy',
+    description: 'Master enterprise-grade AI tools, generative AI, machine learning, and quantum computing with AIXX Academy.',
+    images: [
+      {
+        url: '/images/logo/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'AIXX Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AIXX | Enterprise AI & Productivity Academy',
+    description: 'Master enterprise-grade AI tools, generative AI, machine learning, and quantum computing with AIXX Academy.',
+    images: ['/images/logo/logo.png'],
   },
 };
 
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -40,13 +53,17 @@ export default function RootLayout({
   return (
     <html lang="en">
         <head>
+            <link rel="icon" href="/images/logo/logo.png" type="image/png" />
+            <link rel="shortcut icon" href="/images/logo/logo.png" />
+            <link rel="apple-touch-icon" href="/images/logo/logo.png" />
+            {/* CKEditor loaded lazily — does not block page render */}
             <Script
                 src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"
-                strategy="beforeInteractive"
+                strategy="lazyOnload"
             />
         </head>
 
-        <body className={`${lato.className} dark:bg-gray-900`}>
+        <body className="dark:bg-gray-900">
         <ThemeProvider>
             <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>

@@ -1,11 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { fetchPublicTrainings } from '@/lib/training';
 import { storeInquiry } from '@/lib/public/inquiries';
 import { courses as fallbackCourses } from '@/components/public/courseCatalogData';
+import { CertificatePortalForm } from '@/components/public/CertificatePortalForm';
+import { enrollInCourse } from '@/services/studentService';
+import { FaCheckCircle, FaEnvelope, FaPaperPlane } from 'react-icons/fa';
 
 interface CourseDetailItem {
   id: string;
@@ -355,204 +359,75 @@ export default function CourseDetailPage() {
 
       {/* ── Apply Now Modal ── */}
       {showApplyModal && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/50 backdrop-blur-md p-4">
-          <div className="relative w-full max-w-md rounded-[32px] bg-white p-6 md:p-8 shadow-2xl border border-slate-100 flex flex-col max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+          <div className="relative w-full max-w-lg md:max-w-3xl bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-2xl text-slate-900 max-h-[90vh] overflow-y-auto">
             <button
-              onClick={closeModal}
-              className="absolute right-5 top-5 rounded-full p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-700 transition"
+              onClick={() => setShowApplyModal(false)}
+              className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 p-2 rounded-full hover:bg-slate-100 transition-colors cursor-pointer z-10"
               aria-label="Close form"
             >
               <XIcon />
             </button>
 
-            {submitted ? (
-              <div className="my-auto py-10 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-500">
-                  <svg className="h-8 w-8 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                  </svg>
+            {/* Check if course is self-enrollable (elearning/free_courses) or requires direct contact */}
+            {(course as any).type !== 'elearning' && (course as any).type !== 'free_courses' && !course.domestic?.includes('Free') && !course.international?.includes('Free') ? (
+              <div className="text-center space-y-5 py-2 animate-fadeIn max-w-lg mx-auto">
+                <div className="w-16 h-16 bg-blue-50 text-brand-600 rounded-2xl flex items-center justify-center mx-auto border border-blue-100">
+                  <FaEnvelope size={28} />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900">Application Received!</h3>
-                <p className="mt-2 text-sm text-slate-500">
-                  Thank you for applying to <strong>{course.title}</strong>.<br />
-                  Your inquiry has been stored in our admin panel. An email confirmation has been sent to your address.
-                </p>
+                <div>
+                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-brand-600 bg-brand-50 px-3 py-1 rounded-full border border-brand-100">Admissions Advisory Notice</span>
+                  <h3 className="text-2xl font-black text-slate-900 tracking-tight mt-3">Direct Admissions Inquiry Required</h3>
+                  <p className="text-xs text-slate-500 mt-1">Program: <strong className="text-slate-800">{course.title}</strong></p>
+                </div>
+
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left space-y-3 text-xs leading-relaxed text-slate-650">
+                  <p className="font-semibold text-slate-800">
+                    Online self-enrollment via Student Registration ID is available exclusively for <strong className="text-brand-600">E-Learning Modules</strong> and <strong className="text-brand-600">Free AI Certificates</strong>.
+                  </p>
+                  <p>
+                    For executive seminars, specialized certifications, and paid enterprise programs, applications are processed directly through our admissions advisory team.
+                  </p>
+                  <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-xs">
+                    <span className="font-bold text-slate-700">Contact Admissions Email:</span>
+                    <a href={`mailto:info@aixx.com.sg?subject=Enrollment%20Inquiry%20for%20${encodeURIComponent(course.title)}`} className="font-bold text-brand-600 hover:underline">info@aixx.com.sg</a>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <a
+                    href={`mailto:info@aixx.com.sg?subject=Enrollment%20Inquiry%20for%20${encodeURIComponent(course.title)}`}
+                    className="w-full bg-[#43933E] hover:bg-[#387D34] text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer text-center"
+                  >
+                    <FaEnvelope size={14} />
+                    <span>Contact via Email</span>
+                  </a>
+                  <Link
+                    href={`/contact?service=AI%20Training%20%26%20Certification&subject=Enrollment%20Inquiry%20for%20${encodeURIComponent(course.title)}`}
+                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3.5 px-4 rounded-xl border border-slate-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer text-center"
+                  >
+                    <FaPaperPlane size={12} className="text-slate-600" />
+                    <span>Submit Inquiry</span>
+                  </Link>
+                </div>
               </div>
             ) : (
-              <form onSubmit={handleApplySubmit} className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 leading-tight">Course Application</h3>
-                  <p className="text-xs text-slate-400 mt-1">Please fill in your details below to apply.</p>
-                </div>
-
-                {/* Course Badge */}
-                <div className="bg-brand-50/70 border border-brand-100 rounded-2xl p-4">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-600 block mb-1">Applying for Course</span>
-                  <p className="text-sm font-bold text-slate-900 leading-snug">{course.title}</p>
-                </div>
-
-                {/* Name Row */}
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <label className="sr-only">First Name</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="First Name"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-400"
-                    />
-                  </div>
-                  <div>
-                    <label className="sr-only">Last Name</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Last Name"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-400"
-                    />
-                  </div>
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className="sr-only">Email Address</label>
-                  <input
-                    type="email"
-                    required
-                    placeholder="Email Address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-400"
-                  />
-                </div>
-
-                {/* Company Name */}
-                <div>
-                  <label className="sr-only">Company Name</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Company Name"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-400"
-                  />
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <label className="sr-only">Phone Number</label>
-                  <div className="flex rounded-xl border border-slate-200 overflow-hidden bg-white focus-within:border-brand-500 focus-within:ring-1 focus-within:ring-brand-500 transition-all">
-                    <select
-                      value={countryCode}
-                      onChange={(e) => setCountryCode(e.target.value)}
-                      className="bg-slate-50 px-3 border-r border-slate-200 text-sm font-semibold text-slate-700 outline-none cursor-pointer max-w-[120px]"
-                    >
-                      <option value="+65">🇸🇬 +65</option>
-                      <option value="+60">🇲🇾 +60</option>
-                      <option value="+62">🇮🇩 +62</option>
-                      <option value="+66">🇹🇭 +66</option>
-                      <option value="+63">🇵🇭 +63</option>
-                      <option value="+84">🇻🇳 +84</option>
-                      <option value="+91">🇮🇳 +91</option>
-                      <option value="+61">🇦🇺 +61</option>
-                      <option value="+44">🇬🇧 +44</option>
-                      <option value="+1">🇺🇸 +1</option>
-                      <option value="+86">🇨🇳 +86</option>
-                      <option value="+81">🇯🇵 +81</option>
-                      <option value="+82">🇰🇷 +82</option>
-                      <option value="+95">🇲🇲 +95</option>
-                      <option value="+855">🇰🇭 +855</option>
-                      <option value="+673">🇧🇳 +673</option>
-                      <option value="+856">🇱🇦 +856</option>
-                    </select>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="Phone"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full bg-white px-4 py-3 text-sm text-slate-700 outline-none placeholder:text-slate-400"
-                    />
-                  </div>
-                </div>
-
-                {/* Inquiring For */}
-                <div className="space-y-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Inquiring For</span>
-                  <div className="flex items-center gap-6">
-                    <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="inquiringFor"
-                        value="myself"
-                        checked={inquiringFor === 'myself'}
-                        onChange={() => setInquiringFor('myself')}
-                        className="h-4 w-4 accent-brand-600"
-                      />
-                      <span>Myself</span>
-                    </label>
-                    <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="inquiringFor"
-                        value="team"
-                        checked={inquiringFor === 'team'}
-                        onChange={() => setInquiringFor('team')}
-                        className="h-4 w-4 accent-brand-600"
-                      />
-                      <span>Team / Group</span>
-                    </label>
-                  </div>
-                </div>
-
-                {/* Work Experience */}
-                <div>
-                  <label className="sr-only">Total Work Experience</label>
-                  <select
-                    required
-                    value={experience}
-                    onChange={(e) => setExperience(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-500 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all cursor-pointer"
-                  >
-                    <option value="" disabled>Total Work Experience</option>
-                    <option value="none">Less than 1 year</option>
-                    <option value="1-3">1 to 3 years</option>
-                    <option value="3-5">3 to 5 years</option>
-                    <option value="5-10">5 to 10 years</option>
-                    <option value="10+">10+ years</option>
-                  </select>
-                </div>
-
-                {/* Privacy */}
-                <div className="text-[10px] leading-relaxed text-slate-400">
-                  By clicking the button below, you agree to receive communications via Email/Call/WhatsApp/SMS from AIXX Academy and partners about this program and other relevant programs.{' '}
-                  <Link href="/privacy-policy" className="text-slate-500 underline hover:text-slate-650">Privacy Policy</Link>.
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={loadingForm}
-                  className="w-full bg-brand-500 hover:bg-brand-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white py-3.5 rounded-2xl font-bold uppercase tracking-wider text-xs shadow-md shadow-brand-100 transition-all duration-150 flex items-center justify-center gap-2"
-                >
-                  {loadingForm ? (
-                    <>
-                      <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
-                      <span>Submitting...</span>
-                    </>
-                  ) : (
-                    <span>Submit Application</span>
-                  )}
-                </button>
-              </form>
+              <CertificatePortalForm
+                onClose={() => setShowApplyModal(false)}
+                title="Free AI Certificate Portal"
+                subtitle="New candidate? Fill in your details to register. Already registered? Just enter your email — we'll recognize you and log you in instantly."
+                onSuccess={async (studentData) => {
+                  try {
+                    await enrollInCourse(studentData.registration_id, {
+                      id: course.id,
+                      title: course.title,
+                      description: course.description,
+                    });
+                  } catch (err) {
+                    console.error('Enrollment error:', err);
+                  }
+                }}
+              />
             )}
           </div>
         </div>
@@ -572,10 +447,14 @@ export default function CourseDetailPage() {
 
             {/* Certificate Preview Image */}
             <div className="relative z-10 w-full aspect-[2/1] mb-6 mt-2 rounded-2xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50 flex items-center justify-center">
-              <img 
+              <Image
                 src="/images/gallery/certificate.png" 
                 alt="AIXX Certificate" 
-                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" 
+                width={800}
+                height={400}
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
             </div>

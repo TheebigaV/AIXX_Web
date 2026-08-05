@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             DocumentSeeder::class,
             ProjectSeeder::class,
             SettingsTableSeeder::class,
+            AiTrainingSeeder::class,
         ]);
     }
 }

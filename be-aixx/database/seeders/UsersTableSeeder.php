@@ -15,10 +15,19 @@ class UsersTableSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'admin@example.com'], // Unique field to avoid duplicates
+            ['email' => 'admin@gmail.com'],
             [
-                'name' => 'Admin',
-                'password' => Hash::make('12345678'), // Secure password
+                'name' => 'Admin User',
+                'password' => Hash::make('12345678'),
+                'email_verified_at' => now(),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin Example',
+                'password' => Hash::make('12345678'),
                 'email_verified_at' => now(),
             ]
         );

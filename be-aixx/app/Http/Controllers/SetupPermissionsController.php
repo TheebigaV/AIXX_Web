@@ -35,17 +35,22 @@ class SetupPermissionsController extends Controller
         $role = Role::updateOrCreate(['name' => 'Super Admin']);
         $role->givePermissionTo(Permission::all());
 
-        // Assign to authenticated user or admin@example.com
-        $user = auth()->user() ?? User::where('email', 'admin@example.com')->first();
+        // Assign to authenticated user or admin accounts
+        $users = array_filter([
+            auth()->user(),
+            User::where('email', 'admin@example.com')->first(),
+            User::where('email', 'admin@gmail.com')->first(),
+        ]);
 
-        if ($user) {
+        foreach ($users as $user) {
             $user->assignRole($role);
-            return response()->json([
-                'success' => true,
-                'message' => "All permissions assigned to {$user->email}",
-                'permissions_count' => count($permissions),
-            ]);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => "All permissions assigned to admin accounts",
+            'permissions_count' => count($permissions),
+        ]);
 
         return response()->json([
             'success' => false,

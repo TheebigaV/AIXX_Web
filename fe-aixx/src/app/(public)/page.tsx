@@ -17,7 +17,9 @@ const HomePage: React.FC = () => {
       <HomeBanner />
 
       {/* Latest News & Free AI Certificate Section */}
-      <HomeLatestNewsCertificate />
+      <React.Suspense fallback={null}>
+        <HomeLatestNewsCertificate />
+      </React.Suspense>
 
       {/* Other sections (content has its own padding) */}
       <div className="w-full">

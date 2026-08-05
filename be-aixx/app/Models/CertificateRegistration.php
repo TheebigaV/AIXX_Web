@@ -16,16 +16,19 @@ class CertificateRegistration extends Model
         'full_name',
         'gender',
         'company_name',
+        'academic_institution',
         'phone',
         'email',
         'country',
         'test_score',
         'passed',
         'passed_at',
+        'last_login_at',
     ];
 
     protected $casts = [
         'passed' => 'boolean',
         'passed_at' => 'datetime',
+        'last_login_at' => 'datetime',
     ];
 }

@@ -62,7 +62,7 @@ export default function useCategories() {
             return res.data.data;
         } catch (err: any) {
             console.error("Error getting all categories:", err);
-            setError(err?.response?.data?.message || "Failed to fetch categories.");
+            setError(err?.response?.data?.message || err?.message || "Failed to fetch categories.");
             return [];
         } finally {
             setLoading(false);

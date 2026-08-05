@@ -72,7 +72,7 @@ export default function useBanners() {
             return res.data || [];
         } catch (err: any) {
             console.error("Error fetching all banners:", err);
-            setError(err?.response?.data?.message || "Failed to fetch all banners.");
+            setError(err?.response?.data?.message || err?.message || "Failed to fetch all banners.");
             setLoading(false);
             return [];
         }
