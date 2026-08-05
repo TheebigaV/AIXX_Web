@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { fetchPublicTrainings } from '@/lib/training';
@@ -446,10 +447,14 @@ export default function CourseDetailPage() {
 
             {/* Certificate Preview Image */}
             <div className="relative z-10 w-full aspect-[2/1] mb-6 mt-2 rounded-2xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50 flex items-center justify-center">
-              <img 
+              <Image
                 src="/images/gallery/certificate.png" 
                 alt="AIXX Certificate" 
-                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" 
+                width={800}
+                height={400}
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
             </div>

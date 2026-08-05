@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -56,9 +56,10 @@ export default function RootLayout({
             <link rel="icon" href="/images/logo/logo.png" type="image/png" />
             <link rel="shortcut icon" href="/images/logo/logo.png" />
             <link rel="apple-touch-icon" href="/images/logo/logo.png" />
+            {/* CKEditor loaded lazily — does not block page render */}
             <Script
                 src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"
-                strategy="beforeInteractive"
+                strategy="lazyOnload"
             />
         </head>
 

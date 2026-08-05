@@ -1,0 +1,20 @@
+# AIXX Academy — llms.txt
+# This file follows the llms.txt specification to help AI agents navigate this site.
+
+> AIXX Academy is an enterprise AI & Productivity training academy offering courses, workshops, and certifications in Generative AI, Machine Learning, Quantum Computing and more.
+
+## Key Pages
+- [Home](/) — Learn about AIXX Academy and our AI training programs
+- [Courses](/courses) — Browse all AI courses and free certification programs
+- [Training & Certification](/training-and-certification) — View all professional training programs
+- [Free AI Certificate](/courses?view=free-certificate) — Register for our free AI Knowledge Certificate
+- [Study Guide](/ai-certificate/study) — Access the AI study guide (login required)
+- [AI Certificate Test](/ai-certificate/test) — Take the AI certification test (study guide required first)
+- [Contact](/contact) — Get in touch with AIXX Academy
+
+## About
+AIXX Pte Ltd is a Singapore-based AI training company delivering practical, enterprise-grade AI education across Southeast Asia. Programs cover prompt engineering, LLMs, RAG systems, AI agents, machine learning, and quantum computing.
+
+## Contact
+- Website: https://aixx.com.sg
+- Email: cs@aixx.com.sg
