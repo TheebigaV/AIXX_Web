@@ -1,3 +1,5 @@
+import type { Dispatch, SetStateAction } from 'react';
+
 export type User = {
     id: number;
     name: string;
@@ -16,6 +18,7 @@ export type AuthContextType = {
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
+    setUser: Dispatch<SetStateAction<User | null>>;
 };
 
 export type BannerContent = {

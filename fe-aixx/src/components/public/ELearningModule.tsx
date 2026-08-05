@@ -1408,9 +1408,41 @@ export default function ELearningModule() {
   // STATE
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [enrollmentStatus, setEnrollmentStatus] = useState<'unenrolled' | 'enrolling' | 'enrolled'>('unenrolled');
+  const [coursesList, setCoursesList] = useState(availableCourses);
   
   const [activeLessonId, setActiveLessonId] = useState(101);
   const [completedLessonIds, setCompletedLessonIds] = useState<number[]>([]);
+
+  // Fetch backend E-Learning modules created in admin
+  useEffect(() => {
+    const fetchELearningCourses = async () => {
+      try {
+        const response = await api.get('api/trainings/all?type=elearning');
+        const items = response.data?.data || response.data || [];
+        if (Array.isArray(items) && items.length > 0) {
+          const mapped = items.map((item: any, idx: number) => {
+            const themes = ['brand', 'emerald', 'blue'];
+            const icons = [FaChartLine, FaBrain, FaNetworkWired];
+            return {
+              id: item.slug || item.id?.toString() || `elearning-${idx}`,
+              title: item.name || 'Untitled E-Learning Module',
+              description: item.description || 'Comprehensive E-learning module with interactive lessons and assessment.',
+              extendedDescription: item.description || 'Master this module with a hands-on approach, practical guidance, and certification.',
+              modules: item.sub_modules ? item.sub_modules.split('\n').filter(Boolean).length : 4,
+              duration: item.duration || '2h 30m',
+              icon: icons[idx % icons.length],
+              theme: themes[idx % themes.length],
+              price: 'Free'
+            };
+          });
+          setCoursesList([...mapped, ...availableCourses.filter(ac => !mapped.some(m => m.id === ac.id))]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch backend E-learning modules:', err);
+      }
+    };
+    fetchELearningCourses();
+  }, []);
   
   // Quiz states
   const [isQuizStarted, setIsQuizStarted] = useState(false);
@@ -1473,7 +1505,7 @@ export default function ELearningModule() {
     }
   }, [toastMessage]);
 
-  const selectedCourse = availableCourses.find(c => c.id === selectedCourseId) || availableCourses[0];
+  const selectedCourse = coursesList.find(c => c.id === selectedCourseId) || coursesList[0];
   const currentCurriculum = courseCurriculums[selectedCourse.id] || courseCurriculums['ai-productivity'];
   const allLessons = currentCurriculum.flatMap(section => section.lessons);
   const activeLesson = allLessons.find((l) => l.id === activeLessonId) || allLessons[0];
@@ -1609,7 +1641,7 @@ export default function ELearningModule() {
       <div className="py-8 relative overflow-hidden bg-transparent text-slate-900 w-full animate-fade-in-up">
         <div className="relative z-10 w-full">
           <div className="flex flex-col gap-4">
-            {availableCourses.map((course) => (
+            {coursesList.map((course) => (
               <div 
                 key={course.id}
                 onClick={() => {

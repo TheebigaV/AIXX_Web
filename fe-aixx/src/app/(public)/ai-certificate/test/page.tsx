@@ -40,6 +40,7 @@ function TestPageContent() {
     } | null>(null);
 
     // Login Form State
+    const [loginEmail, setLoginEmail] = useState('');
     const [loginId, setLoginId] = useState('');
     const [loginLoading, setLoginLoading] = useState(false);
     const [loginError, setLoginError] = useState('');
@@ -105,17 +106,22 @@ function TestPageContent() {
         setLoginError('');
         try {
             const response = await api.post('api/certificate/login', {
+                email: loginEmail,
                 registration_id: loginId
             });
             const newToken = response.data.token;
             if (newToken) {
                 if (typeof window !== 'undefined') {
                     localStorage.setItem('aixx_certificate_token', newToken);
+                    localStorage.setItem('aixx_candidate_name', response.data.full_name || '');
+                    localStorage.setItem('aixx_candidate_email', response.data.email || loginEmail);
+                    localStorage.setItem('aixx_candidate_reg_id', response.data.registration_id || loginId);
+                    window.dispatchEvent(new Event('aixx-auth-change'));
                 }
                 setToken(newToken);
             }
         } catch (err: any) {
-            setLoginError(err.response?.data?.message || 'Invalid Registration ID or password.');
+            setLoginError(err.response?.data?.message || 'Invalid Registered Email or Registration ID.');
         } finally {
             setLoginLoading(false);
         }
@@ -241,9 +247,9 @@ function TestPageContent() {
                         <div className="w-14 h-14 bg-brand-500/10 text-brand-600 rounded-full flex items-center justify-center mx-auto border border-brand-500/20">
                             <FaLock size={20} />
                         </div>
-                        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Access Portal Login</h2>
+                        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Student Portal Login</h2>
                         <p className="text-xs text-slate-500 max-w-xs mx-auto">
-                            Enter your Registration ID to unlock the study lessons and digital certificate.
+                            Please log in with your registered email and Registration ID to unlock the assessment and digital certificate.
                         </p>
                     </div>
 
@@ -262,19 +268,37 @@ function TestPageContent() {
                     )}
 
                     <form onSubmit={handleLoginSubmit} className="space-y-4">
-                        {/* Registration ID Input */}
+                        {/* Registered Email Input */}
                         <div>
-                            <label className="text-xs font-extrabold text-slate-600 block mb-1">Registration ID</label>
+                            <label className="text-xs font-extrabold text-slate-600 block mb-1">Registered Email Address <span className="text-brand-600">*</span></label>
                             <div className="relative">
                                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
                                     <FaUser size={12} />
+                                </span>
+                                <input
+                                    type="email"
+                                    required
+                                    value={loginEmail}
+                                    onChange={(e) => setLoginEmail(e.target.value)}
+                                    placeholder="student@example.com"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-xs sm:text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Registration ID Input */}
+                        <div>
+                            <label className="text-xs font-extrabold text-slate-600 block mb-1">Registration ID <span className="text-brand-600">*</span></label>
+                            <div className="relative">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                                    <FaKey size={12} />
                                 </span>
                                 <input
                                     type="text"
                                     required
                                     value={loginId}
                                     onChange={(e) => setLoginId(e.target.value)}
-                                    placeholder="AIXX-REG-1"
+                                    placeholder="e.g. AIXX-REG-1"
                                     className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-xs sm:text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all font-mono"
                                 />
                             </div>
@@ -288,11 +312,11 @@ function TestPageContent() {
                             {loginLoading ? (
                                 <>
                                     <FaSpinner className="animate-spin" size={14} />
-                                    <span>Verifying Access...</span>
+                                    <span>Authenticating &amp; Unlocking...</span>
                                 </>
                             ) : (
                                 <>
-                                    <span>Verify & Unlock Portal</span>
+                                    <span>Log In &amp; Unlock Portal</span>
                                     <FaChevronRight size={10} />
                                 </>
                             )}
@@ -301,7 +325,7 @@ function TestPageContent() {
 
                     <div className="text-center pt-2">
                         <Link
-                            href="/courses?view=free-certificate"
+                            href="/?register=true#latest-news"
                             className="text-xs text-slate-455 hover:text-slate-700 underline font-medium"
                         >
                             Don&apos;t have an account? Register Here

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CertificateRegistrationController;
+use App\Http\Controllers\Admin\StudentController as AdminStudentController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\InquiryController;
@@ -40,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/profile', [ProfileController::class, 'getProfile']);
+    Route::put('/profile', [ProfileController::class, 'updateProfile']);
     // Get Role Permissions
     Route::get('roles/{role}/permissions', [RoleController::class, 'permissions']);
     // Give Role Permission
@@ -86,6 +88,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Certificate Registrations
         Route::apiResource('certificate-registrations', CertificateRegistrationController::class)->only(['index', 'destroy']);
+
+        // Students (public sign-up / sign-in)
+        Route::apiResource('students', AdminStudentController::class)->only(['index', 'destroy']);
     });
 });
 
@@ -106,10 +111,24 @@ Route::get('products', [App\Http\Controllers\Api\ProductController::class, 'inde
 Route::get('products/{slug}/by-slug', [App\Http\Controllers\Api\ProductController::class, 'show']);
 Route::get('settings', [\App\Http\Controllers\SettingController::class, 'index']);
 
+// Student auth (public sign-up / sign-in)
+Route::post('student/register', [\App\Http\Controllers\Api\StudentController::class, 'register']);
+Route::post('student/login', [\App\Http\Controllers\Api\StudentController::class, 'login']);
+Route::get('student/verify-token', [\App\Http\Controllers\Api\StudentController::class, 'verifyToken']);
+
 // Free AI Knowledge Certificate Routes
 Route::post('certificate/register', [\App\Http\Controllers\Api\CertificateController::class, 'register']);
 Route::post('certificate/login', [\App\Http\Controllers\Api\CertificateController::class, 'login']);
+Route::post('certificate/register-or-login', [\App\Http\Controllers\Api\CertificateController::class, 'registerOrLogin']);
 Route::get('certificate/verify-token', [\App\Http\Controllers\Api\CertificateController::class, 'verifyToken']);
 Route::get('certificate/questions', [\App\Http\Controllers\Api\CertificateController::class, 'getQuestions']);
 Route::post('certificate/submit-test', [\App\Http\Controllers\Api\CertificateController::class, 'submitTest']);
+Route::get('certificate/profile', [\App\Http\Controllers\Api\CertificateController::class, 'getCandidateProfile']);
+Route::put('certificate/profile', [\App\Http\Controllers\Api\CertificateController::class, 'updateCandidateProfile']);
+Route::get('certificate/my-courses', [\App\Http\Controllers\Api\CertificateController::class, 'getMyCourses']);
+Route::post('certificate/enroll-course', [\App\Http\Controllers\Api\CertificateController::class, 'enrollCourse']);
+Route::post('certificate/unenroll-course', [\App\Http\Controllers\Api\CertificateController::class, 'unenrollCourse']);
+
+
+
 

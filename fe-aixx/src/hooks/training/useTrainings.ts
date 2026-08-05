@@ -73,14 +73,18 @@ export default function useTrainings() {
   };
 
   const getAllTrainings = async () => {
+    setLoading(true);
     setError(null);
     try {
       const res = await fetchAllTrainings();
-      setTrainings(res.data.data);
-      return res.data || [];
+      const data = res.data?.data || res.data || [];
+      setTrainings(data);
+      setLoading(false);
+      return data;
     } catch (err: any) {
       console.error("Error fetching all trainings:", err);
       setError(err?.response?.data?.message || "Failed to fetch all trainings.");
+      setLoading(false);
       return [];
     }
   };

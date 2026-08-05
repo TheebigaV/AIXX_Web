@@ -8,7 +8,7 @@ import {
     TableRow,
 } from "../ui/table";
 
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {
     TrashBinIcon,
     PencilIcon,
@@ -27,12 +27,14 @@ export default function TrainingTableOne() {
         loading,
         pagination,
         loadTrainings,
+        getAllTrainings,
         handleDelete,
     }: {
         trainings: TrainingTableData[];
         loading: boolean;
         pagination: any;
         loadTrainings: (page: number, perPage: number) => void;
+        getAllTrainings: () => Promise<any>;
         handleDelete: (id: string | null) => Promise<void>;
     } = useTrainings();
 
@@ -41,13 +43,22 @@ export default function TrainingTableOne() {
     const [perPage, setPerPage] = useState(10);
     const [trainingToDelete, setTrainingToDelete] = useState<string | null>(null);
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const typeFilter = searchParams.get("type");
 
     useEffect(() => {
-        loadTrainings(page, perPage);
-    }, [page, perPage]);
+        getAllTrainings();
+    }, [typeFilter]);
+
+    const filteredTrainings = typeFilter
+        ? trainings.filter((t) => t.type === typeFilter)
+        : trainings.filter((t) => t.type === "courses" || !t.type);
 
     const formatType = (type: string) => {
         if (!type) return "-";
+        if (type === "elearning") return "E-Learning Modules";
+        if (type === "free_courses") return "Free Certificates & Courses";
+        if (type === "courses") return "Courses & Programs";
         if (type === "newsletters") return "Latest Technology News";
         if (type === "certification") return "Skill Training & Certification";
         if (type === "media_gallery") return "Training Media Gallery";
@@ -98,8 +109,8 @@ export default function TrainingTableOne() {
 
                         {/* Table Body */}
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                            {!loading && trainings.length > 0 ? (
-                                trainings.map((training) => (
+                            {!loading && filteredTrainings.length > 0 ? (
+                                filteredTrainings.map((training) => (
                                     <TableRow key={training.id}>
                                         <TableCell className="px-5 py-4 sm:px-6 text-center">
                                             <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">

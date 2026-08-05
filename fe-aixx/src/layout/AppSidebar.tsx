@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useSidebar } from "@/context/SidebarContext";
 import {
     BoxCubeIcon,
@@ -49,10 +49,49 @@ const navItems: NavItem[] = [
     },
     {
         icon: <TaskIcon />,
-        name: "Training",
-        path: "/admin/training",
-        permission: "training-view",
+        name: "Courses",
         skipPermissionCheck: true,
+        subItems: [
+            {
+                name: "All Courses",
+                path: "/admin/training",
+            },
+            {
+                name: "E-Learning Modules",
+                path: "/admin/training?type=elearning",
+            },
+            {
+                name: "Free Certificates",
+                path: "/admin/training?type=free_courses",
+            },
+        ],
+    },
+    {
+        icon: <TaskIcon />,
+        name: "AI Training",
+        skipPermissionCheck: true,
+        subItems: [
+            {
+                name: "Seminars",
+                path: "/admin/training?type=seminars",
+            },
+            {
+                name: "Workshops",
+                path: "/admin/training?type=workshops",
+            },
+            {
+                name: "Latest Technology News",
+                path: "/admin/training?type=newsletters",
+            },
+            {
+                name: "Training Media Gallery",
+                path: "/admin/training?type=media_gallery",
+            },
+            {
+                name: "Skill Training & Certification",
+                path: "/admin/training?type=certification",
+            },
+        ],
     },
     {
         icon: <BoxCubeIcon />, 
@@ -65,7 +104,13 @@ const navItems: NavItem[] = [
         icon: <PaperPlaneIcon />, 
         name: "Products", 
         path: "/admin/products", 
-        permission: "products-view", 
+        skipPermissionCheck: true,
+    },
+    {
+        icon: <FolderIcon />,
+        name: "Banner Sliders",
+        path: "/admin/banners",
+        permission: "banners-viewany",
         skipPermissionCheck: true,
     },
     {
@@ -73,7 +118,7 @@ const navItems: NavItem[] = [
         name: "Enquiries",
         path: "/admin/inquiries",
         permission: "inquiries-view",
-        skipPermissionCheck: false,
+        skipPermissionCheck: true,
     },
     {
         icon: <UserCircleIcon />,
@@ -91,35 +136,60 @@ const othersItems: NavItem[] = [
         name: "General Settings",
         path: "/admin/settings",
         permission: "settings-view",
-        skipPermissionCheck: false,
+        skipPermissionCheck: true,
     },
     {
         icon: <UserCircleIcon />,
         name: "Users",
         path: "/admin/users",
         permission: "users-view",
-        skipPermissionCheck: false,
-
+        skipPermissionCheck: true,
     },
     {
         icon: <RoleAndPermissionIcom />,
         name: "Roles",
         path: "/admin/roles",
         permission: "roles-view",
-        skipPermissionCheck: false,
+        skipPermissionCheck: true,
     },
 ];
 
 const AppSidebar: React.FC = () => {
     const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const [openSubmenu, setOpenSubmenu] = useState<{ index: number; category: string } | null>(null);
     const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>({});
     const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
     const isActive = useCallback(
-        (path: string) => path === pathname,
-        [pathname]
+        (path: string) => {
+            if (!path) return false;
+
+            if (path.includes("?")) {
+                const [pathBase, pathQuery] = path.split("?");
+                if (pathname !== pathBase) return false;
+
+                const targetParams = new URLSearchParams(pathQuery);
+                for (const [key, val] of targetParams.entries()) {
+                    if (searchParams?.get(key) !== val) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            if (path === "/admin") {
+                return pathname === "/admin";
+            }
+
+            if (path === "/admin/training") {
+                return pathname === "/admin/training" && (!searchParams || !searchParams.get("type"));
+            }
+
+            return pathname === path || pathname.startsWith(`${path}/`);
+        },
+        [pathname, searchParams]
     );
 
     const handleSubmenuToggle = (index: number, category: string) => {
@@ -147,7 +217,7 @@ const AppSidebar: React.FC = () => {
                 }
             });
         });
-    }, [pathname, isActive]);
+    }, [pathname, searchParams, isActive]);
 
     useEffect(() => {
         if (openSubmenu) {
@@ -165,6 +235,7 @@ const AppSidebar: React.FC = () => {
     const renderMenuItems = (items: NavItem[], category: string) => (
         <ul className="flex flex-col gap-4">
             {items.map((nav, index) => {
+                const isSubActive = nav.subItems?.some((sub) => isActive(sub.path));
                 const content = (
                     <>
                         {nav.subItems ? (
@@ -172,9 +243,10 @@ const AppSidebar: React.FC = () => {
                                 {/* Submenu button */}
                                 <button
                                     onClick={() => handleSubmenuToggle(index, category)}
-                                    className={`menu-item group ${openSubmenu?.index === index && openSubmenu?.category === category
-                                        ? "menu-item-active"
-                                        : "menu-item-inactive"
+                                    className={`menu-item group ${
+                                        isSubActive
+                                            ? "menu-item-active"
+                                            : "menu-item-inactive"
                                         } ${!isExpanded && !isHovered ? "lg:justify-center" : "lg:justify-start"}`}
                                 >
                                     <span>{nav.icon}</span>
@@ -194,7 +266,7 @@ const AppSidebar: React.FC = () => {
                                     style={{
                                         height:
                                             openSubmenu?.index === index && openSubmenu?.category === category
-                                                ? `${subMenuHeight[`submenu-${category}-${index}`]}px`
+                                                ? `${subMenuHeight[`submenu-${category}-${index}`] || "auto"}px`
                                                 : "0px",
                                     }}
                                 >
@@ -205,7 +277,7 @@ const AppSidebar: React.FC = () => {
                                                     <Can permission={sub.permission}>
                                                         <Link
                                                             href={sub.path}
-                                                            className={`menu-dropdown-item ${isActive(sub.path) ? "active" : ""}`}
+                                                            className={`menu-dropdown-item ${isActive(sub.path) ? "menu-dropdown-item-active" : "menu-dropdown-item-inactive"}`}
                                                         >
                                                             {sub.name}
                                                         </Link>
@@ -213,7 +285,7 @@ const AppSidebar: React.FC = () => {
                                                 ) : (
                                                     <Link
                                                         href={sub.path}
-                                                        className={`menu-dropdown-item ${isActive(sub.path) ? "active" : ""}`}
+                                                        className={`menu-dropdown-item ${isActive(sub.path) ? "menu-dropdown-item-active" : "menu-dropdown-item-inactive"}`}
                                                     >
                                                         {sub.name}
                                                     </Link>
@@ -265,24 +337,40 @@ const AppSidebar: React.FC = () => {
             onMouseLeave={() => setIsHovered(false)}
         >
             {/* Logo */}
-            <div className="py-8 flex justify-center">
-                <Link href="/">
+            <div className="py-6 px-4 border-b border-gray-100 flex items-center justify-center">
+                <Link href="/admin" className="flex items-center gap-3">
                     {isExpanded || isHovered || isMobileOpen ? (
-                        <Image
-                            src="/images/logo/logo.png"
-                            alt="Logo"
-                            width={150}
-                            height={40}
-                            priority
-                        />
+                        <>
+                            <div className="relative w-10 h-10 flex-shrink-0">
+                                <Image
+                                    src="/images/logo/logo.png"
+                                    alt="AIXX Logo"
+                                    width={40}
+                                    height={40}
+                                    className="object-contain w-10 h-10"
+                                    priority
+                                />
+                            </div>
+                            <div className="flex flex-col justify-center">
+                                <span className="text-xl font-extrabold tracking-tight text-[#00062A] leading-tight font-sans">
+                                    AI<span className="text-brand-500 font-extrabold">XX</span>
+                                </span>
+                                <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500 leading-none mt-0.5">
+                                    PTE LTD
+                                </span>
+                            </div>
+                        </>
                     ) : (
-                        <Image
-                            src="/images/logo/logo.png"
-                            alt="Logo"
-                            width={32}
-                            height={32}
-                            priority
-                        />
+                        <div className="relative w-9 h-9 flex-shrink-0">
+                            <Image
+                                src="/images/logo/logo.png"
+                                alt="AIXX Logo"
+                                width={36}
+                                height={36}
+                                className="object-contain w-9 h-9"
+                                priority
+                            />
+                        </div>
                     )}
                 </Link>
             </div>

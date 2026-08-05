@@ -1,7 +1,12 @@
 import axios from "axios";
 
+const getBaseUrl = () => {
+  const url = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+  return url.endsWith('/') ? url.slice(0, -1) : url;
+};
+
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/",
+  baseURL: getBaseUrl(),
   withCredentials: true,
   withXSRFToken: true,
   headers: {
@@ -15,7 +20,9 @@ export const api = axios.create({
 
 // Add token to requests if it exists
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('auth_token');
+  if (typeof window === 'undefined') return config;
+
+  const token = window.localStorage.getItem('auth_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -28,8 +35,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('auth_token');
+    if (typeof window !== 'undefined' && error.response?.status === 401) {
+      window.localStorage.removeItem('auth_token');
     }
     return Promise.reject(error);
   }

@@ -25,7 +25,7 @@ class StoreTrainingRequest extends FormRequest
             'type' => [
                 'required',
                 'string',
-                'in:seminars,workshops,courses,certification,newsletters,media_gallery',
+                'in:seminars,workshops,courses,certification,newsletters,media_gallery,free_courses,elearning',
             ],
             'description' => [
                 'nullable',

@@ -10,12 +10,13 @@ import Button from "@/components/ui/button/Button";
 import {EyeCloseIcon, EyeIcon} from "@/icons";
 import {toast} from "react-toastify";
 import {useRouter, useSearchParams} from "next/navigation";
+import { loginStudent, persistStudentSession } from "@/services/studentService";
 
 export default function SignInForm() {
     const {login} = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const redirectTo = searchParams.get("redirect") || "/admin";
+    const redirectTo = searchParams.get("redirect") || "/";
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -81,34 +82,45 @@ export default function SignInForm() {
         if (Object.keys(newErrors).length > 0) return;
 
         setLoading(true);
+        // Try Admin login first
         try {
             await login(email, password);
-            router.push(redirectTo);
             setFailedAttempts(0);
             localStorage.removeItem("login-lock");
-        } catch (error: any) {
-            const updatedFails = failedAttempts + 1;
-
-            if (updatedFails >= 5) {
-                const lockUntil = Date.now() + 30 * 1000; // 30s lock
-                localStorage.setItem("login-lock", JSON.stringify({failed: updatedFails, lockUntil}));
-                setIsLocked(true);
-                setLockEndTime(lockUntil);
-                setCountdown(30);
-            } else {
-                localStorage.setItem("login-lock", JSON.stringify({failed: updatedFails}));
-                setFailedAttempts(updatedFails);
+            router.push(searchParams.get("redirect") || "/admin");
+            return;
+        } catch (adminError) {
+            // If Admin login fails, try Student login
+            try {
+                const studentData = await loginStudent({ email, password });
+                persistStudentSession(studentData);
+                setFailedAttempts(0);
+                localStorage.removeItem("login-lock");
+                router.push(redirectTo === "/admin" ? "/" : redirectTo);
+                return;
+            } catch (studentError: any) {
+                const updatedFails = failedAttempts + 1;
+                if (updatedFails >= 5) {
+                    const lockUntil = Date.now() + 30 * 1000;
+                    localStorage.setItem("login-lock", JSON.stringify({failed: updatedFails, lockUntil}));
+                    setIsLocked(true);
+                    setLockEndTime(lockUntil);
+                    setCountdown(30);
+                } else {
+                    localStorage.setItem("login-lock", JSON.stringify({failed: updatedFails}));
+                    setFailedAttempts(updatedFails);
+                }
+                setGeneralError("Incorrect email or password.");
             }
-
-            setGeneralError(error.message || "Incorrect email or password.");
         } finally {
             setLoading(false);
         }
     };
 
+
     return (
-        <section className="min-h-screen flex items-center justify-center dark:bg-gray-950 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-10 bg-white dark:bg-gray-900 rounded-xl shadow-md p-10">
+        <section className="flex items-center justify-center w-full px-4 sm:px-6 lg:px-8 py-10 h-full">
+            <div className="max-w-md w-full space-y-10 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-8 sm:p-10">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                         Sign In to Your Account
@@ -119,7 +131,7 @@ export default function SignInForm() {
                     <p className="text-sm text-red-600 dark:text-red-400 text-center">{generalError}</p>
                 )}
 
-                {isLocked && (
+{isLocked && (
                     <p className="text-sm text-yellow-600 dark:text-yellow-400 text-center">
                         Too many failed attempts. Please wait {countdown}s before trying again.
                     </p>
@@ -189,6 +201,11 @@ export default function SignInForm() {
                         </Button>
                     </div>
                 </form>
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-gray-600">
+                    Don't have an account? <Link href="/signup" className="text-brand-500 hover:text-brand-600 dark:text-brand-400">Register here</Link>
+                  </p>
+                </div>
             </div>
         </section>
     );

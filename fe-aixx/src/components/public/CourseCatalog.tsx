@@ -89,6 +89,10 @@ const FreeCertificateTabContent: React.FC = () => {
       setRegId(registration_id);
       if (typeof window !== 'undefined') {
         localStorage.setItem('aixx_certificate_token', uuid);
+        localStorage.setItem('aixx_candidate_name', formData.full_name);
+        localStorage.setItem('aixx_candidate_reg_id', registration_id);
+        localStorage.setItem('aixx_candidate_email', formData.email);
+        window.dispatchEvent(new Event('aixx-auth-change'));
       }
       setSuccess(true);
     } catch (err: any) {
@@ -509,7 +513,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
 
     const loadCourses = async () => {
       try {
-        const response = await fetchPublicTrainings('courses');
+        const response = await fetchPublicTrainings();
         const payload = response?.data?.data || response?.data || [];
         const items = Array.isArray(payload) ? payload : [];
 
@@ -517,10 +521,8 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
           return;
         }
 
-        const mappedCourses = items
-          .filter((item: any) => item?.type === 'courses' || item?.name)
-          .map((item: any) => {
-            // Find fallback course to match defaults for any missing API fields
+        if (items.length > 0) {
+          const mappedCourses = items.map((item: any) => {
             const fallback = fallbackCourses.find((c) => c.id === (item.slug || item.id)) || fallbackCourses[0];
             return {
               id: item.slug || item.id,
@@ -528,34 +530,38 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
               description: item.description || 'More details will be shared soon.',
               domestic: item.domestic_fee || fallback.domestic,
               international: item.international_fee || fallback.international,
-              rating: item.rating || fallback.rating,
-              ratingsCount: item.ratings_count || fallback.ratingsCount,
-              attendees: item.attendees || fallback.attendees,
+              rating: item.rating || 5.0,
+              ratingsCount: item.ratings_count || 24,
+              attendees: item.attendees || 120,
               startDate: item.start_date || fallback.startDate,
               fullFee: item.domestic_fee || fallback.fullFee,
               payableFee: item.international_fee || fallback.payableFee,
               discount: item.discount_badge || fallback.discount,
-              institution: item.institution || fallback.institution,
+              institution: item.institution || 'AIXX Academy',
               deliveryMethod: item.delivery_method || (fallback as any).deliveryMethod || 'Live Virtual',
+              type: item.type || 'courses',
             };
           });
-
-        setCourses(mappedCourses.length > 0 ? mappedCourses : fallbackCourses.map((course) => ({
-          id: course.id,
-          title: course.title,
-          description: course.description,
-          domestic: course.domestic,
-          international: course.international,
-          rating: course.rating,
-          ratingsCount: course.ratingsCount,
-          attendees: course.attendees,
-          startDate: course.startDate,
-          fullFee: course.fullFee,
-          payableFee: course.payableFee,
-          discount: course.discount,
-          institution: course.institution,
-          deliveryMethod: (course as any).deliveryMethod || 'Live Virtual',
-        })));
+          setCourses(mappedCourses);
+        } else {
+          setCourses(fallbackCourses.map((course) => ({
+            id: course.id,
+            title: course.title,
+            description: course.description,
+            domestic: course.domestic,
+            international: course.international,
+            rating: course.rating,
+            ratingsCount: course.ratingsCount,
+            attendees: course.attendees,
+            startDate: course.startDate,
+            fullFee: course.fullFee,
+            payableFee: course.payableFee,
+            discount: course.discount,
+            institution: course.institution,
+            deliveryMethod: (course as any).deliveryMethod || 'Live Virtual',
+            type: 'courses',
+          })));
+        }
       } catch (error) {
         console.error('Failed to load public courses:', error);
         if (isMounted) {
@@ -574,6 +580,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
             discount: course.discount,
             institution: course.institution,
             deliveryMethod: (course as any).deliveryMethod || 'Live Virtual',
+            type: 'courses',
           })));
         }
       } finally {
@@ -756,7 +763,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
             }`}
           >
             <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>E-Learning</span>
+            <span>E-Learning {courses.filter(c => c.type === 'elearning').length > 0 ? `(${courses.filter(c => c.type === 'elearning').length})` : ''}</span>
           </button>
           <button
             onClick={() => setFilterType('free-certificate')}
@@ -767,7 +774,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
             }`}
           >
             <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
-            <span>Free Certificate</span>
+            <span>Free Certificate {courses.filter(c => c.type === 'free_courses').length > 0 ? `(${courses.filter(c => c.type === 'free_courses').length})` : ''}</span>
           </button>
         </div>
 

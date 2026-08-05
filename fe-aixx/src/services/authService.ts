@@ -14,6 +14,7 @@ export const loginService = async (email: string, password: string): Promise<{ u
     if (response.data?.token) {
       localStorage.setItem('auth_token', response.data.token);
     }
+    return response.data;
   } catch (error: any) {
     const msg = error?.response?.data?.message || "Login failed";
     throw new Error(msg);
@@ -31,6 +32,10 @@ export const logoutService = async () => {
 };
 
 export const getProfileService = async () : Promise<{ user: User } | null> => {
+  const token = typeof window !== "undefined" ? localStorage.getItem('auth_token') : null;
+  if (!token) {
+    return null;
+  }
   try {
     await getCsrfToken();
     const res = await fetchAuthenticatedUser();

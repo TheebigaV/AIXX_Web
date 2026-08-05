@@ -39,8 +39,8 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
   };
 
   const value = useMemo(
-      () => ({user, loading, login, logout,}),
-      [user, loading, login, logout,]
+      () => ({user, loading, login, logout, setUser}),
+      [user, loading, login, logout, setUser]
   );
 
   useEffect(() => {

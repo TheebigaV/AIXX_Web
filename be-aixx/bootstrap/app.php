@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
-            'api/login', 'api/forgot-password', 'api/reset-password', 'api/inquiries', 'api/submit-contact-form', 'api/admin/*', 'api/certificate/*'
+            'api/login', 'api/forgot-password', 'api/reset-password', 'api/inquiries', 'api/submit-contact-form', 'api/admin/*', 'api/certificate/*', 'api/student/*'
         ]);
         $middleware->statefulApi();
     })

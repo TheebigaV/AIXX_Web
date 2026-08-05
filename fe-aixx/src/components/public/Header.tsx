@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useCategories from "@/hooks/public/useCategories";
+import CandidateDropdown from "@/components/header/CandidateDropdown";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -32,9 +33,49 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { getAllCategories } = useCategories();
+  const [candidateName, setCandidateName] = useState<string | null>(null);
+  const [candidateRegId, setCandidateRegId] = useState<string | null>(null);
+  const [candidateEmail, setCandidateEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkCandidateLogin = () => {
+      setCandidateName(localStorage.getItem("aixx_candidate_name"));
+      setCandidateRegId(localStorage.getItem("aixx_candidate_reg_id"));
+      setCandidateEmail(localStorage.getItem("aixx_candidate_email"));
+    };
+    checkCandidateLogin();
+    window.addEventListener("aixx-auth-change", checkCandidateLogin as EventListener);
+    return () => window.removeEventListener("aixx-auth-change", checkCandidateLogin as EventListener);
+  }, []);
+
+  const handleCandidateLogout = () => {
+    localStorage.removeItem("aixx_student_token");
+    localStorage.removeItem("aixx_certificate_token");
+    localStorage.removeItem("aixx_candidate_name");
+    localStorage.removeItem("aixx_candidate_reg_id");
+    localStorage.removeItem("aixx_candidate_email");
+    window.dispatchEvent(new Event("aixx-auth-change"));
+  };
 
   useEffect(() => {
     getAllCategories();
+  }, []);
+
+  // Listen for storage changes (e.g., from other tabs)
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'aixx_candidate_name' || e.key === 'aixx_candidate_reg_id' || e.key === 'aixx_candidate_email') {
+        // Re-run the check to update state
+        const checkCandidateLogin = () => {
+          setCandidateName(localStorage.getItem('aixx_candidate_name'));
+          setCandidateRegId(localStorage.getItem('aixx_candidate_reg_id'));
+          setCandidateEmail(localStorage.getItem('aixx_candidate_email'));
+        };
+        checkCandidateLogin();
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
   }, []);
 
   useEffect(() => {
@@ -158,6 +199,15 @@ const Header = () => {
             Contact Us
             <FaBolt className="w-3 h-3 transition-transform group-hover:rotate-12" />
           </Link>
+
+          <div className="ml-1 pl-3 border-l border-gray-200 h-8 flex items-center">
+            <CandidateDropdown 
+              candidateName={candidateName} 
+              candidateRegId={candidateRegId} 
+              candidateEmail={candidateEmail} 
+              onLogout={handleCandidateLogout} 
+            />
+          </div>
         </div>
 
         {/* ── Mobile hamburger ── */}
@@ -230,7 +280,7 @@ const Header = () => {
           </div>
 
           {/* Mobile CTA */}
-          <div className="pt-3 pb-1">
+          <div className="pt-3 pb-1 space-y-3">
             <Link
               href="/contact"
               className="beveled-corner group flex items-center justify-center gap-2 w-full bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-5 py-3 transition-colors shadow-sm"
@@ -238,6 +288,15 @@ const Header = () => {
               Contact Us
               <FaBolt className="w-3 h-3 transition-transform group-hover:rotate-12" />
             </Link>
+
+            <div className="flex justify-center border-t border-gray-100 pt-3">
+              <CandidateDropdown 
+                candidateName={candidateName} 
+                candidateRegId={candidateRegId} 
+                candidateEmail={candidateEmail} 
+                onLogout={handleCandidateLogout} 
+              />
+            </div>
           </div>
         </div>
       </div>

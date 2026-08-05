@@ -1,4 +1,3 @@
-import { Outfit, Lato } from 'next/font/google';
 import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
@@ -7,22 +6,31 @@ import { ThemeProvider } from '@/context/ThemeContext';
 
 import Script from "next/script";
 
-const outfit = Outfit({
-  subsets: ['latin'],
-});
-
 import type { Metadata } from 'next';
-
-const lato = Lato({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-});
 
 export const metadata: Metadata = {
   title: 'AIXX',
   description: 'AIXX Platform',
   icons: {
-    icon: '/images/logo/logo-icon.svg',
+    icon: '/images/logo/logo.png',
+  },
+  openGraph: {
+    title: 'AIXX',
+    description: 'AIXX Platform',
+    images: [
+      {
+        url: '/images/logo/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'AIXX Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AIXX',
+    description: 'AIXX Platform',
+    images: ['/images/logo/logo.png'],
   },
 };
 
@@ -46,7 +54,7 @@ export default function RootLayout({
             />
         </head>
 
-        <body className={`${lato.className} dark:bg-gray-900`}>
+        <body className="dark:bg-gray-900">
         <ThemeProvider>
             <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>
