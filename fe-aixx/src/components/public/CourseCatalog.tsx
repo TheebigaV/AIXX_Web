@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useMemo, useState } from 'react';
 import { 
   FaGraduationCap, 
@@ -17,7 +18,11 @@ import {
   FaPaperPlane,
   FaSpinner,
   FaCheckCircle,
-  FaUser
+  FaUser,
+  FaIdCard,
+  FaArrowRight,
+  FaBookOpen,
+  FaLock
 } from 'react-icons/fa';
 import { fetchPublicTrainings } from '@/lib/training';
 import { storeInquiry } from '@/lib/public/inquiries';
@@ -25,6 +30,8 @@ import { courses as fallbackCourses } from '@/components/public/courseCatalogDat
 import ELearningModule from '@/components/public/ELearningModule';
 import StudyGuide from './StudyGuide';
 import { api } from '@/lib/public/api';
+import { CertificatePortalForm } from '@/components/public/CertificatePortalForm';
+import { enrollInCourse } from '@/services/studentService';
 
 const countries = [
   "Singapore", "Malaysia", "Indonesia", "Thailand", "Philippines", "Vietnam", "India", "Australia",
@@ -56,71 +63,314 @@ const countries = [
 ];
 
 const FreeCertificateTabContent: React.FC = () => {
-  const [formData, setFormData] = useState({
-    full_name: '',
-    gender: '',
-    company_name: '',
-    phone: '',
-    email: '',
-    country: 'Singapore'
-  });
+  const router = useRouter();
 
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [testToken, setTestToken] = useState('');
-  const [regId, setRegId] = useState('');
+  // Detect if already registered via localStorage
+  const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
+  const [storedCandidateName, setStoredCandidateName] = useState('');
+  const [storedRegId, setStoredRegId] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (errorMsg) setErrorMsg('');
-  };
+  // Registration ID entry for already-registered users
+  const [regIdInput, setRegIdInput] = useState('');
+  const [regIdError, setRegIdError] = useState('');
+  const [regIdVerified, setRegIdVerified] = useState(false);
+  const [verifyLoading, setVerifyLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setErrorMsg('');
+  // View toggle: 'check' | 'register'
+  const [view, setView] = useState<'check' | 'register'>('check');
 
-    try {
-      const response = await api.post('api/certificate/register', formData);
-      const uuid = response.data?.uuid || response.data?.data?.uuid || '';
-      const registration_id = response.data?.registration_id || '';
-      setTestToken(uuid);
-      setRegId(registration_id);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('aixx_certificate_token', uuid);
-        localStorage.setItem('aixx_candidate_name', formData.full_name);
-        localStorage.setItem('aixx_candidate_reg_id', registration_id);
-        localStorage.setItem('aixx_candidate_email', formData.email);
-        window.dispatchEvent(new Event('aixx-auth-change'));
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('aixx_certificate_token');
+      const name = localStorage.getItem('aixx_candidate_name') || '';
+      const rid = localStorage.getItem('aixx_candidate_reg_id') || '';
+      if (token) {
+        setIsAlreadyRegistered(true);
+        setStoredCandidateName(name);
+        setStoredRegId(rid);
+        // Pre-fill the reg id input if stored
+        if (rid) setRegIdInput(rid);
       }
-      setSuccess(true);
+    }
+  }, []);
+
+  const handleVerifyRegId = async () => {
+    const id = regIdInput.trim();
+    if (!id) {
+      setRegIdError('Please enter your Registration ID.');
+      return;
+    }
+    setVerifyLoading(true);
+    setRegIdError('');
+    try {
+      const storedToken = typeof window !== 'undefined' ? localStorage.getItem('aixx_certificate_token') : null;
+      const storedRid = (typeof window !== 'undefined' ? localStorage.getItem('aixx_candidate_reg_id') : null) || '';
+
+      // Primary: verify using the stored token + check reg ID matches
+      if (storedToken) {
+        try {
+          const res = await api.get(`api/certificate/verify-token?token=${storedToken}`);
+          // verify-token returns flat response (no .data wrapper): { registration_id, full_name, ... }
+          const data = res.data;
+          const backendRegId: string = data?.registration_id || storedRid;
+
+          if (backendRegId.toUpperCase() === id.toUpperCase()) {
+            // Token is valid and reg ID matches — proceed
+            if (data?.full_name) localStorage.setItem('aixx_candidate_name', data.full_name);
+            localStorage.setItem('aixx_candidate_reg_id', backendRegId);
+            window.dispatchEvent(new Event('aixx-auth-change'));
+            setRegIdVerified(true);
+            setVerifyLoading(false);
+            return;
+          } else if (backendRegId && id.toUpperCase() !== backendRegId.toUpperCase()) {
+            setRegIdError(`That doesn't match your registered ID (${backendRegId}). Please enter your correct Registration ID.`);
+            setVerifyLoading(false);
+            return;
+          }
+        } catch {
+          // Token invalid/expired — fall through to login
+        }
+      }
+
+      // Fallback: login with registration_id only (email is optional on backend)
+      const loginRes = await api.post('api/certificate/login', { registration_id: id });
+      const loginData = loginRes.data;
+      // backend login returns { token, full_name, email, registration_id }
+      if (loginData?.token || loginData?.uuid) {
+        const tok = loginData.token || loginData.uuid;
+        localStorage.setItem('aixx_certificate_token', tok);
+        if (loginData.full_name) localStorage.setItem('aixx_candidate_name', loginData.full_name);
+        localStorage.setItem('aixx_candidate_reg_id', id);
+        if (loginData.email) localStorage.setItem('aixx_candidate_email', loginData.email);
+        window.dispatchEvent(new Event('aixx-auth-change'));
+        setRegIdVerified(true);
+      } else {
+        setRegIdError('Registration ID not found. Please check and try again.');
+      }
     } catch (err: any) {
-      console.error('Registration failed:', err);
-      setErrorMsg(err.response?.data?.message || 'Something went wrong. Please check your details and try again.');
+      setRegIdError(
+        err?.response?.data?.message ||
+        'Registration ID not found. Please check and try again.'
+      );
     } finally {
-      setLoading(false);
+      setVerifyLoading(false);
     }
   };
 
+  // ── Already registered: ask for reg ID ──────────────────────────────────────
+  if (isAlreadyRegistered && view === 'check') {
+    const studyVisited = typeof window !== 'undefined' && !!localStorage.getItem('aixx_study_guide_visited');
+
+    if (regIdVerified) {
+      // Show success / action screen with study-guide gate
+      return (
+        <div className="w-full py-8 px-4 sm:px-6 lg:px-8 bg-slate-50 rounded-[32px] border border-slate-200/60 shadow-inner">
+          <div className="max-w-md mx-auto text-center space-y-6 py-4">
+            <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto border border-emerald-200">
+              <FaCheckCircle size={32} />
+            </div>
+            <div>
+              <h3 className="text-2xl font-black text-[#191E42]">Welcome Back!</h3>
+              <p className="text-sm text-slate-500 mt-1">
+                Identity verified. Your Registration ID is active.
+              </p>
+              <div className="mt-3 bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 inline-block">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Student Registration ID</span>
+                <span className="text-lg font-black text-brand-600 font-mono tracking-wider">{regIdInput.trim()}</span>
+              </div>
+            </div>
+
+            {/* Study first notice */}
+            {!studyVisited && (
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-xs text-amber-800 flex items-start gap-2 text-left">
+                <FaLock size={12} className="text-amber-500 mt-0.5 flex-shrink-0" />
+                <span>
+                  <strong>Study Guide required first.</strong> Please complete the Study Guide before taking the test. This ensures you're fully prepared for the assessment.
+                </span>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              {/* Study Guide — always active */}
+              <button
+                onClick={() => router.push(`/ai-certificate/study?token=${localStorage.getItem('aixx_certificate_token') || ''}`)}
+                className="w-full bg-brand-500 hover:bg-brand-600 text-white font-extrabold py-3.5 rounded-xl shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <FaBookOpen size={14} />
+                <span>Study Guide</span>
+              </button>
+
+              {/* Take the Test — locked until study guide visited */}
+              {studyVisited ? (
+                <button
+                  onClick={() => router.push(`/ai-certificate/test?token=${localStorage.getItem('aixx_certificate_token') || ''}`)}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-xl shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <FaGraduationCap size={14} />
+                  <span>Take the Test</span>
+                </button>
+              ) : (
+                <div className="relative group w-full">
+                  <button
+                    disabled
+                    className="w-full bg-slate-200 text-slate-400 font-extrabold py-3.5 rounded-xl text-xs flex items-center justify-center gap-2 cursor-not-allowed opacity-70"
+                  >
+                    <FaLock size={13} />
+                    <span>Take the Test</span>
+                  </button>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-52 bg-slate-900 text-white text-[10px] rounded-xl px-3 py-2 text-center shadow-lg z-10 leading-relaxed">
+                    Complete the Study Guide first to unlock the test.
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="w-full py-8 px-4 sm:px-6 lg:px-8 bg-slate-50 rounded-[32px] border border-slate-200/60 shadow-inner">
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-stretch gap-8 lg:gap-12">
+          {/* Left Column — Info */}
+          <div className="lg:w-[45%] flex flex-col justify-center space-y-6">
+            <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-600 rounded-full px-4 py-1.5 w-fit">
+              <FaGraduationCap size={16} className="text-blue-500 animate-bounce" />
+              <span className="text-xs font-semibold uppercase tracking-wider">Professional Credential</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
+              Free AI Knowledge Certificate
+            </h2>
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+              Test your general AI literacy and earn a Free AI Knowledge Certificate by completing our 20-question MCQ assessment.
+            </p>
+            <div className="space-y-4">
+              {[
+                { title: '20 Question Assessment', desc: 'Comprehensive multiple-choice questions covering generative AI theories and implementations.' },
+                { title: 'Passing Grade: 80%', desc: 'Demonstrate competency by scoring at least 80% (16/20 correct answers).' },
+                { title: 'Verifiable Digital Certificate', desc: 'Receive a uniquely serialized digital certificate suitable for resume integration and LinkedIn sharing.' }
+              ].map((item, idx) => (
+                <div key={idx} className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
+                    {idx + 1}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-950 text-sm sm:text-base">{item.title}</h4>
+                    <p className="text-slate-500 text-xs sm:text-sm mt-0.5">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Column — Registration ID Entry */}
+          <div className="lg:w-[55%] bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-8 flex flex-col justify-center space-y-6">
+            {/* Header */}
+            <div className="text-center space-y-2">
+              <div className="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mx-auto border border-brand-100">
+                <FaIdCard size={26} />
+              </div>
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-brand-600 bg-brand-50 px-3 py-1 rounded-full border border-brand-100 inline-block">
+                Already Registered
+              </span>
+              <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                Welcome Back{storedCandidateName ? `, ${storedCandidateName.split(' ')[0]}` : ''}!
+              </h3>
+              <p className="text-xs text-slate-500 max-w-xs mx-auto">
+                You're already registered. Enter your <strong className="text-slate-800">Student Registration ID</strong> to access the Free Certificate program.
+              </p>
+            </div>
+
+            <div className="border-t border-slate-100" />
+
+            {/* Reg ID Input */}
+            <div className="space-y-3">
+              <label className="text-xs font-bold text-slate-700 flex items-center gap-2">
+                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500 text-white text-[10px] font-black">1</span>
+                Enter your Student Registration ID
+              </label>
+              <div className="relative">
+                <FaIdCard className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={13} />
+                <input
+                  id="free-cert-reg-id-input"
+                  type="text"
+                  value={regIdInput}
+                  onChange={(e) => { setRegIdInput(e.target.value); if (regIdError) setRegIdError(''); }}
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleVerifyRegId(); }}
+                  placeholder="e.g. AIXX-REG-4"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-slate-900 placeholder-slate-400 focus:border-brand-500 focus:bg-white focus:outline-none transition-colors text-xs font-mono tracking-wider"
+                />
+              </div>
+              {regIdError && (
+                <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-2.5 text-xs font-medium flex items-start gap-2">
+                  <span className="mt-0.5">⚠️</span>
+                  <span>{regIdError}</span>
+                </div>
+              )}
+              <button
+                id="free-cert-verify-btn"
+                onClick={handleVerifyRegId}
+                disabled={verifyLoading}
+                className="w-full bg-brand-500 hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-extrabold py-3.5 rounded-xl shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {verifyLoading ? (
+                  <><FaSpinner className="animate-spin" size={14} /><span>Verifying…</span></>
+                ) : (
+                  <><span>Verify & Continue</span><FaArrowRight size={12} /></>
+                )}
+              </button>
+            </div>
+
+            {/* Divider */}
+            <div className="relative flex items-center gap-3">
+              <div className="flex-1 border-t border-slate-200" />
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">OR</span>
+              <div className="flex-1 border-t border-slate-200" />
+            </div>
+
+            {/* Switch to register */}
+            <div className="space-y-2 text-center">
+              <p className="text-xs text-slate-500">Don't have your Registration ID?</p>
+              <button
+                id="free-cert-register-new-btn"
+                onClick={() => setView('register')}
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3.5 rounded-xl border border-slate-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <FaGraduationCap size={14} className="text-brand-600" />
+                <span>Register for Free — Get your ID</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Not registered (or user clicked "Register" from the ID check view) ───────
   return (
     <div className="w-full py-8 px-4 sm:px-6 lg:px-8 bg-slate-50 rounded-[32px] border border-slate-200/60 shadow-inner">
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-stretch gap-8 lg:gap-12">
         {/* Left Column — Info */}
         <div className="lg:w-[45%] flex flex-col justify-center space-y-6">
+          {/* Back button if came from ID-check screen */}
+          {view === 'register' && isAlreadyRegistered && (
+            <button
+              onClick={() => setView('check')}
+              className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 font-semibold transition-colors cursor-pointer w-fit"
+            >
+              ← Back
+            </button>
+          )}
           <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-600 rounded-full px-4 py-1.5 w-fit">
             <FaGraduationCap size={16} className="text-blue-500 animate-bounce" />
             <span className="text-xs font-semibold uppercase tracking-wider">Professional Credential</span>
           </div>
-
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
             Free AI Knowledge Certificate
           </h2>
-
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
             Test your general AI literacy and earn a Free AI Knowledge Certificate by completing our 20-question MCQ assessment.
           </p>
-
           <div className="space-y-4">
             {[
               { title: '20 Question Assessment', desc: 'Comprehensive multiple-choice questions covering generative AI theories and implementations.' },
@@ -140,198 +390,9 @@ const FreeCertificateTabContent: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column — Registration Card */}
+        {/* Right Column — Registration Form */}
         <div className="lg:w-[55%] bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-8 flex flex-col justify-between">
-          {success ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center space-y-6 h-full animate-fadeIn">
-              <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center animate-bounce">
-                <FaCheckCircle size={48} />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-900">Registration Successful!</h3>
-              <p className="text-slate-650 text-sm max-w-sm leading-relaxed font-medium">
-                Thank you, <strong className="text-slate-950 font-bold">{formData.full_name}</strong>. Please copy and save your unique Registration ID below:
-              </p>
-
-              {/* Login Credentials Box */}
-              <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 w-full text-left shadow-inner">
-                <div>
-                  <label className="text-[10px] uppercase tracking-wider font-extrabold text-slate-455 block">Your Registration ID</label>
-                  <div className="flex items-center justify-between mt-1">
-                    <strong className="text-base font-mono text-slate-900 select-all">{regId}</strong>
-                    <button
-                      onClick={() => navigator.clipboard.writeText(regId)}
-                      className="text-[11px] font-bold text-brand-600 hover:text-brand-700 bg-white border border-slate-200 hover:border-brand-300 rounded-md px-2.5 py-1 transition cursor-pointer"
-                    >
-                      Copy ID
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-full">
-                <Link
-                  href={`/ai-certificate/study?token=${testToken}`}
-                  className="w-full relative inline-flex items-center justify-center gap-2.5 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white font-bold py-4 px-8 rounded-2xl text-sm sm:text-base transition-all duration-200 shadow-md shadow-brand-100"
-                >
-                  <span>Go to Study Portal & Lessons</span>
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </Link>
-              </div>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <h3 className="text-lg sm:text-xl font-bold text-slate-900">Registration Form</h3>
-                <p className="text-xs text-slate-500 mt-1">Please provide valid contact details. The test link will be sent to the email provided.</p>
-              </div>
-
-              {errorMsg && (
-                <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl p-3 text-xs font-semibold">
-                  {errorMsg}
-                </div>
-              )}
-
-              {/* Full Name */}
-              <div className="relative">
-                <label className="text-xs font-bold text-slate-600 block mb-1">Full Name</label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                    <FaUser size={14} />
-                  </span>
-                  <input
-                    type="text"
-                    name="full_name"
-                    required
-                    value={formData.full_name}
-                    onChange={handleChange}
-                    placeholder="John Doe"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all placeholder:text-slate-400"
-                  />
-                </div>
-              </div>
-
-              {/* Gender */}
-              <div>
-                <label className="text-xs font-bold text-slate-600 block mb-1">Gender</label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                    <FaVenusMars size={14} />
-                  </span>
-                  <select
-                    name="gender"
-                    required
-                    value={formData.gender}
-                    onChange={handleChange}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all appearance-none cursor-pointer"
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Company Name */}
-              <div>
-                <label className="text-xs font-bold text-slate-600 block mb-1">Company Name</label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                    <FaBuilding size={14} />
-                  </span>
-                  <input
-                    type="text"
-                    name="company_name"
-                    required
-                    value={formData.company_name}
-                    onChange={handleChange}
-                    placeholder="Company Ltd"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all placeholder:text-slate-400"
-                  />
-                </div>
-              </div>
-
-              {/* Mobile Number */}
-              <div>
-                <label className="text-xs font-bold text-slate-600 block mb-1">Mobile Number</label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                    <FaPhone size={14} />
-                  </span>
-                  <input
-                    type="tel"
-                    name="phone"
-                    required
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="+65 9123 4567"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all placeholder:text-slate-400"
-                  />
-                </div>
-              </div>
-
-              {/* Email Address */}
-              <div>
-                <label className="text-xs font-bold text-slate-600 block mb-1">Email Address</label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                    <FaEnvelope size={14} />
-                  </span>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="johndoe@email.com"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all placeholder:text-slate-400"
-                  />
-                </div>
-              </div>
-
-              {/* Country */}
-              <div>
-                <label className="text-xs font-bold text-slate-600 block mb-1">Country</label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                    <FaGlobe size={14} />
-                  </span>
-                  <select
-                    name="country"
-                    required
-                    value={formData.country}
-                    onChange={handleChange}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:border-brand-500 focus:bg-white transition-all appearance-none cursor-pointer"
-                  >
-                    {countries.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-md shadow-brand-100 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <>
-                    <FaSpinner className="animate-spin" size={16} />
-                    <span>Processing...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Register & Get Test Link</span>
-                    <FaPaperPlane className="group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform" size={14} />
-                  </>
-                )}
-              </button>
-            </form>
-          )}
+          <CertificatePortalForm />
         </div>
       </div>
     </div>
@@ -353,6 +414,7 @@ interface CourseCardItem {
   discount: string;
   institution: string;
   deliveryMethod?: string;
+  type?: string;
 }
 interface CourseCatalogProps {
   onFilterChange?: (filter: string) => void;
@@ -412,57 +474,69 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
 
   // Course Application Form States
   const [applyingCourse, setApplyingCourse] = useState<CourseCardItem | null>(null);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [companyName, setCompanyName] = useState('');
-  const [countryCode, setCountryCode] = useState('+65');
-  const [phone, setPhone] = useState('');
-  const [inquiringFor, setInquiringFor] = useState<'myself' | 'team'>('myself');
-  const [experience, setExperience] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [loadingForm, setLoadingForm] = useState(false);
+  const [enrollSuccessId, setEnrollSuccessId] = useState<string | null>(null);
+  const [isContactOnlyCourse, setIsContactOnlyCourse] = useState(false);
+  // Enrollment flow: 'reg-id-entry' | 'register-form' | 'success' | 'contact'
+  const [enrollStep, setEnrollStep] = useState<'reg-id-entry' | 'register-form' | 'success' | 'contact'>('reg-id-entry');
+  const [enrollRegIdInput, setEnrollRegIdInput] = useState('');
+  const [enrollRegIdError, setEnrollRegIdError] = useState('');
+  const [enrollLoading, setEnrollLoading] = useState(false);
 
-  const handleApplySubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!firstName || !lastName || !email || !phone || !experience || !applyingCourse || !companyName) {
-      alert('Please fill in all fields before submitting.');
+  const handleApplyClick = (course: CourseCardItem) => {
+    const isSelfEnrollable =
+      course.type === 'elearning' ||
+      course.type === 'free_courses' ||
+      course.fullFee?.includes('Free') ||
+      course.payableFee?.includes('Free');
+
+    setApplyingCourse(course);
+    setEnrollSuccessId(null);
+    setEnrollRegIdInput('');
+    setEnrollRegIdError('');
+    setEnrollLoading(false);
+
+    if (!isSelfEnrollable) {
+      setIsContactOnlyCourse(true);
+      setEnrollStep('contact');
+    } else {
+      setIsContactOnlyCourse(false);
+      setEnrollStep('reg-id-entry');
+    }
+  };
+
+  const handleRegIdEnroll = async () => {
+    const regId = enrollRegIdInput.trim();
+    if (!regId) {
+      setEnrollRegIdError('Please enter your Student Registration ID.');
       return;
     }
-
-    setLoadingForm(true);
-
+    setEnrollLoading(true);
+    setEnrollRegIdError('');
     try {
-      await storeInquiry({
-        customer_name: `${firstName} ${lastName}`,
-        customer_email: email,
-        customer_phone: `${countryCode} ${phone}`,
-        service_interest: 'AI Training & Certification',
-        industry_type: `Inquiring For: ${inquiringFor === 'myself' ? 'Myself' : 'Team / Group'}`,
-        budget_timeline: `Work Experience: ${experience === 'none' ? 'Less than 1 year' : experience + ' years'}`,
-        message: `Company: ${companyName}\nEnrollment application for course: ${applyingCourse.title} (ID: ${applyingCourse.id})`,
+      await enrollInCourse(regId, {
+        id: applyingCourse!.id,
+        title: applyingCourse!.title,
+        description: applyingCourse!.description,
       });
-
-      setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
-        setApplyingCourse(null);
-        // Reset form
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setPhone('');
-        setCompanyName('');
-        setCountryCode('+65');
-        setInquiringFor('myself');
-        setExperience('');
-      }, 3000);
-    } catch (err) {
-      console.error(err);
-      alert('Failed to submit application. Please try again.');
+      setEnrollSuccessId(regId);
+      setEnrollStep('success');
+    } catch (err: any) {
+      setEnrollRegIdError(
+        err?.response?.data?.message ||
+        'Enrollment failed. Please check your Registration ID and try again.'
+      );
     } finally {
-      setLoadingForm(false);
+      setEnrollLoading(false);
     }
+  };
+
+  const handleCloseEnrollModal = () => {
+    setApplyingCourse(null);
+    setEnrollSuccessId(null);
+    setIsContactOnlyCourse(false);
+    setEnrollRegIdInput('');
+    setEnrollRegIdError('');
+    setEnrollLoading(false);
   };
 
   // Check URL query parameters for view=saved or free-certificate on mount
@@ -883,10 +957,10 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
                         More info
                       </Link>
                       <button
-                        onClick={() => setApplyingCourse(course)}
+                        onClick={() => handleApplyClick(course)}
                         className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 rounded-full bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 text-xs font-semibold shadow-sm hover:shadow-md transition-all duration-200 group/btn text-center whitespace-nowrap"
                       >
-                        <span>Apply</span>
+                        <span>Enroll Now</span>
                         <span className="group-hover/btn:translate-x-0.5 transition-transform">→</span>
                       </button>
                     </div>
@@ -900,198 +974,201 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
       </div>
 
       {applyingCourse && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/50 backdrop-blur-md p-4 animate-fadeIn">
-          <div className="relative w-full max-w-md rounded-[32px] bg-white p-6 md:p-8 shadow-2xl border border-slate-100 flex flex-col max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+          <div className="relative w-full max-w-lg bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-2xl text-slate-900 max-h-[90vh] overflow-y-auto">
             {/* Close Button */}
             <button
-              onClick={() => setApplyingCourse(null)}
-              className="absolute right-5 top-5 rounded-full p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-700 transition"
+              onClick={handleCloseEnrollModal}
+              className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 p-2 rounded-full hover:bg-slate-100 transition-colors cursor-pointer z-10"
               aria-label="Close form"
             >
-              <FaTimes className="h-4 w-4" />
+              <FaTimes size={18} />
             </button>
 
-            {submitted ? (
-              <div className="my-auto py-10 text-center animate-fadeIn">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-500">
-                  <svg className="h-8 w-8 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                  </svg>
+            {/* ── Step: Contact Only ── */}
+            {enrollStep === 'contact' && (
+              <div className="text-center space-y-5 py-2 animate-fadeIn max-w-lg mx-auto">
+                <div className="w-16 h-16 bg-blue-50 text-brand-600 rounded-2xl flex items-center justify-center mx-auto border border-blue-100">
+                  <FaEnvelope size={28} />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900">Application Received!</h3>
-                <p className="mt-2 text-sm text-slate-500">
-                  Thank you for applying to <strong>{applyingCourse.title}</strong>.<br />
-                  Your inquiry has been stored in our admin panel. An email confirmation has been sent to your address.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleApplySubmit} className="space-y-4 animate-fadeIn">
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 leading-tight">
-                    Course Application
-                  </h3>
-                  <p className="text-xs text-slate-400 mt-1">Please fill in your details below to apply.</p>
+                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-brand-600 bg-brand-50 px-3 py-1 rounded-full border border-brand-100">Admissions Advisory Notice</span>
+                  <h3 className="text-2xl font-black text-slate-900 tracking-tight mt-3">Direct Admissions Inquiry Required</h3>
+                  <p className="text-xs text-slate-500 mt-1">Program: <strong className="text-slate-800">{applyingCourse.title}</strong></p>
                 </div>
-
-                {/* Selected Course Card Details inside Form */}
-                <div className="bg-brand-50/70 border border-brand-100 rounded-2xl p-4">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-600 block mb-1">Applying for Course</span>
-                  <p className="text-sm font-bold text-slate-900 leading-snug">{applyingCourse.title}</p>
-                </div>
-
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <label className="sr-only">First Name</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="First Name"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-400"
-                    />
-                  </div>
-                  <div>
-                    <label className="sr-only">Last Name</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Last Name"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-400"
-                    />
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left space-y-3 text-xs leading-relaxed">
+                  <p className="font-semibold text-slate-800">
+                    Online self-enrollment via Student Registration ID is available exclusively for <strong className="text-brand-600">E-Learning Modules</strong> and <strong className="text-brand-600">Free AI Certificates</strong>.
+                  </p>
+                  <p className="text-slate-600">
+                    For executive seminars, specialized certifications, and paid enterprise programs, applications are processed directly through our admissions advisory team.
+                  </p>
+                  <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-xs">
+                    <span className="font-bold text-slate-700">Contact Admissions Email:</span>
+                    <a href={`mailto:cs@aixx.com.sg?subject=Enrollment%20Inquiry%20for%20${encodeURIComponent(applyingCourse.title)}`} className="font-bold text-brand-600 hover:underline">cs@aixx.com.sg</a>
                   </div>
                 </div>
-
-                <div>
-                  <label className="sr-only">Email Address</label>
-                  <input
-                    type="email"
-                    required
-                    placeholder="Email Address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-400"
-                  />
-                </div>
-
-                <div>
-                  <label className="sr-only">Company Name</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Company Name"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-400"
-                  />
-                </div>
-
-                <div>
-                  <label className="sr-only">Phone Number</label>
-                  <div className="flex rounded-xl border border-slate-200 overflow-hidden bg-white focus-within:border-brand-500 focus-within:ring-1 focus-within:ring-brand-500 transition-all">
-                    <select
-                      value={countryCode}
-                      onChange={(e) => setCountryCode(e.target.value)}
-                      className="bg-slate-50 px-3 border-r border-slate-200 text-sm font-semibold text-slate-700 outline-none cursor-pointer max-w-[120px]"
-                    >
-                      <option value="+65">🇸🇬 +65</option>
-                      <option value="+60">🇲🇾 +60</option>
-                      <option value="+62">🇮🇩 +62</option>
-                      <option value="+66">🇹🇭 +66</option>
-                      <option value="+63">🇵🇭 +63</option>
-                      <option value="+84">🇻🇳 +84</option>
-                      <option value="+91">🇮🇳 +91</option>
-                      <option value="+61">🇦🇺 +61</option>
-                      <option value="+44">🇬🇧 +44</option>
-                      <option value="+1">🇺🇸 +1</option>
-                      <option value="+86">🇨🇳 +86</option>
-                      <option value="+81">🇯🇵 +81</option>
-                      <option value="+82">🇰🇷 +82</option>
-                      <option value="+95">🇲🇲 +95</option>
-                      <option value="+855">🇰🇭 +855</option>
-                      <option value="+673">🇧🇳 +673</option>
-                      <option value="+856">🇱🇦 +856</option>
-                    </select>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="Phone"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full bg-white px-4 py-3 text-sm text-slate-700 outline-none placeholder:text-slate-400"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Inquiring For</span>
-                  <div className="flex items-center gap-6">
-                    <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="inquiringFor"
-                        value="myself"
-                        checked={inquiringFor === 'myself'}
-                        onChange={() => setInquiringFor('myself')}
-                        className="h-4 w-4 text-brand-600 border-slate-300 focus:ring-brand-500 accent-brand-600"
-                      />
-                      <span>Myself</span>
-                    </label>
-                    <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="inquiringFor"
-                        value="team"
-                        checked={inquiringFor === 'team'}
-                        onChange={() => setInquiringFor('team')}
-                        className="h-4 w-4 text-brand-600 border-slate-300 focus:ring-brand-500 accent-brand-600"
-                      />
-                      <span>Team / Group</span>
-                    </label>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="sr-only">Total Work Experience</label>
-                  <select
-                    required
-                    value={experience}
-                    onChange={(e) => setExperience(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-500 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all cursor-pointer"
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <a
+                    href={`mailto:cs@aixx.com.sg?subject=Enrollment%20Inquiry%20for%20${encodeURIComponent(applyingCourse.title)}`}
+                    className="w-full bg-[#43933E] hover:bg-[#387D34] text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <option value="" disabled>Total Work Experience</option>
-                    <option value="none">Less than 1 year</option>
-                    <option value="1-3">1 to 3 years</option>
-                    <option value="3-5">3 to 5 years</option>
-                    <option value="5-10">5 to 10 years</option>
-                    <option value="10+">10+ years</option>
-                  </select>
+                    <FaEnvelope size={14} />
+                    <span>Contact via Email</span>
+                  </a>
+                  <Link
+                    href={`/contact?service=AI%20Training%20%26%20Certification&subject=Enrollment%20Inquiry%20for%20${encodeURIComponent(applyingCourse.title)}`}
+                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3.5 px-4 rounded-xl border border-slate-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <FaPaperPlane size={12} className="text-slate-600" />
+                    <span>Submit Inquiry</span>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* ── Step: Enter Registration ID ── */}
+            {enrollStep === 'reg-id-entry' && (
+              <div className="space-y-6 animate-fadeIn">
+                {/* Header */}
+                <div className="text-center space-y-3">
+                  <div className="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mx-auto border border-brand-100">
+                    <FaIdCard size={26} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-brand-600 bg-brand-50 px-3 py-1 rounded-full border border-brand-100">
+                      Course Enrollment
+                    </span>
+                    <h3 className="text-xl font-black text-slate-900 tracking-tight mt-2">
+                      Enroll in this Course
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
+                      Program: <strong className="text-slate-800">{applyingCourse.title}</strong>
+                    </p>
+                  </div>
                 </div>
 
-                <div className="text-[10px] leading-relaxed text-slate-400">
-                  By clicking the button below, you agree to receive communications via Email/Call/WhatsApp/SMS from AIXX Academy and partners about this program and other relevant programs. <Link href="/privacy-policy" className="text-slate-500 underline hover:text-slate-650">Privacy Policy</Link>.
-                </div>
+                {/* Divider */}
+                <div className="border-t border-slate-100" />
 
-                <button
-                  type="submit"
-                  disabled={loadingForm}
-                  className="w-full bg-brand-500 hover:bg-brand-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white py-3.5 rounded-2xl font-bold uppercase tracking-wider text-xs shadow-md shadow-brand-100 transition-all duration-150 flex items-center justify-center gap-2"
-                >
-                  {loadingForm ? (
-                    <>
-                      <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
-                      <span>Submitting...</span>
-                    </>
-                  ) : (
-                    <span>Submit Application</span>
+                {/* Already have a Reg ID */}
+                <div className="space-y-3">
+                  <p className="text-xs font-bold text-slate-700 flex items-center gap-2">
+                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500 text-white text-[10px] font-black">1</span>
+                    Already registered? Enter your Student Registration ID
+                  </p>
+                  <div className="relative">
+                    <FaIdCard className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={13} />
+                    <input
+                      id="enroll-reg-id-input"
+                      type="text"
+                      value={enrollRegIdInput}
+                      onChange={(e) => { setEnrollRegIdInput(e.target.value); if (enrollRegIdError) setEnrollRegIdError(''); }}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleRegIdEnroll(); }}
+                      placeholder="e.g. AIXX-REG-4"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-slate-900 placeholder-slate-400 focus:border-brand-500 focus:bg-white focus:outline-none transition-colors text-xs font-mono tracking-wider"
+                    />
+                  </div>
+                  {enrollRegIdError && (
+                    <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-2.5 text-xs font-medium flex items-start gap-2">
+                      <span className="mt-0.5">⚠️</span>
+                      <span>{enrollRegIdError}</span>
+                    </div>
                   )}
+                  <button
+                    id="enroll-reg-id-submit"
+                    onClick={handleRegIdEnroll}
+                    disabled={enrollLoading}
+                    className="w-full bg-brand-500 hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-extrabold py-3.5 rounded-xl shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    {enrollLoading ? (
+                      <><FaSpinner className="animate-spin" size={14} /><span>Enrolling…</span></>
+                    ) : (
+                      <><span>Enroll with my Registration ID</span><FaArrowRight size={12} /></>
+                    )}
+                  </button>
+                </div>
+
+                {/* Divider with OR */}
+                <div className="relative flex items-center gap-3">
+                  <div className="flex-1 border-t border-slate-200" />
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">OR</span>
+                  <div className="flex-1 border-t border-slate-200" />
+                </div>
+
+                {/* New student */}
+                <div className="space-y-3">
+                  <p className="text-xs font-bold text-slate-700 flex items-center gap-2">
+                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-slate-200 text-slate-600 text-[10px] font-black">2</span>
+                    New student? Register first to get your ID
+                  </p>
+                  <button
+                    id="enroll-register-first-btn"
+                    onClick={() => setEnrollStep('register-form')}
+                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3.5 rounded-xl border border-slate-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <FaGraduationCap size={14} className="text-brand-600" />
+                    <span>Register Now — It's Free</span>
+                  </button>
+                  <p className="text-[10px] text-slate-400 text-center leading-relaxed">
+                    Registration is free and takes under 1 minute. You'll receive a unique Student Registration ID you can use to enroll in any course.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* ── Step: Register Form ── */}
+            {enrollStep === 'register-form' && (
+              <div className="animate-fadeIn">
+                {/* Back button */}
+                <button
+                  onClick={() => { setEnrollStep('reg-id-entry'); setEnrollRegIdError(''); }}
+                  className="mb-4 inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 font-semibold transition-colors cursor-pointer"
+                >
+                  ← Back
                 </button>
-              </form>
+                <CertificatePortalForm
+                  onClose={handleCloseEnrollModal}
+                  title="Create Your Student Account"
+                  subtitle="Register in seconds to get your Student Registration ID, then enroll instantly."
+                  onSuccess={async (studentData) => {
+                    try {
+                      await enrollInCourse(studentData.registration_id, {
+                        id: applyingCourse.id,
+                        title: applyingCourse.title,
+                        description: applyingCourse.description,
+                      });
+                      setEnrollSuccessId(studentData.registration_id);
+                      setEnrollStep('success');
+                    } catch (err) {
+                      console.error('Enrollment error after registration:', err);
+                    }
+                  }}
+                />
+              </div>
+            )}
+
+            {/* ── Step: Success ── */}
+            {enrollStep === 'success' && (
+              <div className="text-center space-y-4 py-4 animate-fadeIn">
+                <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto border border-emerald-200">
+                  <FaCheckCircle size={32} />
+                </div>
+                <h3 className="text-2xl font-black text-[#191E42]">Successfully Enrolled!</h3>
+                <p className="text-xs text-slate-600">
+                  You have been enrolled in <strong className="text-slate-900">{applyingCourse.title}</strong> using your Student Registration ID:
+                </p>
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center">
+                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Student Registration ID</span>
+                  <span className="text-xl font-black text-brand-600 font-mono tracking-wider">{enrollSuccessId}</span>
+                </div>
+                <button
+                  onClick={handleCloseEnrollModal}
+                  className="w-full bg-brand-600 hover:bg-brand-700 text-white font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-xs cursor-pointer"
+                >
+                  Close &amp; Continue
+                </button>
+              </div>
             )}
           </div>
         </div>

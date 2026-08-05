@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { FaPlay, FaCheckCircle, FaLock, FaBookOpen, FaLaptopCode, FaArrowRight, FaArrowLeft, FaClock, FaLayerGroup, FaChartLine, FaBrain, FaNetworkWired, FaFileAlt, FaTimesCircle, FaTrophy, FaApple, FaFacebook, FaGoogle, FaLinkedin, FaCheck } from 'react-icons/fa';
+import { FaPlay, FaCheckCircle, FaLock, FaBookOpen, FaLaptopCode, FaArrowRight, FaArrowLeft, FaClock, FaLayerGroup, FaChartLine, FaBrain, FaNetworkWired, FaFileAlt, FaTimesCircle, FaTrophy, FaApple, FaFacebook, FaGoogle, FaLinkedin, FaCheck, FaIdCard, FaSpinner, FaTimes } from 'react-icons/fa';
 import { api } from '@/lib/public/api';
 import { courseQuestions } from './courseQuestions';
+import { CertificatePortalForm } from '@/components/public/CertificatePortalForm';
+import { enrollInCourse } from '@/services/studentService';
 // --- MOCK DATA ---
 
 interface QuizQuestion {
@@ -1409,6 +1411,62 @@ export default function ELearningModule() {
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [enrollmentStatus, setEnrollmentStatus] = useState<'unenrolled' | 'enrolling' | 'enrolled'>('unenrolled');
   const [coursesList, setCoursesList] = useState(availableCourses);
+
+  // Enroll modal states
+  const [enrollModalOpen, setEnrollModalOpen] = useState(false);
+  const [enrollModalStep, setEnrollModalStep] = useState<'reg-id-entry' | 'register-form'>('reg-id-entry');
+  const [enrollRegIdInput, setEnrollRegIdInput] = useState('');
+  const [enrollRegIdError, setEnrollRegIdError] = useState('');
+  const [enrollRegIdLoading, setEnrollRegIdLoading] = useState(false);
+
+  const openEnrollModal = () => {
+    setEnrollModalOpen(true);
+    setEnrollModalStep('reg-id-entry');
+    setEnrollRegIdInput('');
+    setEnrollRegIdError('');
+    setEnrollRegIdLoading(false);
+  };
+
+  const closeEnrollModal = () => {
+    setEnrollModalOpen(false);
+    setEnrollRegIdInput('');
+    setEnrollRegIdError('');
+    setEnrollRegIdLoading(false);
+  };
+
+  const handleRegIdEnrollElearning = async () => {
+    const regId = enrollRegIdInput.trim();
+    if (!regId) {
+      setEnrollRegIdError('Please enter your Student Registration ID.');
+      return;
+    }
+    setEnrollRegIdLoading(true);
+    setEnrollRegIdError('');
+    try {
+      const course = coursesList.find(c => c.id === selectedCourseId) || coursesList[0];
+      await enrollInCourse(regId, {
+        id: course.id,
+        title: course.title,
+        description: course.description,
+      });
+      closeEnrollModal();
+      // Start course
+      const firstLessonId = (courseCurriculums[course.id] || courseCurriculums['ai-productivity'])[0]?.lessons[0]?.id || 101;
+      setActiveLessonId(firstLessonId);
+      const firstTopicId = (courseCurriculums[course.id] || courseCurriculums['ai-productivity'])[0]?.id || 'intro';
+      setExpandedTopics([firstTopicId]);
+      setCompletedLessonIds([]);
+      setCertName('');
+      setEnrollmentStatus('enrolled');
+    } catch (err: any) {
+      setEnrollRegIdError(
+        err?.response?.data?.message ||
+        'Enrollment failed. Please check your Registration ID and try again.'
+      );
+    } finally {
+      setEnrollRegIdLoading(false);
+    }
+  };
   
   const [activeLessonId, setActiveLessonId] = useState(101);
   const [completedLessonIds, setCompletedLessonIds] = useState<number[]>([]);
@@ -1532,8 +1590,7 @@ export default function ELearningModule() {
   // --- HANDLERS ---
 
   const handleEnrollClick = () => {
-    setEnrollmentStatus('enrolling');
-    setEnrollFormSubmitted(false);
+    openEnrollModal();
   };
 
   const handleSimulateSignup = async (e: React.FormEvent) => {
@@ -1642,13 +1699,9 @@ export default function ELearningModule() {
         <div className="relative z-10 w-full">
           <div className="flex flex-col gap-4">
             {coursesList.map((course) => (
-              <div 
+              <div
                 key={course.id}
-                onClick={() => {
-                  setSelectedCourseId(course.id);
-                  setEnrollmentStatus('unenrolled');
-                }}
-                className="group cursor-pointer bg-transparent rounded-[24px] border border-slate-200 p-6 sm:p-8 hover:shadow-lg hover:border-brand-200 transition-all duration-300 transform flex flex-col md:flex-row md:items-center justify-between gap-6"
+                className="group bg-transparent rounded-[24px] border border-slate-200 p-6 sm:p-8 hover:shadow-lg hover:border-brand-200 transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-6"
               >
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-slate-900 mb-2 leading-tight group-hover:text-brand-600 transition-colors">{course.title}</h3>
@@ -1658,9 +1711,19 @@ export default function ELearningModule() {
                   </div>
                 </div>
                 <div className="shrink-0 w-full md:w-auto">
-                  <div className="w-full md:w-auto px-8 py-3.5 rounded-xl font-bold text-center transition-colors border border-brand-200 text-brand-600 group-hover:bg-brand-500 group-hover:text-white group-hover:border-transparent">
+                  <button
+                    onClick={() => {
+                      // Update URL slug
+                      if (typeof window !== 'undefined') {
+                        window.history.pushState({}, '', `/courses/elearning/${course.id}`);
+                      }
+                      setSelectedCourseId(course.id);
+                      setEnrollmentStatus('unenrolled');
+                    }}
+                    className="w-full md:w-auto px-8 py-3.5 rounded-xl font-bold text-center transition-colors border border-brand-200 text-brand-600 hover:bg-brand-500 hover:text-white hover:border-transparent"
+                  >
                     View Details
-                  </div>
+                  </button>
                 </div>
               </div>
             ))}
@@ -1670,17 +1733,23 @@ export default function ELearningModule() {
     );
   }
 
-  // VIEW 1: COURSE DETAILS (Image 1)
+  // VIEW 1: COURSE DETAILS
   if (enrollmentStatus === 'unenrolled') {
     return (
+      <>
       <div className="w-full bg-white text-slate-900 animate-fade-in-up relative z-10 p-4 md:p-8">
-        <button 
-          onClick={() => setSelectedCourseId(null)}
+        <button
+          onClick={() => {
+            if (typeof window !== 'undefined') {
+              window.history.pushState({}, '', '/courses');
+            }
+            setSelectedCourseId(null);
+          }}
           className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-brand-500 mb-6 transition-colors"
         >
           <FaArrowLeft /> Back to Courses
         </button>
-        
+
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Left Content */}
           <div className="flex-1">
@@ -1701,12 +1770,12 @@ export default function ELearningModule() {
                 ))}
               </div>
             </div>
-            
+
             <div className="mt-16 bg-[#FAF8F5] p-6 md:p-10 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-gray-100">
               <h2 className="text-3xl md:text-4xl font-serif text-[#4A5568] max-w-sm leading-tight">
                 Discover your potential, starting today
               </h2>
-              <button 
+              <button
                 onClick={handleEnrollClick}
                 className="px-8 py-3 rounded-full border border-gray-400 font-medium hover:bg-brand-500 hover:text-white hover:border-brand-500 transition-colors whitespace-nowrap"
               >
@@ -1724,20 +1793,20 @@ export default function ELearningModule() {
                 <selectedCourse.icon className="text-5xl text-brand-400 mb-3 drop-shadow-md z-10" />
                 <h3 className="font-bold text-lg leading-tight text-white z-10">{selectedCourse.title}</h3>
               </div>
-              
+
               <div className="p-6">
                 <h4 className="text-lg font-serif text-[#4A5568] border-b border-gray-200 pb-2 mb-4">About this course</h4>
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-3 text-slate-700">
-                    <span className="font-bold text-lg">$</span> 
+                    <span className="font-bold text-lg">$</span>
                     <span className="font-medium">Free</span>
                   </div>
                   <div className="flex items-center gap-3 text-slate-700">
-                    <FaBookOpen className="text-lg text-gray-400" /> 
+                    <FaBookOpen className="text-lg text-gray-400" />
                     <span className="font-medium">{allLessons.length} Lessons</span>
                   </div>
                 </div>
-                <button 
+                <button
                   onClick={handleEnrollClick}
                   className="w-full mt-6 py-3 bg-brand-500 text-white font-bold rounded-lg hover:bg-brand-600 transition-colors shadow-sm"
                 >
@@ -1748,6 +1817,145 @@ export default function ELearningModule() {
           </div>
         </div>
       </div>
+
+      {/* ── Enroll Modal ── */}
+      {enrollModalOpen && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+          <div className="relative w-full max-w-md bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-2xl text-slate-900 max-h-[90vh] overflow-y-auto">
+            {/* Close */}
+            <button
+              onClick={closeEnrollModal}
+              className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 p-2 rounded-full hover:bg-slate-100 transition-colors cursor-pointer z-10"
+              aria-label="Close"
+            >
+              <FaTimes size={18} />
+            </button>
+
+            {enrollModalStep === 'reg-id-entry' && (
+              <div className="space-y-6 animate-fadeIn">
+                {/* Header */}
+                <div className="text-center space-y-3">
+                  <div className="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center mx-auto border border-brand-100">
+                    <FaIdCard size={26} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-brand-600 bg-brand-50 px-3 py-1 rounded-full border border-brand-100">
+                      Course Enrollment
+                    </span>
+                    <h3 className="text-xl font-black text-slate-900 tracking-tight mt-2">Enroll in this Course</h3>
+                    <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
+                      Program: <strong className="text-slate-800">{selectedCourse.title}</strong>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="border-t border-slate-100" />
+
+                {/* Path 1 — existing reg ID */}
+                <div className="space-y-3">
+                  <p className="text-xs font-bold text-slate-700 flex items-center gap-2">
+                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500 text-white text-[10px] font-black">1</span>
+                    Already registered? Enter your Student Registration ID
+                  </p>
+                  <div className="relative">
+                    <FaIdCard className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={13} />
+                    <input
+                      id="elearning-enroll-reg-id-input"
+                      type="text"
+                      value={enrollRegIdInput}
+                      onChange={(e) => { setEnrollRegIdInput(e.target.value); if (enrollRegIdError) setEnrollRegIdError(''); }}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleRegIdEnrollElearning(); }}
+                      placeholder="e.g. AIXX-REG-4"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-slate-900 placeholder-slate-400 focus:border-brand-500 focus:bg-white focus:outline-none transition-colors text-xs font-mono tracking-wider"
+                    />
+                  </div>
+                  {enrollRegIdError && (
+                    <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-2.5 text-xs font-medium flex items-start gap-2">
+                      <span className="mt-0.5">⚠️</span>
+                      <span>{enrollRegIdError}</span>
+                    </div>
+                  )}
+                  <button
+                    id="elearning-enroll-reg-id-submit"
+                    onClick={handleRegIdEnrollElearning}
+                    disabled={enrollRegIdLoading}
+                    className="w-full bg-brand-500 hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-extrabold py-3.5 rounded-xl shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    {enrollRegIdLoading ? (
+                      <><FaSpinner className="animate-spin" size={14} /><span>Enrolling…</span></>
+                    ) : (
+                      <><span>Enroll with my Registration ID</span><FaArrowRight size={12} /></>
+                    )}
+                  </button>
+                </div>
+
+                {/* OR divider */}
+                <div className="relative flex items-center gap-3">
+                  <div className="flex-1 border-t border-slate-200" />
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">OR</span>
+                  <div className="flex-1 border-t border-slate-200" />
+                </div>
+
+                {/* Path 2 — new student */}
+                <div className="space-y-3">
+                  <p className="text-xs font-bold text-slate-700 flex items-center gap-2">
+                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-slate-200 text-slate-600 text-[10px] font-black">2</span>
+                    New student? Register first to get your ID
+                  </p>
+                  <button
+                    id="elearning-register-first-btn"
+                    onClick={() => setEnrollModalStep('register-form')}
+                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3.5 rounded-xl border border-slate-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <FaCheckCircle size={14} className="text-brand-600" />
+                    <span>Register Now — It's Free</span>
+                  </button>
+                  <p className="text-[10px] text-slate-400 text-center leading-relaxed">
+                    Registration is free and takes under 1 minute. You'll receive a unique Student Registration ID you can use to enroll in any course.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {enrollModalStep === 'register-form' && (
+              <div className="animate-fadeIn">
+                <button
+                  onClick={() => { setEnrollModalStep('reg-id-entry'); setEnrollRegIdError(''); }}
+                  className="mb-4 inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 font-semibold transition-colors cursor-pointer"
+                >
+                  ← Back
+                </button>
+                <CertificatePortalForm
+                  onClose={closeEnrollModal}
+                  title="Create Your Student Account"
+                  subtitle="Register in seconds to get your Student Registration ID, then enroll instantly."
+                  onSuccess={async (studentData) => {
+                    try {
+                      await enrollInCourse(studentData.registration_id, {
+                        id: selectedCourse.id,
+                        title: selectedCourse.title,
+                        description: selectedCourse.description,
+                      });
+                    } catch (err) {
+                      console.error('Enrollment after registration error:', err);
+                    }
+                    closeEnrollModal();
+                    const curriculum = courseCurriculums[selectedCourse.id] || courseCurriculums['ai-productivity'];
+                    const firstLessonId = curriculum[0]?.lessons[0]?.id || 101;
+                    setActiveLessonId(firstLessonId);
+                    const firstTopicId = curriculum[0]?.id || 'intro';
+                    setExpandedTopics([firstTopicId]);
+                    setCompletedLessonIds([]);
+                    setCertName(studentData.full_name || '');
+                    setEnrollmentStatus('enrolled');
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      </>
     );
   }
 
@@ -1821,121 +2029,21 @@ export default function ELearningModule() {
           </div>
 
           {/* Right: Detailed Registration Form */}
-          <div className="flex-1 max-w-md w-full mx-auto">
-            <h2 className="text-2xl md:text-3xl font-serif text-[#4A5568] mb-6">Enroll in course</h2>
-            
-            <form onSubmit={handleSimulateSignup} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1">Full Name <span className="text-red-500">*</span></label>
-                <input 
-                  required 
-                  type="text" 
-                  value={enrollFormData.fullName}
-                  onChange={(e) => setEnrollFormData({...enrollFormData, fullName: e.target.value})}
-                  placeholder="Full Name" 
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-slate-900" 
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1">Gender <span className="text-red-500">*</span></label>
-                  <select 
-                    required 
-                    value={enrollFormData.gender}
-                    onChange={(e) => setEnrollFormData({...enrollFormData, gender: e.target.value})}
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-slate-900 appearance-none cursor-pointer"
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1">Company Name <span className="text-red-500">*</span></label>
-                  <input 
-                    required 
-                    type="text" 
-                    value={enrollFormData.companyName}
-                    onChange={(e) => setEnrollFormData({...enrollFormData, companyName: e.target.value})}
-                    placeholder="Company Name" 
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-slate-900" 
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1">Mobile Number <span className="text-red-500">*</span></label>
-                <div className="flex border border-gray-200 rounded-xl overflow-hidden bg-slate-50 focus-within:ring-2 focus-within:ring-brand-500 focus-within:bg-white transition-all">
-                  <select
-                    value={enrollFormData.country}
-                    onChange={(e) => setEnrollFormData({...enrollFormData, country: e.target.value})}
-                    className="bg-slate-50 px-3 border-r border-gray-200 text-xs font-semibold text-slate-700 outline-none cursor-pointer max-w-[120px]"
-                  >
-                    {countryPhoneCodes.map((item) => (
-                      <option key={item.country} value={item.country}>
-                        {item.flag} {item.code}
-                      </option>
-                    ))}
-                  </select>
-                  <input 
-                    required 
-                    type="tel" 
-                    value={enrollFormData.phone}
-                    onChange={(e) => setEnrollFormData({...enrollFormData, phone: e.target.value})}
-                    placeholder="Mobile Number" 
-                    className="w-full px-4 py-2.5 bg-transparent outline-none text-slate-900 text-sm" 
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1">Email Address <span className="text-red-500">*</span></label>
-                <input 
-                  required 
-                  type="email" 
-                  value={enrollFormData.email}
-                  onChange={(e) => setEnrollFormData({...enrollFormData, email: e.target.value})}
-                  placeholder="johndoe@email.com" 
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-slate-900" 
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1">Country <span className="text-red-500">*</span></label>
-                <select 
-                  required 
-                  value={enrollFormData.country}
-                  onChange={(e) => setEnrollFormData({...enrollFormData, country: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all text-slate-900 appearance-none cursor-pointer"
-                >
-                  <option value="">Select Country</option>
-                  {countries.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-              </div>
-
-              <button 
-                type="submit" 
-                disabled={loadingForm}
-                className="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow-md transition-colors mt-6 flex justify-center items-center text-sm uppercase tracking-wider disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {loadingForm ? (
-                  <span className="flex items-center gap-2">
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Processing...
-                  </span>
-                ) : (
-                  "Enroll & Request Test Link"
-                )}
-              </button>
-            </form>
+          <div className="flex-1 max-w-md w-full mx-auto bg-white p-6 rounded-3xl shadow-xl border border-slate-100">
+            <CertificatePortalForm
+              title="Enroll in Course"
+              subtitle="Enter your details to register or enter your email to log in and start learning instantly."
+              onSuccess={(studentData) => {
+                if (selectedCourse) {
+                  enrollInCourse(studentData.registration_id, {
+                    id: selectedCourse.id,
+                    title: selectedCourse.title,
+                    description: selectedCourse.description,
+                  }).catch(console.error);
+                }
+                setEnrollmentStatus('enrolled');
+              }}
+            />
           </div>
         </div>
       </div>

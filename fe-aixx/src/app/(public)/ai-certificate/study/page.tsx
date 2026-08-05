@@ -12,9 +12,11 @@ import {
   FaGraduationCap, 
   FaUser, 
   FaLock, 
-  FaKey 
+  FaKey,
+  FaTimes
 } from 'react-icons/fa';
 import StudyGuide from '@/components/public/StudyGuide';
+import { CertificatePortalForm } from '@/components/public/CertificatePortalForm';
 
 function StudyPageContent() {
     const searchParams = useSearchParams();
@@ -32,6 +34,9 @@ function StudyPageContent() {
     const [loginId, setLoginId] = useState('');
     const [loginLoading, setLoginLoading] = useState(false);
     const [loginError, setLoginError] = useState('');
+
+    // Registration Modal State
+    const [showRegisterModal, setShowRegisterModal] = useState(false);
 
     // On mount, check URL query parameters and local storage
     useEffect(() => {
@@ -60,6 +65,11 @@ function StudyPageContent() {
 
                 setCandidateName(data.full_name);
                 setCandidateRegId(data.registration_id || '');
+
+                // Mark study guide as visited so the test unlocks
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('aixx_study_guide_visited', 'true');
+                }
 
                 if (data.already_passed) {
                     setAlreadyPassed(true);
@@ -121,6 +131,7 @@ function StudyPageContent() {
     // Render Login Page if no token is active
     if (!token) {
         return (
+            <>
             <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-20">
                 <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200/80 shadow-2xl space-y-6">
                     <div className="text-center space-y-2">
@@ -204,15 +215,39 @@ function StudyPageContent() {
                     </form>
 
                     <div className="text-center pt-2">
-                        <Link
-                            href="/?register=true#latest-news"
-                            className="text-xs text-slate-500 hover:text-brand-600 underline font-medium"
+                        <button
+                            type="button"
+                            onClick={() => setShowRegisterModal(true)}
+                            className="text-xs text-slate-500 hover:text-brand-600 underline font-medium cursor-pointer"
                         >
                             Don&apos;t have an account? Register Here
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>
+
+            {/* Registration Modal */}
+            {showRegisterModal && (
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+                    <div className="relative w-full max-w-lg md:max-w-3xl bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-2xl text-slate-900 space-y-6 max-h-[90vh] overflow-y-auto">
+                        <button
+                            onClick={() => setShowRegisterModal(false)}
+                            className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 p-2 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+                            aria-label="Close"
+                        >
+                            <FaTimes size={18} />
+                        </button>
+                        <CertificatePortalForm
+                            onClose={() => setShowRegisterModal(false)}
+                            onSuccess={(studentData) => {
+                                setShowRegisterModal(false);
+                                setToken(studentData.token);
+                            }}
+                        />
+                    </div>
+                </div>
+            )}
+            </>
         );
     }
 

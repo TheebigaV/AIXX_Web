@@ -9,14 +9,19 @@ import Script from "next/script";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'AIXX',
-  description: 'AIXX Platform',
+  title: {
+    default: 'AIXX | Enterprise AI & Productivity Academy',
+    template: '%s | AIXX',
+  },
+  description: 'AIXX Academy — Master enterprise-grade AI tools, generative AI, machine learning, and quantum computing to optimize workflows and drive organizational efficiency.',
   icons: {
     icon: '/images/logo/logo.png',
+    shortcut: '/images/logo/logo.png',
+    apple: '/images/logo/logo.png',
   },
   openGraph: {
-    title: 'AIXX',
-    description: 'AIXX Platform',
+    title: 'AIXX | Enterprise AI & Productivity Academy',
+    description: 'Master enterprise-grade AI tools, generative AI, machine learning, and quantum computing with AIXX Academy.',
     images: [
       {
         url: '/images/logo/logo.png',
@@ -28,8 +33,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AIXX',
-    description: 'AIXX Platform',
+    title: 'AIXX | Enterprise AI & Productivity Academy',
+    description: 'Master enterprise-grade AI tools, generative AI, machine learning, and quantum computing with AIXX Academy.',
     images: ['/images/logo/logo.png'],
   },
 };
@@ -48,6 +53,9 @@ export default function RootLayout({
   return (
     <html lang="en">
         <head>
+            <link rel="icon" href="/images/logo/logo.png" type="image/png" />
+            <link rel="shortcut icon" href="/images/logo/logo.png" />
+            <link rel="apple-touch-icon" href="/images/logo/logo.png" />
             <Script
                 src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"
                 strategy="beforeInteractive"

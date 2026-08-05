@@ -26,7 +26,7 @@ export default function TrainingForm() {
         handleSubmit,
     } = useTrainingForm(trainingId as string, () => {
         toast.success("Training saved successfully!");
-        router.push("/admin/training");
+        router.push(formData.type === "courses" ? "/admin/training" : `/admin/training?type=${formData.type}`);
     });
 
     const [imagePreview, setImagePreview] = useState<string>("");

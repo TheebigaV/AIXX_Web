@@ -291,9 +291,17 @@ const CountryAutocomplete: React.FC<CountryAutocompleteProps> = ({ value, onChan
 // ─── Shared Portal Form Component ──────────────────────────────────────────
 interface CertificatePortalFormProps {
   onClose?: () => void;
+  onSuccess?: (studentData: { registration_id: string; full_name: string; token: string }) => void;
+  title?: string;
+  subtitle?: string;
 }
 
-export const CertificatePortalForm: React.FC<CertificatePortalFormProps> = ({ onClose }) => {
+export const CertificatePortalForm: React.FC<CertificatePortalFormProps> = ({
+  onClose,
+  onSuccess,
+  title = "Free AI Certificate Portal",
+  subtitle = "New candidate? Fill in your details to register. Already registered? Just enter your email — we'll recognize you and log you in instantly."
+}) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     full_name: '',
@@ -315,6 +323,22 @@ export const CertificatePortalForm: React.FC<CertificatePortalFormProps> = ({ on
     full_name: string;
     is_new: boolean;
   } | null>(null);
+
+  // ── On mount: if already logged in, skip the form and show the portal ──
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const storedToken = localStorage.getItem('aixx_certificate_token');
+    const storedRegId = localStorage.getItem('aixx_candidate_reg_id');
+    const storedName  = localStorage.getItem('aixx_candidate_name');
+    if (storedToken && storedRegId) {
+      setRegistrationResult({
+        token: storedToken,
+        registration_id: storedRegId,
+        full_name: storedName || 'Student',
+        is_new: false,
+      });
+    }
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -360,6 +384,9 @@ export const CertificatePortalForm: React.FC<CertificatePortalFormProps> = ({ on
         }
 
       setRegistrationResult({ token, registration_id, full_name, is_new });
+      if (onSuccess) {
+        onSuccess({ registration_id, full_name, token });
+      }
     } catch (err: any) {
       console.error('Certificate portal error:', err);
       const apiMessage = err.response?.data?.message || err.response?.data?.errors;
@@ -383,10 +410,12 @@ export const CertificatePortalForm: React.FC<CertificatePortalFormProps> = ({ on
             <div className="w-12 h-12 bg-[#E6F0FA] text-[#00245A] rounded-2xl flex items-center justify-center mx-auto border border-blue-100">
               <FaGraduationCap size={24} />
             </div>
-            <h3 className="text-2xl font-black text-[#191E42] tracking-tight">Free AI Certificate Portal</h3>
-            <p className="text-xs text-slate-500 max-w-md mx-auto">
-              New candidate? Fill in your details to register. Already registered? Just enter your email — we'll recognize you and log you in instantly.
-            </p>
+            <h3 className="text-2xl font-black text-[#191E42] tracking-tight">{title}</h3>
+            {subtitle && (
+              <p className="text-xs text-slate-500 max-w-md mx-auto">
+                {subtitle}
+              </p>
+            )}
           </div>
 
 
@@ -523,12 +552,12 @@ export const CertificatePortalForm: React.FC<CertificatePortalFormProps> = ({ on
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-brand-600 hover:bg-brand-700 text-white font-extrabold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  className="w-full bg-[#43933E] hover:bg-[#387D34] text-white font-extrabold py-4 rounded-2xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base tracking-wide"
                 >
                   {loading ? (
-                    <><FaSpinner className="animate-spin" size={14} /><span>Processing…</span></>
+                    <><FaSpinner className="animate-spin" size={16} /><span>Processing…</span></>
                   ) : (
-                    <><span>Register &amp; Access Certificate Portal</span><FaArrowRight size={12} /></>
+                    <><span>Register &amp; Access Certificate Portal</span><FaArrowRight size={14} /></>
                   )}
                 </button>
               </div>
@@ -582,6 +611,23 @@ export const CertificatePortalForm: React.FC<CertificatePortalFormProps> = ({ on
             >
               <FaGraduationCap size={16} />
               <span>Take 20-MCQ Test</span>
+            </button>
+          </div>
+          <div className="text-center pt-1">
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  localStorage.removeItem('aixx_certificate_token');
+                  localStorage.removeItem('aixx_candidate_reg_id');
+                  localStorage.removeItem('aixx_candidate_name');
+                  localStorage.removeItem('aixx_candidate_email');
+                }
+                setRegistrationResult(null);
+              }}
+              className="text-[11px] text-slate-400 hover:text-slate-600 underline cursor-pointer transition-colors"
+            >
+              Not you? Register a new account
             </button>
           </div>
         </div>
