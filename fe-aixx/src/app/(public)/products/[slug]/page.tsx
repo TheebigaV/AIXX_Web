@@ -25,6 +25,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, '') || 'ht
 const resolveImageUrl = (imageUrl: string | null): string | null => {
   if (!imageUrl) return null;
   if (imageUrl.startsWith('http')) return imageUrl;
+  if (imageUrl.startsWith('/images/')) return imageUrl;
   if (imageUrl.startsWith('/storage')) return `${API_BASE_URL}${imageUrl}`;
   return `${API_BASE_URL}/storage/${imageUrl}`;
 };
@@ -46,17 +47,53 @@ export default function ProductDetailPage() {
       try {
         setIsLoading(true);
         const res = await getProduct(slug);
-        const relatedRes = await fetchProducts(1, 4, '');
+        const allRes = await fetchProducts(1, 100, '');
         if (!mounted) return;
 
-        if (res.data) {
-          setProduct(res.data);
-          setSelectedImage(res.data.main_product_image);
+        const fallbackImages = [
+          '/images/ai_edge_device.png',
+          '/images/smart_ai_hub.png',
+          '/images/neural_chip.png',
+          '/images/ai_drone.png',
+          '/images/smart_glasses.png',
+          '/images/ai_server_rack.png'
+        ];
 
-          const productsData = relatedRes?.data?.data ?? relatedRes?.data ?? [];
-          const activeOthers = (Array.isArray(productsData) ? productsData : [])
-            .filter((p: any) => (p.is_active === 1 || p.is_active === true || p.is_active === '1') && p.slug !== slug)
+        if (res.data) {
+          let currentProduct = res.data;
+          
+          const excludeNames = [
+            'AI Hardware Integration',
+            'AI Computing Systems',
+            'Hardware Optimization',
+            'Edge AI Solutions',
+            'Emerging Technologies'
+          ];
+
+          const allProductsData = allRes?.data?.data ?? allRes?.data ?? [];
+          const allActive = (Array.isArray(allProductsData) ? allProductsData : [])
+            .filter((p: any) => (p.is_active === 1 || p.is_active === true || p.is_active === '1') && !excludeNames.includes(p.name));
+
+          if (!currentProduct.main_product_image || currentProduct.main_product_image === '') {
+            const index = allActive.findIndex((p: any) => p.id === currentProduct.id);
+            const useIndex = index !== -1 ? index : 0;
+            currentProduct.main_product_image = fallbackImages[useIndex % fallbackImages.length];
+          }
+
+          setProduct(currentProduct);
+          setSelectedImage(currentProduct.main_product_image);
+
+          const activeOthers = allActive
+            .filter((p: any) => p.slug !== slug)
+            .map((p: any) => {
+              if (!p.main_product_image || p.main_product_image === '') {
+                const idx = allActive.findIndex((ap: any) => ap.id === p.id);
+                return { ...p, main_product_image: fallbackImages[(idx !== -1 ? idx : 0) % fallbackImages.length] };
+              }
+              return p;
+            })
             .slice(0, 3);
+            
           setRelatedProducts(activeOthers);
         } else {
           setError('Product not found');

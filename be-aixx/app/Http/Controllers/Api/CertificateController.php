@@ -11,231 +11,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
+use App\Models\CertificateQuestion;
+use App\Models\CertificateAttempt;
+use App\Models\CertificateAttemptQuestion;
+
 class CertificateController extends Controller
 {
-    // 20 MCQ Master Questions Key (Correct answers kept on backend for security)
-    protected array $questions = [
-        [
-            'id' => 1,
-            'question' => 'What does the term "LLM" stand for in modern AI?',
-            'options' => [
-                'A' => 'Logical Learning Machine',
-                'B' => 'Large Language Model',
-                'C' => 'Linear Latent Model',
-                'D' => 'Language Low Memory'
-            ],
-            'answer' => 'B'
-        ],
-        [
-            'id' => 2,
-            'question' => 'Which prompt engineering technique involves guiding an AI through step-by-step reasoning?',
-            'options' => [
-                'A' => 'Zero-shot prompting',
-                'B' => 'Directional stimulus prompting',
-                'C' => 'Chain of Thought prompting',
-                'D' => 'Meta-prompting'
-            ],
-            'answer' => 'C'
-        ],
-        [
-            'id' => 3,
-            'question' => 'In machine learning, what is "overfitting"?',
-            'options' => [
-                'A' => 'A model performs well on training data but poorly on unseen test data',
-                'B' => 'A model fails to identify patterns in the training data',
-                'C' => 'A model becomes too fast during inference',
-                'D' => 'A dataset having too many redundant columns'
-            ],
-            'answer' => 'A'
-        ],
-        [
-            'id' => 4,
-            'question' => 'What is the main purpose of "reinforcement learning from human feedback" (RLHF)?',
-            'options' => [
-                'A' => 'To compress the model size for edge deployment',
-                'B' => 'To automate label generation in unsupervised learning',
-                'C' => 'To align AI model outputs with human preferences and safety guidelines',
-                'D' => 'To bypass neural network training'
-            ],
-            'answer' => 'C'
-        ],
-        [
-            'id' => 5,
-            'question' => 'Which transformer-based mechanism allows models to focus on different words dynamically when processing input?',
-            'options' => [
-                'A' => 'Recurrent pooling',
-                'B' => 'Attention mechanism',
-                'C' => 'Convolution filter',
-                'D' => 'Backpropagation'
-            ],
-            'answer' => 'B'
-        ],
-        [
-            'id' => 6,
-            'question' => 'What is "temperature" in the context of Large Language Model text generation?',
-            'options' => [
-                'A' => 'A metric representing CPU heat during inference',
-                'B' => 'A hyperparameter controlling the degree of randomness/creativity of outputs',
-                'C' => 'The size of the vector database search query',
-                'D' => 'The total speed of token generation per second'
-            ],
-            'answer' => 'B'
-        ],
-        [
-            'id' => 7,
-            'question' => 'What does "RAG" stand for in generative AI system design?',
-            'options' => [
-                'A' => 'Recursive Analysis Grid',
-                'B' => 'Reasoning and Action Graph',
-                'C' => 'Retrieval-Augmented Generation',
-                'D' => 'Random Adversarial Generator'
-            ],
-            'answer' => 'C'
-        ],
-        [
-            'id' => 8,
-            'question' => 'In RAG systems, what is the primary role of a vector database?',
-            'options' => [
-                'A' => 'To run raw SQL queries on structured client logs',
-                'B' => 'To store and perform semantic similarity searches on text embeddings',
-                'C' => 'To train new base transformer models from scratch',
-                'D' => 'To compile TypeScript frontend builds'
-            ],
-            'answer' => 'B'
-        ],
-        [
-            'id' => 9,
-            'question' => 'What is "hallucination" in Generative AI?',
-            'options' => [
-                'A' => 'When a model generates incorrect, fabricated, or nonsensical information confidently',
-                'B' => 'When the user inputs prompts that cause server crashes',
-                'C' => 'A method used to augment training images with noise',
-                'D' => 'The compression of parameters into quantized matrices'
-            ],
-            'answer' => 'A'
-        ],
-        [
-            'id' => 10,
-            'question' => 'Which type of AI model is specifically designed to create new contents such as text, images, or audio?',
-            'options' => [
-                'A' => 'Discriminative AI',
-                'B' => 'Generative AI',
-                'C' => 'Predictive regression model',
-                'D' => 'Decision tree algorithm'
-            ],
-            'answer' => 'B'
-        ],
-        [
-            'id' => 11,
-            'question' => 'What is an AI agent or "agentic system"?',
-            'options' => [
-                'A' => 'A server that only routes API requests without logical parsing',
-                'B' => 'An autonomous system capable of planning, utilizing tools, and making decisions to achieve goals',
-                'C' => 'A database trigger that logs user logins',
-                'D' => 'A machine learning framework restricted to static tabular predictions'
-            ],
-            'answer' => 'B'
-        ],
-        [
-            'id' => 12,
-            'question' => 'What does "zero-shot learning" mean in LLM task execution?',
-            'options' => [
-                'A' => 'The model performs a task without receiving any prior example of it in the prompt',
-                'B' => 'The model runs with zero parameter weight configuration',
-                'C' => 'Training a model with zero datasets available',
-                'D' => 'Running inference in offline desktop environments'
-            ],
-            'answer' => 'A'
-        ],
-        [
-            'id' => 13,
-            'question' => 'What is "prompt injection"?',
-            'options' => [
-                'A' => 'A technique to feed more API keys to custom integrations',
-                'B' => 'A security vulnerability where untrusted inputs manipulate an LLM\'s system instructions',
-                'C' => 'The physical installation of memory expansion modules into AI GPUs',
-                'D' => 'Increasing the temperature parameter during prompt design'
-            ],
-            'answer' => 'B'
-        ],
-        [
-            'id' => 14,
-            'question' => 'Which of the following is a key characteristic of "deep learning"?',
-            'options' => [
-                'A' => 'Relying exclusively on small linear spreadsheets',
-                'B' => 'Utilizing artificial neural networks with multiple hidden layers',
-                'C' => 'Avoiding the use of gradient descent optimization',
-                'D' => 'Executing programs only in low-level assembly code'
-            ],
-            'answer' => 'B'
-        ],
-        [
-            'id' => 15,
-            'question' => 'What does the term "fine-tuning" refer to?',
-            'options' => [
-                'A' => 'Writing system prompts with more adjectives and style directives',
-                'B' => 'Training a pre-trained model on a smaller, specialized dataset to adapt it to specific tasks',
-                'C' => 'Aligning vector search databases manually',
-                'D' => 'Adjusting the display brightness of neural monitors'
-            ],
-            'answer' => 'B'
-        ],
-        [
-            'id' => 16,
-            'question' => 'What is the purpose of "system instructions" (system prompts) in AI assistants?',
-            'options' => [
-                'A' => 'To define core personas, behaviors, constraints, and instructions for responses',
-                'B' => 'To measure model response speed and output size',
-                'C' => 'To compile frontend source configurations',
-                'D' => 'To load custom database migration routes'
-            ],
-            'answer' => 'A'
-        ],
-        [
-            'id' => 17,
-            'question' => 'What is "context window" size in LLMs?',
-            'options' => [
-                'A' => 'The maximum resolution of AI generated interface images',
-                'B' => 'The maximum number of tokens a model can process collectively in a single query and response',
-                'C' => 'The count of total threads allocated on host systems',
-                'D' => 'The response timer for custom API connections'
-            ],
-            'answer' => 'B'
-        ],
-        [
-            'id' => 18,
-            'question' => 'Which concept describes the challenge of ensuring AI systems act in accordance with human values and intent?',
-            'options' => [
-                'A' => 'AI alignment problem',
-                'B' => 'Gradient descent optimization',
-                'C' => 'Model quantization challenge',
-                'D' => 'RAG latency bottleneck'
-            ],
-            'answer' => 'A'
-        ],
-        [
-            'id' => 19,
-            'question' => 'What is a "token" in natural language processing (NLP)?',
-            'options' => [
-                'A' => 'A crypto payment coin used to buy GPU rigs',
-                'B' => 'A basic unit of text (like a word or sub-word segment) processed by language models',
-                'C' => 'A session cookie stored in browser storage',
-                'D' => 'The primary key of relational database rows'
-            ],
-            'answer' => 'B'
-        ],
-        [
-            'id' => 20,
-            'question' => 'Which benchmark is widely used to evaluate an AI model\'s massive multitask language understanding capabilities?',
-            'options' => [
-                'A' => 'SQLQuery Bench',
-                'B' => 'MMLU',
-                'C' => 'API-Speed Benchmark',
-                'D' => 'CSS Flexbox Validator'
-            ],
-            'answer' => 'B'
-        ]
-    ];
+    // The hardcoded questions array has been removed in favor of the dynamic database-driven system.
 
     /**
      * Register a candidate for the Free AI Certificate
@@ -410,6 +192,13 @@ class CertificateController extends Controller
             return response()->json(['message' => 'Invalid or expired token.'], 404);
         }
 
+        $freeAttempt = \App\Models\CertificateAttempt::where('student_id', $candidate->id)
+            ->whereHas('training', function($q) {
+                $q->where('slug', 'free-ai-knowledge-certificate-program');
+            })
+            ->orderByDesc('created_at')
+            ->first();
+
         return response()->json([
             'full_name'            => $candidate->full_name,
             'email'                => $candidate->email,
@@ -419,8 +208,8 @@ class CertificateController extends Controller
             'company_name'         => $candidate->company_name,
             'academic_institution' => $candidate->academic_institution,
             'registration_id'      => $candidate->registration_id,
-            'passed'               => $candidate->passed,
-            'test_score'           => $candidate->test_score,
+            'passed'               => $freeAttempt ? current((array) $freeAttempt->passed) : false,
+            'test_score'           => $freeAttempt ? current((array) $freeAttempt->score) : null,
         ], 200);
     }
 
@@ -456,14 +245,24 @@ class CertificateController extends Controller
 
         // 1. Default Free AI Knowledge Certificate
         if ($candidate->registration_id) {
+            $freeAttempt = \App\Models\CertificateAttempt::where('student_id', $candidate->id)
+                ->whereHas('training', function($q) {
+                    $q->where('slug', 'free-ai-knowledge-certificate-program');
+                })
+                ->orderByDesc('created_at')
+                ->first();
+                
+            $isPassed = $freeAttempt ? current((array) $freeAttempt->passed) : false;
+            $score = $freeAttempt ? current((array) $freeAttempt->score) : null;
+
             $courses[] = [
                 'registration_id' => $candidate->registration_id,
                 'course_id'       => 'free-ai-certificate',
                 'title'           => 'Free AI Knowledge Certificate',
                 'description'     => 'AIXX AI Knowledge Certificate Program',
-                'passed'          => $candidate->passed ?? false,
-                'test_score'      => $candidate->test_score ?? null,
-                'status'          => $candidate->passed ? 'Completed' : 'In Progress',
+                'passed'          => $isPassed,
+                'test_score'      => $score,
+                'status'          => $isPassed ? 'Completed' : 'In Progress',
             ];
         }
 
@@ -661,6 +460,10 @@ class CertificateController extends Controller
     public function getQuestions(Request $request)
     {
         $uuid = $request->query('token');
+        // Currently, we'll assume the Free AI Course (ID: 128) if no course slug is passed. 
+        // In a fully dynamic system, the token (Student) should be tied to a course, 
+        // or the frontend should pass the course ID/slug.
+        $courseSlug = $request->query('course_slug', 'free-ai-knowledge-certificate-program');
 
         if (!$uuid) {
             return response()->json(['message' => 'Token parameter is missing.'], 400);
@@ -672,14 +475,75 @@ class CertificateController extends Controller
             return response()->json(['message' => 'Unauthorized token.'], 403);
         }
 
-        // Return questions with answers stripped out
-        $publicQuestions = array_map(function ($item) {
-            return [
-                'id' => $item['id'],
-                'question' => $item['question'],
-                'options' => $item['options']
+        $training = \App\Models\Training::where('slug', $courseSlug)->first();
+        if (!$training) {
+             return response()->json(['message' => 'Course not found.'], 404);
+        }
+
+        // Find an incomplete attempt for this student AND course, or create one
+        $attempt = CertificateAttempt::where('student_id', $candidate->id)
+            ->where('training_id', $training->id)
+            ->where('is_completed', false)
+            ->first();
+
+        if (!$attempt) {
+            $attempt = CertificateAttempt::create([
+                'student_id' => $candidate->id,
+                'training_id' => $training->id,
+            ]);
+
+            // Pick random questions from the bank for this SPECIFIC course
+            $questions = CertificateQuestion::where('training_id', $training->id)
+                ->where('is_active', true)
+                ->inRandomOrder()
+                ->limit(20)
+                ->get();
+            
+            if ($questions->isEmpty()) {
+                 return response()->json(['message' => 'No questions available for this course.'], 400);
+            }
+
+            foreach ($questions as $q) {
+                // Shuffle options
+                $originalOptions = $q->options;
+                $indices = array_keys($originalOptions);
+                shuffle($indices);
+
+                // Map to A, B, C, D (or more if there are more options)
+                $letters = range('A', 'Z');
+                $mapping = [];
+                foreach ($indices as $i => $originalIndex) {
+                    $letter = $letters[$i];
+                    $mapping[$letter] = $originalIndex; // Store which original index this letter represents
+                }
+
+                CertificateAttemptQuestion::create([
+                    'certificate_attempt_id' => $attempt->id,
+                    'certificate_question_id' => $q->id,
+                    'options_mapping' => $mapping,
+                ]);
+            }
+        }
+
+        // Return the mapped questions to the frontend
+        $attemptQuestions = CertificateAttemptQuestion::where('certificate_attempt_id', $attempt->id)
+            ->with('question')
+            ->get();
+
+        $publicQuestions = [];
+        foreach ($attemptQuestions as $aq) {
+            $q = $aq->question;
+            $optionsToPresent = [];
+            foreach ($aq->options_mapping as $letter => $originalIndex) {
+                $optionsToPresent[$letter] = $q->options[$originalIndex];
+            }
+
+            $publicQuestions[] = [
+                'id' => $aq->id, // Use the AttemptQuestion ID so we can track answers exactly
+                'question' => $q->question,
+                'options' => $optionsToPresent,
             ];
-        }, $this->questions);
+        }
 
         return response()->json([
             'questions' => $publicQuestions
@@ -692,7 +556,8 @@ class CertificateController extends Controller
     public function submitTest(Request $request)
     {
         $uuid = $request->input('token');
-        $answers = $request->input('answers'); // Associative array: [question_id => selected_option]
+        $answers = $request->input('answers'); // [attempt_question_id => selected_option_letter]
+        $courseSlug = $request->input('course_slug', 'free-ai-knowledge-certificate-program');
 
         if (!$uuid) {
             return response()->json(['message' => 'Token parameter is missing.'], 400);
@@ -704,47 +569,88 @@ class CertificateController extends Controller
             return response()->json(['message' => 'Invalid or unauthorized candidate token.'], 403);
         }
 
-        if ($candidate->passed) {
-            return response()->json([
-                'message' => 'This certificate has already been earned and completed.',
-                'passed' => true,
-                'score' => $candidate->test_score
-            ], 200);
+        $training = \App\Models\Training::where('slug', $courseSlug)->first();
+        if (!$training) {
+             return response()->json(['message' => 'Course not found.'], 404);
         }
 
-        // Calculate score
+        $attempt = CertificateAttempt::where('student_id', $candidate->id)
+            ->where('training_id', $training->id)
+            ->where('is_completed', false)
+            ->first();
+
+        if (!$attempt) {
+            return response()->json(['message' => 'No active attempt found.'], 404);
+        }
+
+        $attemptQuestions = CertificateAttemptQuestion::where('certificate_attempt_id', $attempt->id)->with('question')->get();
+        $totalQuestions = $attemptQuestions->count();
+
+        if ($totalQuestions === 0) {
+            return response()->json(['message' => 'No questions found for this attempt.'], 400);
+        }
+
         $correctCount = 0;
-        $totalQuestions = count($this->questions);
-        $details = [];
 
-        foreach ($this->questions as $q) {
-            $qId = $q['id'];
-            $correctAnswer = $q['answer'];
-            $submittedAnswer = $answers[$qId] ?? null;
+        foreach ($attemptQuestions as $aq) {
+            $submittedLetter = $answers[$aq->id] ?? null;
+            $isCorrect = false;
 
-            $isCorrect = ($submittedAnswer === $correctAnswer);
-            if ($isCorrect) {
-                $correctCount++;
+            if ($submittedLetter && isset($aq->options_mapping[$submittedLetter])) {
+                $mappedOriginalIndex = $aq->options_mapping[$submittedLetter];
+                if ($mappedOriginalIndex === $aq->question->correct_answer_index) {
+                    $isCorrect = true;
+                    $correctCount++;
+                }
             }
 
-            $details[] = [
-                'question_id' => $qId,
-                'submitted' => $submittedAnswer,
-                'correct' => $correctAnswer,
-                'is_correct' => $isCorrect
-            ];
+            $aq->update([
+                'selected_option_key' => $submittedLetter,
+                'is_correct' => $isCorrect,
+            ]);
         }
 
         $percentageScore = round(($correctCount / $totalQuestions) * 100);
         $hasPassed = ($percentageScore >= 80);
 
-        // Update database record
-        $candidate->test_score = $percentageScore;
-        if ($hasPassed) {
-            $candidate->passed = true;
-            $candidate->passed_at = Carbon::now();
+        // Complete the attempt
+        $attempt->update([
+            'is_completed' => true,
+            'score' => $percentageScore,
+            'passed' => $hasPassed,
+            'completed_at' => Carbon::now(),
+        ]);
+
+        // Record is maintained in CertificateAttempt, so we don't need to save to Student table.
+
+        // Include the actual questions and answers mapped out so the frontend can display the results UI
+        $resultsDetails = [];
+        foreach ($attemptQuestions as $aq) {
+            $q = $aq->question;
+            
+            $optionsToPresent = [];
+            foreach ($aq->options_mapping as $letter => $originalIndex) {
+                $optionsToPresent[$letter] = $q->options[$originalIndex];
+            }
+
+            // Find the correct letter for this attempt
+            $correctLetter = null;
+            foreach ($aq->options_mapping as $letter => $originalIndex) {
+                if ($originalIndex === $q->correct_answer_index) {
+                    $correctLetter = $letter;
+                    break;
+                }
+            }
+
+            $resultsDetails[] = [
+                'question' => $q->question,
+                'options' => $optionsToPresent,
+                'selected_option' => $aq->selected_option_key,
+                'correct_option' => $correctLetter,
+                'is_correct' => $aq->is_correct,
+                'explanation' => $q->explanation
+            ];
         }
-        $candidate->save();
 
         return response()->json([
             'passed' => $hasPassed,
@@ -752,7 +658,8 @@ class CertificateController extends Controller
             'correct_count' => $correctCount,
             'total_questions' => $totalQuestions,
             'full_name' => $candidate->full_name,
-            'passed_at' => $candidate->passed_at ? $candidate->passed_at->format('d M Y') : Carbon::now()->format('d M Y')
+            'passed_at' => $candidate->passed_at ? $candidate->passed_at->format('d M Y') : Carbon::now()->format('d M Y'),
+            'results_details' => $resultsDetails
         ], 200);
     }
 }

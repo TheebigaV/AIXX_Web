@@ -56,4 +56,14 @@ class Training extends Model
     {
         return $this->morphOne(Document::class, 'documentable')->where('type', Types::Image);
     }
+
+    public function modules()
+    {
+        return $this->hasMany(TrainingModule::class)->orderBy('module_index');
+    }
+
+    public function certificateQuestions()
+    {
+        return $this->hasMany(CertificateQuestion::class);
+    }
 }

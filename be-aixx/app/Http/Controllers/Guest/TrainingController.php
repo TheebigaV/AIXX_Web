@@ -26,4 +26,15 @@ class TrainingController extends Controller
         }
         return new TrainingCollection($query->with('image')->get());
     }
+
+    public function getModules($slug)
+    {
+        $training = Training::where('slug', $slug)->firstOrFail();
+        $modules = $training->modules()->where('is_published', true)->with('questions')->orderBy('module_index')->get();
+        
+        return response()->json([
+            'training' => $training,
+            'modules' => $modules
+        ]);
+    }
 }

@@ -9,3 +9,11 @@ export interface ProductFormData {
   features?: string;
   is_visible: boolean; // mandatory
 }
+
+export interface ProductTableData {
+  id: string | number;
+  name: string;
+  slug: string;
+  main_product_image?: string | null;
+  is_active: boolean | number | string;
+}

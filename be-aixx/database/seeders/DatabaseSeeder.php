@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             ProjectSeeder::class,
             SettingsTableSeeder::class,
             AiTrainingSeeder::class,
+            CertificateQuestionsSeeder::class,
         ]);
     }
 }

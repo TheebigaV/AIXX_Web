@@ -9,7 +9,7 @@ import { storeInquiry } from '@/lib/public/inquiries';
 import { courses as fallbackCourses } from '@/components/public/courseCatalogData';
 import { CertificatePortalForm } from '@/components/public/CertificatePortalForm';
 import { enrollInCourse } from '@/services/studentService';
-import { FaCheckCircle, FaEnvelope, FaPaperPlane } from 'react-icons/fa';
+import { FaCheckCircle, FaEnvelope, FaPaperPlane, FaBookOpen } from 'react-icons/fa';
 
 interface CourseDetailItem {
   id: string;
@@ -20,6 +20,7 @@ interface CourseDetailItem {
   domestic: string;
   international: string;
   keyHighlights: string[];
+  imageUrl?: string;
 }
 
 const splitList = (value?: string) =>
@@ -153,7 +154,7 @@ export default function CourseDetailPage() {
 
     const loadCourse = async () => {
       try {
-        const response = await fetchPublicTrainings('courses');
+        const response = await fetchPublicTrainings();
         const payload = response?.data?.data || response?.data || [];
         const items = Array.isArray(payload) ? payload : [];
         const matchedCourse = items.find((item: any) => (item.slug || item.id) === slug);
@@ -169,10 +170,11 @@ export default function CourseDetailPage() {
             title: matchedCourse.name || fallback?.title || 'Course',
             description: matchedCourse.description || fallback?.description || 'More details will be shared soon.',
             duration: matchedCourse.duration || fallback?.duration || 'Contact us for the schedule',
-            subModules: subModules.length > 0 ? subModules : fallback?.subModules || ['Course outline shared by the admin team'],
+            subModules: subModules.length > 1 ? subModules : fallback?.subModules || ['Core Concepts and Theoretical Framework', 'Real-world Applications and Case Studies', 'Hands-on Exercises and Practical Assessment', 'Advanced Techniques and Future Trends'],
             domestic: matchedCourse.domestic_fee || fallback?.domestic || 'Contact us for pricing',
             international: matchedCourse.international_fee || fallback?.international || 'Contact us for pricing',
-            keyHighlights: highlights.length > 0 ? highlights : fallback?.keyHighlights || ['Admin-managed training program'],
+            keyHighlights: highlights.length > 0 ? highlights : fallback?.keyHighlights || ['Admin-managed training program', 'Interactive learning sessions', 'Real-world applications'],
+            imageUrl: matchedCourse.image?.url || fallback?.imageUrl || '/images/ai_course_banner.png',
           });
         } else {
           const fallback = fallbackCourses.find((item) => item.id === slug);
@@ -185,7 +187,18 @@ export default function CourseDetailPage() {
             domestic: fallback.domestic,
             international: fallback.international,
             keyHighlights: fallback.keyHighlights,
-          } : null);
+            imageUrl: fallback.imageUrl || '/images/ai_course_banner.png',
+          } : {
+            id: slug,
+            title: 'AI FREE COURSE',
+            description: 'Start learning AI for FREE today! Master the concepts, apply real-world solutions, and advance your career with our specialized training.',
+            duration: 'Contact us for the schedule',
+            subModules: ['Core Concepts and Theoretical Framework', 'Real-world Applications and Case Studies', 'Hands-on Exercises and Practical Assessment', 'Advanced Techniques and Future Trends'],
+            domestic: 'Contact us for pricing',
+            international: 'Contact us for pricing',
+            keyHighlights: ['Admin-managed training program', 'Interactive learning sessions', 'Real-world applications'],
+            imageUrl: '/images/ai_course_banner.png'
+          });
         }
       } catch (error) {
         console.error('Failed to load course details:', error);
@@ -200,7 +213,18 @@ export default function CourseDetailPage() {
             domestic: fallback.domestic,
             international: fallback.international,
             keyHighlights: fallback.keyHighlights,
-          } : null);
+            imageUrl: fallback.imageUrl || '/images/ai_course_banner.png',
+          } : {
+            id: slug,
+            title: 'AI FREE COURSE',
+            description: 'Start learning AI for FREE today! Master the concepts, apply real-world solutions, and advance your career with our specialized training.',
+            duration: 'Contact us for the schedule',
+            subModules: ['Core Concepts and Theoretical Framework', 'Real-world Applications and Case Studies', 'Hands-on Exercises and Practical Assessment', 'Advanced Techniques and Future Trends'],
+            domestic: 'Contact us for pricing',
+            international: 'Contact us for pricing',
+            keyHighlights: ['Admin-managed training program', 'Interactive learning sessions', 'Real-world applications'],
+            imageUrl: '/images/ai_course_banner.png'
+          });
         }
       } finally {
         if (isMounted) setLoading(false);
@@ -237,8 +261,47 @@ export default function CourseDetailPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl rounded-[32px] border border-slate-200 bg-white p-4 sm:p-8 lg:p-12 shadow-sm">
+    <main className="min-h-screen bg-slate-50 pb-16">
+      {/* Dynamic Course Banner */}
+      <div className="relative w-full overflow-hidden bg-[#0A0F1C] pt-24 pb-32 mb-[-60px] sm:mb-[-80px]">
+        {/* Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {course.imageUrl && (
+            <img 
+              src={course.imageUrl} 
+              alt="Course Banner"
+              className="absolute inset-0 w-full h-full object-cover opacity-80 scale-105 transition-transform duration-1000"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F1C]/70 via-transparent to-[#0A0F1C] z-0"></div>
+        </div>
+        
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+          {/* Breadcrumbs */}
+          <nav className="flex items-center space-x-2 text-sm font-medium text-slate-400 mb-6">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <span>/</span>
+            <Link href="/courses" className="hover:text-white transition-colors">Courses</Link>
+            <span>/</span>
+            <span className="text-white truncate max-w-[200px] sm:max-w-[400px]">{course.title}</span>
+          </nav>
+
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-500/20 border border-brand-500/30 px-3 py-1 text-xs font-bold uppercase tracking-widest text-brand-300 mb-6 backdrop-blur-sm">
+            <BookOpenIcon /> Premium Program
+          </span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight max-w-4xl drop-shadow-lg">
+            {course.title}
+          </h1>
+          <p className="mt-6 text-lg sm:text-xl text-slate-300 max-w-2xl font-medium leading-relaxed">
+            {course.description || "Master the concepts, apply real-world solutions, and advance your career with our specialized training."}
+          </p>
+        </div>
+        
+        {/* Bottom Fade Gradient to blend with content below */}
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-slate-50 to-transparent"></div>
+      </div>
+
+      <div className="relative z-20 mx-auto max-w-6xl rounded-[32px] bg-white/95 backdrop-blur-md p-4 sm:p-8 lg:p-12 shadow-2xl mx-4 sm:mx-6 lg:mx-auto">
         <Link href="/courses" className="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700">
           <ArrowLeftIcon />
           Back to courses
@@ -268,7 +331,7 @@ export default function CourseDetailPage() {
             </div>
 
             {/* Enrolment / Call To Action */}
-            <div className="mt-8 rounded-3xl border border-emerald-100 bg-emerald-50/50 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 shadow-sm">
+            <div className="mt-8 rounded-3xl bg-emerald-50/50 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 shadow-md">
               <div className="space-y-1">
                 <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 flex-wrap">
                   <span>Enrol in this Course</span>
@@ -298,8 +361,8 @@ export default function CourseDetailPage() {
             </div>
 
             {/* Course Details Table */}
-            <div className="mt-8 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
-              <div className="border-b border-slate-200 bg-white px-6 py-4">
+            <div className="mt-8 overflow-hidden rounded-3xl bg-slate-50 shadow-md">
+              <div className="bg-white px-6 py-4">
                 <h2 className="text-lg font-semibold text-slate-900">Course details</h2>
               </div>
               <div className="overflow-x-auto">
@@ -313,7 +376,7 @@ export default function CourseDetailPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-t border-slate-200 align-top">
+                    <tr className="border-t border-slate-100 align-top">
                       <td className="px-4 py-4 font-medium text-slate-900">{course.title}</td>
                       <td className="px-4 py-4">{course.duration}</td>
                       <td className="px-4 py-4 line-through text-slate-400 font-medium">{course.domestic}</td>
@@ -325,7 +388,7 @@ export default function CourseDetailPage() {
             </div>
 
             {/* Key Highlights */}
-            <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6">
+            <div className="mt-8 rounded-3xl bg-slate-50 p-6 shadow-md">
               <h2 className="text-lg font-semibold text-slate-900">Key highlights</h2>
               <ul className="mt-4 space-y-3 text-sm text-slate-700">
                 {course.keyHighlights.map((highlight) => (
@@ -338,17 +401,34 @@ export default function CourseDetailPage() {
             </div>
           </div>
 
-          {/* Learning Modules */}
           <div className="space-y-6">
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-semibold text-slate-900 mb-5">Learning modules</h2>
-              <ol className="space-y-3">
+            <div className="rounded-3xl bg-white p-6 shadow-xl">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-5">
+                <h2 className="text-lg font-semibold text-slate-900">Learning modules</h2>
+                <Link
+                  href={`/courses/${slug}/study`}
+                  className="bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-5 rounded-full text-sm shadow-md transition flex items-center gap-2"
+                >
+                  <FaBookOpen /> Interactive Study Mode
+                </Link>
+              </div>
+              <ol className="space-y-4">
                 {course.subModules.map((module, index) => (
-                  <li key={module} className="flex items-start gap-4 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3 hover:border-brand-200 hover:bg-brand-50/40 transition-colors duration-200">
-                    <span className="flex-shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-full bg-brand-600 text-white text-xs font-bold mt-0.5">
-                      {index + 1}
-                    </span>
-                    <span className="text-sm text-slate-700 leading-relaxed">{module}</span>
+                  <li key={index} className="group flex flex-col gap-3 p-5 sm:p-6 bg-white hover:bg-slate-50 transition-all duration-300 rounded-2xl shadow-sm hover:shadow-xl hover:shadow-brand-500/10">
+                    <div className="flex items-center gap-4 cursor-pointer">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 text-sm font-bold text-white shadow-md shadow-brand-500/20 group-hover:scale-110 transition-transform">
+                        {index + 1}
+                      </div>
+                      <p className="text-slate-900 text-lg leading-relaxed font-bold group-hover:text-brand-600 transition-colors">{module}</p>
+                    </div>
+                    
+                    <div className="ml-14 pl-5 border-l-2 border-brand-100 group-hover:border-brand-300 transition-colors">
+                      <ul className="list-disc list-inside text-sm text-slate-600 space-y-2 mb-5">
+                        <li>Core concepts and theoretical framework</li>
+                        <li>Real-world applications and case studies</li>
+                        <li>Hands-on exercises and practical assessment</li>
+                      </ul>
+                    </div>
                   </li>
                 ))}
               </ol>
@@ -454,7 +534,7 @@ export default function CourseDetailPage() {
                 height={400}
                 className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 50vw"
-                loading="lazy"
+                priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
             </div>

@@ -14,15 +14,14 @@ const NAV_LINKS = [
   { label: "About Us", href: "/about-us" },
   { label: "Technologies", href: "/services" },
   { label: "Innovative Products", href: "/innovative-products" },
-  { label: "Latest News", href: "/latest-news" },
+  { label: "AI-Hot News", href: "/ai-hot-news" },
 ];
 
 const AI_TRAINING_LINKS = [
-  { label: "Free AI Knowledge Certificate", href: "/latest-news" },
+  { label: "Free AI Knowledge Certificate", href: "/ai-hot-news" },
   { label: "Seminars", href: "/training-and-certification/seminars" },
   { label: "Workshops", href: "/training-and-certification/workshops" },
   { label: "Courses", href: "/courses" },
-  { label: "Latest Technology News", href: "/latest-news" },
   { label: "Training Media Gallery", href: "/training-and-certification/media-gallery" },
   { label: "Skill Training & Certification", href: "/training-and-certification/certification" },
 ];
@@ -120,6 +119,7 @@ const Header = () => {
               alt="AIXX Logo"
               fill
               priority
+              sizes="48px"
               className="object-contain object-left"
             />
           </div>

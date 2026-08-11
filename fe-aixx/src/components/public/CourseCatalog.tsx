@@ -22,7 +22,14 @@ import {
   FaIdCard,
   FaArrowRight,
   FaBookOpen,
-  FaLock
+  FaLock,
+  FaUsers,
+  FaBriefcase,
+  FaChartPie,
+  FaAtom,
+  FaFire,
+  FaNewspaper,
+  FaHandshake
 } from 'react-icons/fa';
 import { fetchPublicTrainings } from '@/lib/training';
 import { storeInquiry } from '@/lib/public/inquiries';
@@ -683,6 +690,14 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
     if (filterType === 'saved') {
       result = result.filter((course) => savedCourseIds.includes(course.id));
     }
+    
+    if (filterType === 'elearning') {
+      result = result.filter((course) => course.type === 'elearning');
+    }
+
+    if (filterType === 'free-certificate') {
+      result = result.filter((course) => course.type === 'free_courses');
+    }
 
     if (deliveryMethodFilter !== 'all') {
       result = result.filter((course) => course.deliveryMethod === deliveryMethodFilter);
@@ -707,76 +722,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
   return (
     <section id="courses" className="bg-slate-50 min-h-screen">
 
-      {/* ── Hero / Promo Banner ── */}
-      <div className="relative overflow-hidden bg-[#00062A]">
-        {/* Background Image */}
-        <div 
-          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-60"
-          style={{ backgroundImage: 'url("/images/courses_banner_bg.png")' }}
-        />
 
-        {/* Gradient Overlay for Text Readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#00062A] via-[#00062A]/80 to-[#00062A]/40 z-10" />
-
-        {/* Decorative blobs */}
-        <div className="pointer-events-none absolute -top-24 -right-24 w-[420px] h-[420px] rounded-full bg-brand-500/20 blur-3xl z-10" />
-        <div className="pointer-events-none absolute -bottom-20 -left-20 w-[320px] h-[320px] rounded-full bg-[#58b347]/10 blur-3xl z-10" />
-
-        {/* Grid texture overlay */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.06] z-10"
-          style={{
-            backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-            backgroundSize: '48px 48px',
-          }}
-        />
-
-        <div className="relative z-20 w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 py-16 sm:py-20 lg:py-24 text-center">
-          <div className="max-w-3xl mx-auto">
-            
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-brand-500/20 border border-brand-400/30 rounded-full px-4 py-1.5 mb-6">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-500" />
-              </span>
-              <span className="text-brand-300 text-xs font-semibold uppercase tracking-widest">AIXX Academy — Now Enrolling</span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white leading-tight mb-4">
-              Accelerate Your{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-emerald-300">
-                AI Career
-              </span>{' '}
-              Today
-            </h1>
-            <p className="text-slate-300 text-base sm:text-lg leading-relaxed mb-8 max-w-xl mx-auto">
-              Industry-certified AI training, workshops, and live bootcamps designed for professionals, teams, and executives across Southeast Asia.
-            </p>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a
-                href="#courses-list"
-                className="relative inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white font-semibold px-7 py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 text-sm group overflow-hidden"
-              >
-                <span className="relative z-10">Browse All Courses</span>
-                <svg className="w-4 h-4 relative z-10 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-                <div className="absolute inset-0 bg-gradient-to-r from-brand-400 to-brand-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </a>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 border border-white/20 text-white hover:bg-white/10 font-medium px-7 py-3.5 rounded-xl transition-all duration-200 text-sm backdrop-blur-sm"
-              >
-                Talk to an Advisor
-              </Link>
-            </div>
-
-          </div>
-        </div>
-      </div>
 
       {/* ── Course Catalog ── */}
       <div id="courses-list" className="py-8">
@@ -852,11 +798,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
           </button>
         </div>
 
-        {filterType === 'free-certificate' ? (
-          <FreeCertificateTabContent />
-        ) : filterType === 'elearning' ? (
-          <ELearningModule />
-        ) : filterType === 'saved' && filteredCourses.length === 0 ? (
+        {filterType === 'saved' && filteredCourses.length === 0 ? (
           <div className="rounded-[32px] border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600 shadow-sm max-w-md mx-auto">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-50 text-slate-400 mx-auto mb-4">
               <FaRegBookmark className="h-6 w-6 text-slate-300" />
@@ -877,95 +819,61 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
             No courses matched your search. Try a different keyword.
           </div>
         ) : (
-          <div className="grid gap-6 w-full">
-            {filteredCourses.map((course) => {
-              const isSaved = savedCourseIds.includes(course.id);
-              return (
-                <div 
-                  key={course.id} 
-                  className="group relative rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm transition-all duration-300 hover:shadow-md flex flex-col justify-between"
-                >
-                  <div>
-                    {/* Header Row: Institution & Save Bookmark Button */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                          {course.institution}
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => toggleSaveCourse(course.id)}
-                        className="p-1.5 rounded-full hover:bg-slate-100 transition-colors focus:outline-none"
-                        aria-label={isSaved ? "Unsave course" : "Save course"}
-                      >
-                        {isSaved ? (
-                          <FaBookmark className="h-4 w-4 text-blue-600" />
-                        ) : (
-                          <FaRegBookmark className="h-4 w-4 text-slate-400 hover:text-blue-500" />
-                        )}
-                      </button>
-                    </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+            {filteredCourses.map((course, idx) => {
+              // Determine card theme
+              let color = 'from-[#3A0CA3] to-[#7209B7]';
+              let icon = <FaGraduationCap size={56} />;
+              
+              if (course.type === 'free_courses') { color = 'from-[#1B4332] to-[#2D6A4F]'; icon = <FaBookOpen size={56} />; }
+              else if (course.type === 'seminars') { color = 'from-[#023E8A] to-[#0077B6]'; icon = <FaNewspaper size={56} />; }
+              else if (course.type === 'workshops') { color = 'from-[#D62828] to-[#F77F00]'; icon = <FaBriefcase size={56} />; }
+              else if (course.type === 'certification') { color = 'from-[#006D77] to-[#83C5BE]'; icon = <FaChartPie size={56} />; }
+              else if (course.type === 'elearning') { color = 'from-[#240046] to-[#5A189A]'; icon = <FaAtom size={56} />; }
+              else if (course.type === 'newsletters') { color = 'from-[#9D0208] to-[#D00000]'; icon = <FaFire size={56} />; }
+              else {
+                const themes = [
+                  { color: 'from-[#1B4332] to-[#2D6A4F]', icon: <FaBookOpen size={56} /> },
+                  { color: 'from-[#3A0CA3] to-[#7209B7]', icon: <FaUsers size={56} /> },
+                  { color: 'from-[#023E8A] to-[#0077B6]', icon: <FaNewspaper size={56} /> },
+                  { color: 'from-[#D62828] to-[#F77F00]', icon: <FaBriefcase size={56} /> },
+                  { color: 'from-[#006D77] to-[#83C5BE]', icon: <FaChartPie size={56} /> },
+                  { color: 'from-[#9D0208] to-[#D00000]', icon: <FaFire size={56} /> },
+                  { color: 'from-[#240046] to-[#5A189A]', icon: <FaAtom size={56} /> },
+                  { color: 'from-[#03045E] to-[#0077B6]', icon: <FaHandshake size={56} /> }
+                ];
+                const theme = themes[idx % themes.length];
+                color = theme.color;
+                icon = theme.icon;
+              }
 
-                    {/* Course Content */}
-                    <div className="mt-2.5">
-                      <h3 className="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition-colors leading-snug">
+              return (
+                <Link 
+                  href={`/courses/${course.id}`}
+                  key={course.id} 
+                  className={`group block relative overflow-hidden rounded-2xl bg-gradient-to-r ${color} hover:scale-[1.02] transition-transform duration-300 shadow-lg border border-white/10 min-h-[110px]`}
+                >
+                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  
+                  <div className="w-full h-full p-4 sm:p-5 flex items-center gap-4 sm:gap-5 relative z-10">
+                    <div className="text-white drop-shadow-md flex-shrink-0 opacity-90 transition-transform group-hover:scale-110">
+                      {icon}
+                    </div>
+                    
+                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                      <h3 className="font-bold text-white tracking-wide text-base sm:text-lg leading-snug uppercase drop-shadow-sm truncate">
                         {course.title}
                       </h3>
-                      <p className="mt-1 text-sm text-slate-500 leading-relaxed">
+                      <p className="text-white/90 text-xs sm:text-sm mt-1 line-clamp-2 leading-relaxed">
                         {course.description}
                       </p>
                     </div>
 
-                    {/* No ratings or start date rendered per user instruction */}
-                  </div>
-
-                  {/* Estimated Payable section (Single white card style) */}
-                  <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 flex-wrap">
-                      {/* Full course fee */}
-                      <div className="shrink-0">
-                        <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                          <span>Full course fee</span>
-                          <span className="text-slate-400 cursor-pointer text-[10px]" title="Excludes applicable taxes">ⓘ</span>
-                        </div>
-                        <p className="text-sm text-slate-700 font-semibold">{course.fullFee}</p>
-                      </div>
-
-                      {/* AIXX Alumni Member Fee */}
-                      <div className="shrink-0">
-                        <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                          <span>AIXX Alumni Member Fee</span>
-                          <span className="text-slate-400 cursor-pointer text-[10px]" title="Promo rate details">ⓘ</span>
-                        </div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <p className="text-xs font-semibold text-slate-500">
-                            From <span className="text-lg font-black text-emerald-600">{course.payableFee}*</span>
-                          </p>
-                          <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-600 border border-rose-100 shrink-0">
-                            {course.discount} OFF
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full lg:w-auto shrink-0 mt-2 lg:mt-0">
-                      <Link
-                        href={`/courses/${course.id}`}
-                        className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 text-xs font-semibold shadow-sm transition-all duration-200 text-center whitespace-nowrap"
-                      >
-                        More info
-                      </Link>
-                      <button
-                        onClick={() => handleApplyClick(course)}
-                        className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1 rounded-full bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 text-xs font-semibold shadow-sm hover:shadow-md transition-all duration-200 group/btn text-center whitespace-nowrap"
-                      >
-                        <span>Enroll Now</span>
-                        <span className="group-hover/btn:translate-x-0.5 transition-transform">→</span>
-                      </button>
+                    <div className="flex-shrink-0 bg-white/20 p-2.5 rounded-full group-hover:bg-white/30 transition shadow-sm backdrop-blur-sm ml-2">
+                      <FaArrowRight size={16} className="text-white drop-shadow-sm group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

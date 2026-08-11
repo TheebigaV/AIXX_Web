@@ -59,7 +59,7 @@ export default function TrainingTableOne() {
         if (type === "elearning") return "E-Learning Modules";
         if (type === "free_courses") return "Free Certificates & Courses";
         if (type === "courses") return "Courses & Programs";
-        if (type === "newsletters") return "Latest Technology News";
+        if (type === "newsletters") return "AI-Hot News";
         if (type === "certification") return "Skill Training & Certification";
         if (type === "media_gallery") return "Training Media Gallery";
         return type.charAt(0).toUpperCase() + type.slice(1);
@@ -74,6 +74,7 @@ export default function TrainingTableOne() {
                         {/* Table Header */}
                         <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                             <TableRow>
+
                                 <TableCell
                                     isHeader
                                     className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
@@ -112,6 +113,7 @@ export default function TrainingTableOne() {
                             {!loading && filteredTrainings.length > 0 ? (
                                 filteredTrainings.map((training) => (
                                     <TableRow key={training.id}>
+
                                         <TableCell className="px-5 py-4 sm:px-6 text-center">
                                             <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
                                                 {training.name}
@@ -163,7 +165,7 @@ export default function TrainingTableOne() {
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center p-6">
+                                    <TableCell colSpan={6} className="text-center p-6">
                                         {loading ? "Loading..." : "No trainings found"}
                                     </TableCell>
                                 </TableRow>

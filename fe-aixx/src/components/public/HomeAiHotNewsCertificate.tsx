@@ -19,7 +19,7 @@ import {
 } from 'react-icons/fa';
 import { CertificatePortalForm } from '@/components/public/CertificatePortalForm';
 
-const HomeLatestNewsCertificate: React.FC = () => {
+const HomeAiHotNewsCertificate: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,7 +59,7 @@ const HomeLatestNewsCertificate: React.FC = () => {
   }, [isModalOpen]);
 
   return (
-    <section id="latest-news" className="w-full relative py-12 sm:py-16 lg:py-24 bg-white text-slate-900 overflow-hidden">
+    <section id="ai-hot-news" className="w-full relative py-12 sm:py-16 lg:py-24 bg-white text-slate-900 overflow-hidden">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="relative rounded-[40px] sm:rounded-[60px] lg:rounded-[80px] bg-gradient-to-br from-blue-50/90 via-slate-50 to-indigo-50/40 border border-brand-200/80 shadow-2xl p-6 sm:p-10 lg:p-14 overflow-hidden">
@@ -76,7 +76,7 @@ const HomeLatestNewsCertificate: React.FC = () => {
           <div className="inline-flex items-center gap-3 bg-white/90 backdrop-blur-md border border-amber-200/80 px-4 py-2 rounded-full mb-8 shadow-sm relative z-10 group">
             <span className="flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-red-500 text-white text-[11px] font-black uppercase tracking-wider px-3 py-0.5 rounded-full shadow-sm animate-pulse flex-shrink-0">
               <FaFire className="text-yellow-200" size={12} />
-              LATEST NEWS
+              AI-HOT NEWS
             </span>
             <Link
               href="/ai-certificate/study"
@@ -146,7 +146,7 @@ const HomeLatestNewsCertificate: React.FC = () => {
                   <FaArrowRight size={14} />
                 </button>
                 <Link
-                  href="/latest-news"
+                  href="/ai-hot-news"
                   className="bg-white hover:bg-slate-100 text-slate-800 font-bold px-6 py-4 rounded-2xl border border-slate-200 shadow-sm transition-all duration-300 flex items-center gap-2 text-sm"
                 >
                   <FaBookOpen size={14} className="text-brand-600" />
@@ -218,4 +218,4 @@ const HomeLatestNewsCertificate: React.FC = () => {
   );
 };
 
-export default HomeLatestNewsCertificate;
+export default HomeAiHotNewsCertificate;

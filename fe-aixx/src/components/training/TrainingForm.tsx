@@ -11,6 +11,11 @@ import Button from "@/components/ui/button/Button";
 import {useParams, useRouter} from "next/navigation";
 import {toast} from "react-toastify";
 import {useTrainingForm} from "@/hooks/training/useTrainingForm";
+import {TrainingModulesManager} from "./TrainingModulesManager";
+import dynamic from 'next/dynamic';
+import 'react-quill-new/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 export default function TrainingForm() {
     const {id: trainingId} = useParams();
@@ -29,32 +34,24 @@ export default function TrainingForm() {
         router.push(formData.type === "courses" ? "/admin/training" : `/admin/training?type=${formData.type}`);
     });
 
-    const [imagePreview, setImagePreview] = useState<string>("");
-    // Show preview when selecting file or load existing image URL
-    useEffect(() => {
-        if (existingImageUrl) setImagePreview(existingImageUrl);
-    }, [existingImageUrl]);
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0] || null;
-        handleChange("image", file);
-        if (file) setImagePreview(URL.createObjectURL(file));
-    };
 
     const typeOptions = [
+        { value: "homepage_cards", label: "Homepage Menu Cards" },
         { value: "courses", label: "Courses & E-Learning" },
         { value: "free_courses", label: "Free Courses & Certificates" },
         { value: "elearning", label: "E-Learning Modules" },
         { value: "seminars", label: "Seminars" },
         { value: "workshops", label: "Workshops" },
         { value: "certification", label: "Skill Training & Certification" },
-        { value: "newsletters", label: "Latest Technology News" },
+        { value: "newsletters", label: "AI-Hot News" },
         { value: "media_gallery", label: "Training Media Gallery" }
     ];
 
     const showCourseDetails = ["courses", "free_courses", "elearning", "workshops", "seminars", "certification"].includes(formData.type);
-
+    const isNewsletters = formData.type === "newsletters";
     return (
+        <>
         <ComponentCard title="Training Information">
             {serverError && <div className="mb-4 text-red-500">{serverError}</div>}
 
@@ -91,14 +88,18 @@ export default function TrainingForm() {
 
                 {/* Description */}
                 <div>
-                    <Label>Description</Label>
-                    <TextArea
-                        value={formData.description || ""}
-                        onChange={(value: string) => handleChange("description", value)}
-                        error={!!errors.description}
-                        hint={errors.description}
-                        placeholder="Enter description"
-                    />
+                    <Label>Description (Enhanced Content)</Label>
+                    <div className="mt-1 bg-white [&_.ql-editor]:min-h-[200px] [&_.ql-editor]:text-base">
+                        <ReactQuill 
+                            theme="snow" 
+                            value={formData.description || ""} 
+                            onChange={(value) => handleChange("description", value)} 
+                            placeholder="Enter enhanced description/content here..."
+                        />
+                    </div>
+                    {errors.description && (
+                        <p className="mt-1 text-sm text-red-500">{errors.description}</p>
+                    )}
                 </div>
 
                 {/* More info / program details */}
@@ -160,26 +161,44 @@ export default function TrainingForm() {
                     </div>
                 )}
 
-                {/* Image */}
-                    <div>
-                        <Label>Training Image</Label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            className="mt-1 block w-full text-sm text-gray-500"
-                        />
-                        {errors.image && (
-                            <span className="text-red-500 text-sm">{errors.image}</span>
-                        )}
-                        {imagePreview && (
-                            <img
-                                src={imagePreview}
-                                alt="Training Preview"
-                                className="mt-2 w-40 h-20 object-cover border"
-                            />
-                        )}
+                {/* Newsletter Details */}
+                {isNewsletters && (
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+                        <div className="mb-4">
+                            <Label>News Details</Label>
+                            <p className="mt-1 text-sm text-slate-600">
+                                Additional details shown on the news page.
+                            </p>
+                        </div>
+                        <div className="grid gap-6 md:grid-cols-2">
+                            <div>
+                                <Label>Read Time / Duration</Label>
+                                <Input
+                                    value={formData.duration || ""}
+                                    type="text"
+                                    onChange={(e) => handleChange("duration", e.target.value)}
+                                    placeholder="e.g. 5 min read or Recently"
+                                />
+                            </div>
+                            <div>
+                                <Label>Tag / Highlight</Label>
+                                <Select
+                                    value={formData.highlights || "NEWS"}
+                                    onChange={(val) => handleChange("highlights", val)}
+                                    options={[
+                                        { value: "NEWS", label: "NEWS" },
+                                        { value: "BREAKING", label: "BREAKING" },
+                                        { value: "TRENDING", label: "TRENDING" },
+                                        { value: "LATEST", label: "LATEST" }
+                                    ]}
+                                    placeholder="Select a tag"
+                                />
+                            </div>
+                        </div>
                     </div>
+                )}
+
+
 
                 {/* Active Checkbox */}
                 <div>
@@ -201,5 +220,13 @@ export default function TrainingForm() {
                 </div>
             </div>
         </ComponentCard>
+        {trainingId && (
+            <div className="mt-8">
+                <ComponentCard title="Interactive Modules & Assessments">
+                    <TrainingModulesManager trainingId={trainingId as string} />
+                </ComponentCard>
+            </div>
+        )}
+        </>
     );
 }
