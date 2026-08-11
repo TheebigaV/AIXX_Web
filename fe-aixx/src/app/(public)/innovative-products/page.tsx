@@ -22,10 +22,34 @@ export default function InnovativeProductsPage() {
         const res = await fetchProducts(1, 12, '');
         if (!mounted) return;
         const productsData = res?.data?.data ?? res?.data ?? [];
+        const excludeNames = [
+          'AI Hardware Integration',
+          'AI Computing Systems',
+          'Hardware Optimization',
+          'Edge AI Solutions',
+          'Emerging Technologies'
+        ];
+
         const activeProducts = (Array.isArray(productsData) ? productsData : []).filter(
-            (p: any) => p.is_active === 1 || p.is_active === true || p.is_active === '1'
+            (p: any) => (p.is_active === 1 || p.is_active === true || p.is_active === '1') && !excludeNames.includes(p.name)
         );
-        setProducts(activeProducts);
+        const fallbackImages = [
+          '/images/ai_edge_device.png',
+          '/images/smart_ai_hub.png',
+          '/images/neural_chip.png',
+          '/images/ai_drone.png',
+          '/images/smart_glasses.png',
+          '/images/ai_server_rack.png'
+        ];
+
+        const productsWithImages = activeProducts.map((p: any, i: number) => {
+          if (!p.main_product_image || p.main_product_image === '') {
+            return { ...p, main_product_image: fallbackImages[i % fallbackImages.length] };
+          }
+          return p;
+        });
+
+        setProducts(productsWithImages);
       } catch (err) {
         console.error(err);
         if (!mounted) return;

@@ -299,7 +299,7 @@ interface CertificatePortalFormProps {
 export const CertificatePortalForm: React.FC<CertificatePortalFormProps> = ({
   onClose,
   onSuccess,
-  title = "Free AI Certificate Portal",
+  title = "AIXX Free AI Certificate Portal",
   subtitle = "New candidate? Fill in your details to register. Already registered? Just enter your email — we'll recognize you and log you in instantly."
 }) => {
   const router = useRouter();
@@ -584,11 +584,11 @@ export const CertificatePortalForm: React.FC<CertificatePortalFormProps> = ({
           </div>
           <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Your Official Registration ID</span>
-            <div className="flex items-center justify-center gap-3">
-              <span className="text-lg font-black text-brand-600 font-mono tracking-wider">{registrationResult.registration_id}</span>
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+              <span className="text-base sm:text-lg font-black text-brand-600 font-mono tracking-wider break-all">{registrationResult.registration_id}</span>
               <button
                 onClick={copyRegId}
-                className="text-slate-500 hover:text-slate-800 p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer"
+                className="text-slate-500 hover:text-slate-800 p-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition-colors cursor-pointer flex-shrink-0"
                 title="Copy Registration ID"
               >
                 <FaCopy size={14} />

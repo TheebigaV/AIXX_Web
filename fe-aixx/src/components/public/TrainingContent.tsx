@@ -13,7 +13,7 @@ const tabs = [
   { id: 'seminars', label: 'Seminars', icon: FaChalkboardTeacher },
   { id: 'workshops', label: 'Workshops', icon: FaLaptopCode },
   { id: 'certification', label: 'Skill Training & Certification', icon: FaCertificate },
-  { id: 'newsletters', label: 'Latest Technology News', icon: FaNewspaper },
+  { id: 'newsletters', label: 'AI-Hot News', icon: FaNewspaper },
   { id: 'media_gallery', label: 'Training Media Gallery', icon: FaImages },
 ];
 

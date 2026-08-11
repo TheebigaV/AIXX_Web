@@ -79,6 +79,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('trainings/all', [TrainingController::class, 'all']);
         Route::apiResource('trainings', TrainingController::class);
 
+        // Training Modules
+        Route::apiResource('training-modules', \App\Http\Controllers\Admin\TrainingModuleController::class);
+
+        // Certificate Questions
+        Route::apiResource('certificate-questions', \App\Http\Controllers\Admin\CertificateQuestionController::class);
+
         // Customers
         Route::apiResource('customers', CustomerController::class);
 
@@ -105,6 +111,7 @@ Route::get('categories', [\App\Http\Controllers\Guest\CategoryController::class,
 Route::get('trainings/all', [\App\Http\Controllers\Guest\TrainingController::class, 'all']);
 Route::get('courses', [CourseController::class, 'index']);
 Route::get('trainings', [\App\Http\Controllers\Guest\TrainingController::class, 'index']);
+Route::get('trainings/{slug}/modules', [\App\Http\Controllers\Guest\TrainingController::class, 'getModules']);
 Route::post('inquiries', [\App\Http\Controllers\Guest\InquiryController::class, 'store']);
 Route::post('submit-contact-form', [\App\Http\Controllers\Guest\InquiryController::class, 'submitContact']);
 Route::get('products', [App\Http\Controllers\Api\ProductController::class, 'index']);

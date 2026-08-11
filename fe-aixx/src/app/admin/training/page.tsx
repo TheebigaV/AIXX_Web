@@ -44,10 +44,10 @@ export default function TrainingSettingsPage() {
     }
     if (typeFilter === "newsletters") {
       return {
-        title: "Latest Technology News List",
-        buttonName: "Create News Item",
+        title: "AI-Hot News List",
+        buttonName: "Create AI-Hot News",
         link: "training/create?type=newsletters",
-        pageTitle: "Latest Technology News Management"
+        pageTitle: "AI-Hot News Management"
       };
     }
     if (typeFilter === "media_gallery") {

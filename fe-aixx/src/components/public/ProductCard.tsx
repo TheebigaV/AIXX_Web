@@ -24,6 +24,11 @@ const resolveImageUrl = (
   if (!rawImage) return null;
   if (rawImage.startsWith('http')) return rawImage;
 
+  // Handle local public folder images
+  if (rawImage.startsWith('/images/')) {
+    return rawImage;
+  }
+
   // If path already starts with /storage, prepend API base URL
   if (rawImage.startsWith('/storage')) {
     return `${API_BASE_URL}${rawImage}`;

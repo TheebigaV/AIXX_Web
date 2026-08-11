@@ -275,7 +275,7 @@ function StudyPageContent() {
         <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-[95%] xl:max-w-[90%] mx-auto space-y-8">
                 {/* Header Banner */}
-                <div className="bg-gradient-to-r from-slate-900 via-slate-850 to-brand-950 rounded-3xl p-6 sm:p-8 md:p-10 text-white shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden border border-white/5">
+                <div className="bg-gradient-to-r from-slate-900 via-slate-850 to-brand-950 rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 text-white shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden border border-white/5">
                     {/* Glowing background circles */}
                     <div className="absolute top-[-20%] right-[-10%] w-96 h-96 rounded-full bg-brand-500/15 blur-3xl pointer-events-none" />
                     <div className="absolute bottom-[-30%] left-[-10%] w-80 h-80 rounded-full bg-purple-500/10 blur-3xl pointer-events-none" />
@@ -283,13 +283,13 @@ function StudyPageContent() {
                     <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-60" />
 
                     <div className="space-y-4 relative z-10 max-w-3xl">
-                        <div className="inline-flex items-center gap-2 bg-brand-500/20 text-brand-450 border border-brand-500/30 rounded-full px-4.5 py-1.5 text-xs font-black uppercase tracking-widest">
-                            AIXX Academy Study Portal
+                        <div className="inline-flex flex-wrap items-center gap-2 bg-brand-500/20 text-brand-400 border border-brand-500/30 rounded-full px-4 py-1.5 text-[10px] sm:text-xs font-black uppercase tracking-widest">
+                            AIXX ACADEMY | AI · INNOVATE · EXCEL
                         </div>
-                        <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight text-white">
-                            Free AI Knowledge Certificate Study Course
+                        <h1 className="text-xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight text-white">
+                            AIXX Free AI Knowledge Certificate Study Course
                         </h1>
-                        <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl font-medium">
+                        <p className="text-xs sm:text-sm md:text-base text-slate-300 leading-relaxed max-w-2xl font-medium">
                             Study the 4 interactive lesson modules below. Once all modules are completed, the final 20-question MCQ certification assessment will unlock at the bottom of the page.
                         </p>
                     </div>

@@ -28,7 +28,7 @@ class TrainingController extends Controller
         return new TrainingCollection(
             $this->trainingService->paginate(
                 $request->get('per_page', 15),
-                ['id', 'name', 'slug', 'type', 'description', 'is_active']
+                ['*']
             )
         );
     }
@@ -38,7 +38,7 @@ class TrainingController extends Controller
         $this->authorize('viewany', [Training::class]);
         return new TrainingCollection(
             $this->trainingService->all(
-                ['id', 'name', 'slug', 'type', 'description', 'is_active']
+                ['*']
             )
         );
     }

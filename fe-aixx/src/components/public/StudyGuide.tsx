@@ -432,22 +432,22 @@ export default function StudyGuide({ token, candidateName, candidateRegId }: Stu
           </div>
         </div>
 
-        {/* Footer Navigation Panel */}
-        <div className="flex flex-col sm:flex-row items-center justify-between border-t border-slate-100 pt-6 mt-8 gap-4">
+        {/* Bottom Navigation Actions */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-200/60 w-full">
           <button
             onClick={handlePrev}
             disabled={activeTab === 0}
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-650 hover:text-slate-900 disabled:opacity-30 disabled:pointer-events-none transition cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-slate-650 hover:text-slate-900 disabled:opacity-30 disabled:pointer-events-none transition cursor-pointer py-2.5 px-4 bg-slate-100 sm:bg-transparent rounded-xl sm:rounded-none"
           >
             <FaChevronLeft size={12} />
             <span>Previous Lesson</span>
           </button>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
             {activeTab < lessons.length - 1 ? (
               <button
                 onClick={handleNext}
-                className="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shadow-md shadow-brand-100"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shadow-md shadow-brand-100"
               >
                 <span>Complete Module & Continue</span>
                 <FaChevronRight size={12} />
@@ -456,7 +456,7 @@ export default function StudyGuide({ token, candidateName, candidateRegId }: Stu
               !completedLessons[activeTab] && (
                 <button
                   onClick={handleCompleteFinalLesson}
-                  className="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shadow-md shadow-brand-100"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shadow-md shadow-brand-100"
                 >
                   <FaCheck size={10} />
                   <span>Complete Final Lesson</span>
@@ -467,7 +467,7 @@ export default function StudyGuide({ token, candidateName, candidateRegId }: Stu
             {completedAll ? (
               <Link
                 href={`/ai-certificate/test?token=${token}`}
-                className="inline-flex items-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-3 px-8 rounded-xl text-sm sm:text-base transition-all shadow-lg shadow-emerald-100 animate-bounce cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold py-3 px-8 rounded-xl text-sm sm:text-base transition-all shadow-lg shadow-emerald-100 animate-bounce cursor-pointer"
               >
                 <span>Start MCQ Test Now</span>
                 <FaAward size={16} />
@@ -476,7 +476,7 @@ export default function StudyGuide({ token, candidateName, candidateRegId }: Stu
               activeTab === lessons.length - 1 && !completedAll && (
                 <button
                   disabled
-                  className="inline-flex items-center gap-2 bg-slate-200 text-slate-400 font-bold py-3 px-8 rounded-xl text-sm sm:text-base cursor-not-allowed border border-slate-300/40"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-200 text-slate-400 font-bold py-3 px-8 rounded-xl text-sm sm:text-base cursor-not-allowed border border-slate-300/40"
                 >
                   <FaLock size={12} />
                   <span>MCQ Test Locked</span>

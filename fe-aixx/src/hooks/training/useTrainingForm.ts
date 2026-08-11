@@ -36,7 +36,11 @@ export const useTrainingForm = (trainingId?: string, onSuccess?: () => void) => 
               ...res.data,
               is_active: !!res.data.is_active,
             });
-            if (res.data.image?.url) setExistingImageUrl(res.data.image.url);
+            if (res.data.image?.url) {
+              setExistingImageUrl(res.data.image.url);
+            } else if (res.data.sub_modules && res.data.type === 'newsletters') {
+              setExistingImageUrl(res.data.sub_modules);
+            }
           })
           .catch(() => setServerError("Failed to fetch training"))
           .finally(() => setLoading(false));

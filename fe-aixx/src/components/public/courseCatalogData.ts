@@ -17,6 +17,7 @@ export interface CourseItem {
   discount: string;
   institution: string;
   deliveryMethod: string;
+  imageUrl?: string;
 }
 
 export const courses: CourseItem[] = [

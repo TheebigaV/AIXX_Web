@@ -23,6 +23,26 @@ import Pagination from "@/components/tables/Pagination";
 import useProducts from "@/hooks/product/useProducts";
 import { ProductTableData } from "@/types/product";
 import Can from "../permissions/Can";
+import Image from "next/image";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, '') || 'http://localhost:8000';
+
+const resolveImageUrl = (imageUrl: any): string | null => {
+  if (!imageUrl || typeof imageUrl !== 'string') return null;
+  if (imageUrl.startsWith('http')) return imageUrl;
+  if (imageUrl.startsWith('/images/')) return imageUrl;
+  if (imageUrl.startsWith('/storage')) return `${API_BASE_URL}${imageUrl}`;
+  return `${API_BASE_URL}/storage/${imageUrl}`;
+};
+
+const fallbackImages = [
+  '/images/ai_edge_device.png',
+  '/images/smart_ai_hub.png',
+  '/images/neural_chip.png',
+  '/images/ai_drone.png',
+  '/images/smart_glasses.png',
+  '/images/ai_server_rack.png'
+];
 
 export default function ProductTableOne() {
   const searchParams = useSearchParams(); // ✅ NEW: Get URL params
@@ -77,6 +97,9 @@ export default function ProductTableOne() {
               <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                 <TableRow>
                   <TableCell isHeader className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs">
+                    Image
+                  </TableCell>
+                  <TableCell isHeader className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs">
                     Name
                   </TableCell>
                   <TableCell isHeader className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs">
@@ -98,10 +121,23 @@ export default function ProductTableOne() {
               {/* Table Body */}
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                 {!loading && products.length > 0 ? (
-                  products.map((product) => (
-                    <TableRow key={product.id}>
-                      <TableCell className="px-5 py-4 sm:px-6 text-center">
-                        <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                  products.map((product: any, index: number) => {
+                    let imgUrl = resolveImageUrl(product.main_product_image);
+                    if (!imgUrl) {
+                      imgUrl = fallbackImages[index % fallbackImages.length];
+                    }
+
+                    return (
+                      <TableRow key={product.id}>
+                        <TableCell className="px-5 py-4 sm:px-6 text-center">
+                          <div className="flex justify-center">
+                            <div className="relative w-12 h-12 rounded overflow-hidden bg-gray-100 border border-gray-200">
+                              <Image src={imgUrl} alt={product.name} fill className="object-cover" />
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="px-5 py-4 sm:px-6 text-center">
+                          <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
                           {product.name}
                         </span>
                       </TableCell>
@@ -149,10 +185,13 @@ export default function ProductTableOne() {
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))
+                    );
+                  })
                 ) : (
                   <TableRow>
-
+                    <TableCell colSpan={5} className="px-5 py-4 text-center text-gray-500">
+                      No products found
+                    </TableCell>
                   </TableRow>
                 )}
               </TableBody>

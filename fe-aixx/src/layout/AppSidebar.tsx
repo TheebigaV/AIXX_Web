@@ -80,7 +80,7 @@ const navItems: NavItem[] = [
                 path: "/admin/training?type=workshops",
             },
             {
-                name: "Latest Technology News",
+                name: "AI-Hot News",
                 path: "/admin/training?type=newsletters",
             },
             {
@@ -124,6 +124,13 @@ const navItems: NavItem[] = [
         icon: <UserCircleIcon />,
         name: "E-learning Registrants",
         path: "/admin/certificate-registrations",
+        permission: "inquiries-view",
+        skipPermissionCheck: true,
+    },
+    {
+        icon: <FolderIcon />,
+        name: "Certificate Questions",
+        path: "/admin/certificate-questions",
         permission: "inquiries-view",
         skipPermissionCheck: true,
     },

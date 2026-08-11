@@ -5,7 +5,7 @@ import Breadcrumb from './Breadcrumb';
 import useBanners from "@/hooks/public/useBanners";
 import { useSettings } from "@/hooks/useSettings";
 
-const LatestNewsBanner: React.FC = () => {
+const AiHotNewsBanner: React.FC = () => {
   const { banners, loading, getAllBanners } = useBanners();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const LatestNewsBanner: React.FC = () => {
   const { getSetting } = useSettings();
 
   const bgImage = data?.image_url || "/images/training_banner.png";
-  const title = getSetting('latest_news_banner_title') || data?.title || "Latest Technology News & Global Initiatives";
+  const title = getSetting('latest_news_banner_title') || data?.title || "AI-Hot News & Global Initiatives";
   const subtitle = getSetting('latest_news_banner_subtitle') || data?.subtitle || "Explore breaking AI announcements, official certification programs, and expert insights from AIXX Academy.";
 
   return (
@@ -35,7 +35,7 @@ const LatestNewsBanner: React.FC = () => {
       {/* Background Image */}
       <img
         src={bgImage}
-        alt="Latest News Banner"
+        alt="AI-Hot News Banner"
         className="object-cover absolute w-full h-full inset-0"
       />
 
@@ -49,12 +49,12 @@ const LatestNewsBanner: React.FC = () => {
           <div className="text-white space-y-3">
             {/* Breadcrumb aligned to right */}
             <div className="flex justify-end text-[14px]">
-              <Breadcrumb paths={[{ name: 'Home', href: '/' }, { name: 'Latest News' }]} />
+              <Breadcrumb paths={[{ name: 'Home', href: '/' }, { name: 'AI-Hot News' }]} />
             </div>
 
             {/* Pill Badge */}
             <div className="inline-flex items-center gap-2 bg-brand-500/20 text-brand-400 border border-brand-500/30 backdrop-blur-md rounded-full px-4 py-1.5 text-xs font-black uppercase tracking-widest">
-              AIXX Announcements & News
+              AIXX Announcements & AI-Hot News
             </div>
 
             {/* Heading */}
@@ -73,5 +73,5 @@ const LatestNewsBanner: React.FC = () => {
   );
 };
 
-export default LatestNewsBanner;
+export default AiHotNewsBanner;
 

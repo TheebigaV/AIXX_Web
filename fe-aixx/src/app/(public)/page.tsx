@@ -2,7 +2,7 @@
 
 import React from 'react';
 import HomeBanner from '@/components/public/HomeBanner';
-import HomeLatestNewsCertificate from '@/components/public/HomeLatestNewsCertificate';
+import HomeAiHotNewsCertificate from '@/components/public/HomeAiHotNewsCertificate';
 
 import HomeAbout from '@/components/public/HomeAbout';
 import HomeServices from '@/components/public/HomeServicesAixx';
@@ -18,7 +18,7 @@ const HomePage: React.FC = () => {
 
       {/* Latest News & Free AI Certificate Section */}
       <React.Suspense fallback={null}>
-        <HomeLatestNewsCertificate />
+        <HomeAiHotNewsCertificate />
       </React.Suspense>
 
       {/* Other sections (content has its own padding) */}
