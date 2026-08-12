@@ -141,13 +141,13 @@ export default function CoursesPage() {
 
       {/* Course Listing based on Tabs */}
       <section className="px-4 sm:px-6 max-w-7xl mx-auto relative z-10 mb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lgmid:grid-cols-3 gap-6">
           {loadingCourses ? (
-            <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center py-10">
+            <div className="col-span-1 md:col-span-2 lgmid:col-span-3 flex justify-center py-10">
                <FaSpinner className="animate-spin text-brand-500" size={32} />
             </div>
           ) : courses.length === 0 ? (
-            <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center py-10 text-slate-500 font-medium">
+            <div className="col-span-1 md:col-span-2 lgmid:col-span-3 flex justify-center py-10 text-slate-500 font-medium">
                No courses available in this category.
             </div>
           ) : courses.map((course, idx) => {
@@ -196,7 +196,7 @@ export default function CoursesPage() {
           </Link>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {loadingNews ? (
             <div className="col-span-1 sm:col-span-3 flex justify-center py-10">
               <FaSpinner className="animate-spin text-blue-500" size={24} />

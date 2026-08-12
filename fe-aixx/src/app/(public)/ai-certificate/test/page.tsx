@@ -768,7 +768,15 @@ function TestPageContent() {
 
                 {/* Module Questions List matching Figure 1 */}
                 <div className="space-y-6">
-                    {moduleQuestions.map((q, localIdx) => {
+                    {moduleQuestions.length === 0 ? (
+                        <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center space-y-4">
+                            <div className="w-12 h-12 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mx-auto">
+                                <FaSpinner className="animate-spin" size={24} />
+                            </div>
+                            <p className="text-sm font-bold text-slate-700">Loading Assessment Questions...</p>
+                        </div>
+                    ) : (
+                        moduleQuestions.map((q, localIdx) => {
                         const globalIndex = moduleStartIndex + localIdx + 1;
                         const selectedOption = answers[q.id];
 
@@ -818,58 +826,63 @@ function TestPageContent() {
                                 </div>
                             </div>
                         );
-                    })}
+                    }))}
                 </div>
 
                 {/* Bottom Module Stepper Footer matching Figure 1 */}
-                <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between gap-2 sm:gap-4 overflow-hidden">
                     <button
                         onClick={() => setActiveModuleIndex(prev => Math.max(0, prev - 1))}
                         disabled={activeModuleIndex === 0}
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-bold py-2.5 px-5 rounded-xl text-xs transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                        className="inline-flex items-center justify-center gap-1 sm:gap-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-bold py-2 px-2.5 sm:py-2.5 sm:px-5 rounded-xl text-xs transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex-shrink-0"
+                        title="Previous Module"
                     >
                         <FaArrowLeft size={11} />
-                        <span>Previous: Module {Math.max(1, activeModuleIndex)}</span>
+                        <span className="hidden md:inline">Previous: Module {Math.max(1, activeModuleIndex)}</span>
+                        <span className="md:hidden text-[11px]">Prev</span>
                     </button>
 
                     {/* Progress indicators line in center */}
-                    <div className="flex items-center gap-3 text-xs text-slate-500 font-bold">
+                    <div className="flex flex-col items-center gap-1 text-[10px] sm:text-xs text-slate-500 font-bold text-center flex-shrink min-w-0">
                         <div className="flex gap-1.5">
                             {MODULE_METADATA.map((_, i) => (
                                 <div 
                                     key={i} 
-                                    className={`w-2.5 h-2.5 rounded-full transition-all ${
-                                        i === activeModuleIndex ? 'bg-purple-600 ring-4 ring-purple-100' : 'bg-slate-300'
+                                    className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all ${
+                                        i === activeModuleIndex ? 'bg-purple-600 ring-2 sm:ring-4 ring-purple-100 scale-110' : 'bg-slate-300'
                                     }`} 
                                 />
                             ))}
                         </div>
-                        <span>Module {activeModuleIndex + 1} of 4</span>
+                        <span className="whitespace-nowrap text-[10px] sm:text-xs">Module {activeModuleIndex + 1} of 4</span>
                     </div>
 
                     {activeModuleIndex < MODULE_METADATA.length - 1 ? (
                         <button
                             onClick={() => setActiveModuleIndex(prev => Math.min(MODULE_METADATA.length - 1, prev + 1))}
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition shadow-md shadow-purple-500/20 cursor-pointer"
+                            className="inline-flex items-center justify-center gap-1 sm:gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-2 px-2.5 sm:py-2.5 sm:px-6 rounded-xl text-xs transition shadow-md shadow-purple-500/20 cursor-pointer flex-shrink-0"
+                            title="Next Module"
                         >
-                            <span>Next: Module {activeModuleIndex + 2}</span>
+                            <span className="hidden md:inline">Next: Module {activeModuleIndex + 2}</span>
+                            <span className="md:hidden text-[11px]">Next</span>
                             <FaArrowRight size={11} />
                         </button>
                     ) : (
                         <button
                             onClick={handleSubmitTest}
                             disabled={submittingTest}
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-2.5 px-6 rounded-xl text-xs transition shadow-md shadow-emerald-500/20 disabled:opacity-50 cursor-pointer animate-pulse"
+                            className="inline-flex items-center justify-center gap-1 sm:gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-2 px-2.5 sm:py-2.5 sm:px-6 rounded-xl text-xs transition shadow-md shadow-emerald-500/20 disabled:opacity-50 cursor-pointer animate-pulse flex-shrink-0"
                         >
                             {submittingTest ? (
                                 <>
-                                    <FaSpinner className="animate-spin" size={13} />
-                                    <span>Grading...</span>
+                                    <FaSpinner className="animate-spin" size={12} />
+                                    <span className="text-[11px]">Grading...</span>
                                 </>
                             ) : (
                                 <>
-                                    <span>Submit Assessment</span>
-                                    <FaAward size={13} />
+                                    <span className="hidden md:inline">Submit Assessment</span>
+                                    <span className="md:hidden text-[11px]">Submit</span>
+                                    <FaAward size={12} />
                                 </>
                             )}
                         </button>
@@ -1089,15 +1102,38 @@ function AssessmentReviewSection({
                 {results.map((item, idx) => (
                     <div 
                         key={idx} 
-                        className="rounded-2xl p-6 sm:p-7 border bg-white border-slate-200 shadow-sm space-y-5"
+                        className={`rounded-2xl p-6 sm:p-7 border bg-white shadow-sm space-y-5 ${
+                            item.is_correct ? 'border-slate-200' : 'border-red-200'
+                        }`}
                     >
-                        <div className="flex gap-3.5 items-start">
-                            <div className="w-8 h-8 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center flex-shrink-0 text-xs shadow-md shadow-purple-600/20 mt-0.5">
-                                {idx + 1}
+                        <div className="flex gap-3.5 items-start justify-between">
+                            <div className="flex gap-3.5 items-start flex-1">
+                                <div className={`w-8 h-8 rounded-full font-extrabold flex items-center justify-center flex-shrink-0 text-xs shadow-md mt-0.5 ${
+                                    item.is_correct ? 'bg-emerald-600 text-white shadow-emerald-600/20' : 'bg-red-600 text-white shadow-red-600/20'
+                                }`}>
+                                    {idx + 1}
+                                </div>
+                                <h4 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                                    {item.question}
+                                </h4>
                             </div>
-                            <h4 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">
-                                {item.question}
-                            </h4>
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide flex-shrink-0 ${
+                                item.is_correct 
+                                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                                    : 'bg-red-50 text-red-700 border border-red-200'
+                            }`}>
+                                {item.is_correct ? (
+                                    <>
+                                        <FaCheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                                        <span>Correct</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <FaTimesCircle className="w-3.5 h-3.5 text-red-600" />
+                                        <span>Incorrect</span>
+                                    </>
+                                )}
+                            </span>
                         </div>
 
                         {/* Options Grid - Single Column for all devices */}
@@ -1134,16 +1170,34 @@ function AssessmentReviewSection({
                             })}
                         </div>
 
-                        {/* Answer and Explanation section matching Figure 1 */}
-                        <div className="pl-0 sm:pl-11 space-y-1 text-xs sm:text-sm border-t border-slate-200 pt-3">
-                            <p>
-                                <span className="font-extrabold text-emerald-700">Answer: </span>
-                                <span className="font-bold text-slate-900">{item.correct_option}</span>
-                            </p>
-                            <p className="text-slate-700">
-                                <span className="font-extrabold text-purple-700">Explanation: </span>
-                                <span>{item.explanation || 'No detailed explanation provided.'}</span>
-                            </p>
+                        {/* Answer and Explanation section */}
+                        <div className="pl-0 sm:pl-11 space-y-2 text-xs sm:text-sm border-t border-slate-200 pt-3">
+                            <div className="flex flex-wrap items-center gap-4 text-xs font-bold">
+                                {item.is_correct ? (
+                                    <p className="text-emerald-700">
+                                        Answer: <span className="font-extrabold">{item.correct_option}</span>
+                                    </p>
+                                ) : (
+                                    <>
+                                        <p className="text-red-700">
+                                            Your Answer: <span className="font-extrabold">{item.selected_option || 'None'}</span>
+                                        </p>
+                                        <p className="text-emerald-700">
+                                            Correct Answer: <span className="font-extrabold">{item.correct_option}</span>
+                                        </p>
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Show explanation ONLY if the user's answer is incorrect */}
+                            {!item.is_correct && (
+                                <div className="text-slate-700 bg-amber-50/70 border border-amber-200/80 p-3.5 rounded-xl text-xs sm:text-sm leading-relaxed mt-2.5 space-y-1">
+                                    <span className="font-extrabold text-amber-950 flex items-center gap-1.5">
+                                        Explanation:
+                                    </span>
+                                    <p className="text-slate-800">{item.explanation || 'No detailed explanation provided.'}</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}

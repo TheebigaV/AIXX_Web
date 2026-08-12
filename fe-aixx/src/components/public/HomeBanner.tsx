@@ -112,21 +112,21 @@ const HomeBanner: React.FC = () => {
 
       {/* Content */}
       <div className="absolute bottom-0 left-0 w-full z-20">
-        <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 pb-8 sm:pb-12 md:pb-16 lg:pb-20 xl:pb-24">
-          <div className="text-white max-w-5xl space-y-4 sm:space-y-3">
-            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-6xl font-bold leading-tight text-white">
+        <div className="w-full px-4 sm:px-6 md:px-10 lgmid:px-16 xlmid:px-24 2xl:px-32 pb-6 sm:pb-10 md:pb-14 lgmid:pb-18 xlmid:pb-24">
+          <div className="text-white max-w-5xl space-y-3 sm:space-y-4">
+            <h1 className="text-xl sm:text-2xl md:text-4xl lgmid:text-5xl xl:text-6xl font-bold leading-tight text-white">
               {headingLine1} <br />
               <span className="text-white">Over</span> <span className="text-brand-500">{headingLine2}</span>
             </h1>
 
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-white/90 max-w-2xl">
+            <p className="text-xs sm:text-sm md:text-base lgmid:text-lg leading-relaxed text-white/90 max-w-2xl">
               {subtitle}
             </p>
 
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-1">
               <Link
                 href="/training-and-certification"
-                className="beveled-corner inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 transition-all duration-300 w-full sm:w-auto font-medium"
+                className="beveled-corner inline-flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-5 sm:px-6 py-2.5 sm:py-3 transition-all duration-300 w-full sm:w-auto font-medium text-sm sm:text-base"
                 aria-label="Explore Training Programs"
               >
                 <span>Explore Training</span>
@@ -134,7 +134,7 @@ const HomeBanner: React.FC = () => {
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 border border-white/30 text-white bg-white/10 hover:bg-white/20 px-6 py-3 transition-all duration-300 w-full sm:w-auto font-medium rounded-sm"
+                className="inline-flex items-center justify-center gap-2 border border-white/30 text-white bg-white/10 hover:bg-white/20 px-5 sm:px-6 py-2.5 sm:py-3 transition-all duration-300 w-full sm:w-auto font-medium rounded-sm text-sm sm:text-base"
                 aria-label="Contact AIXX"
               >
                 <span>Contact AIXX</span>

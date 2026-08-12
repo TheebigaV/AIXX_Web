@@ -339,7 +339,7 @@ const AppSidebar: React.FC = () => {
             className={`fixed top-0 left-0 h-screen bg-white border-r border-gray-200 transition-all duration-300 z-50
         ${isExpanded || isMobileOpen ? "w-[290px]" : isHovered ? "w-[290px]" : "w-[90px]"}
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} 
-        lg:translate-x-0`}
+        lgmid:translate-x-0`}
             onMouseEnter={() => !isExpanded && setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >

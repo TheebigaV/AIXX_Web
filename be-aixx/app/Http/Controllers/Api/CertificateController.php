@@ -491,6 +491,21 @@ class CertificateController extends Controller
                 'student_id' => $candidate->id,
                 'training_id' => $training->id,
             ]);
+        }
+
+        // Fetch existing attempt questions
+        $attemptQuestions = CertificateAttemptQuestion::where('certificate_attempt_id', $attempt->id)
+            ->with('question')
+            ->get();
+
+        // Check how many VALID questions exist for this attempt
+        $validAttemptQuestions = $attemptQuestions->filter(function($aq) {
+            return $aq->question !== null && is_array($aq->options_mapping);
+        });
+
+        // If no valid questions exist for this attempt (e.g. newly created or old orphaned attempt), generate 20 questions!
+        if ($validAttemptQuestions->isEmpty()) {
+            CertificateAttemptQuestion::where('certificate_attempt_id', $attempt->id)->delete();
 
             // Pick random questions from the bank for this SPECIFIC course
             $questions = CertificateQuestion::where('training_id', $training->id)
@@ -499,22 +514,26 @@ class CertificateController extends Controller
                 ->limit(20)
                 ->get();
             
+            // Fallback: If training_id specific questions are empty, pick active questions from general pool
             if ($questions->isEmpty()) {
-                 return response()->json(['message' => 'No questions available for this course.'], 400);
+                $questions = CertificateQuestion::where('is_active', true)
+                    ->inRandomOrder()
+                    ->limit(20)
+                    ->get();
             }
 
             foreach ($questions as $q) {
-                // Shuffle options
-                $originalOptions = $q->options;
+                $originalOptions = $q->options ?? [];
+                if (empty($originalOptions) || !is_array($originalOptions)) continue;
+
                 $indices = array_keys($originalOptions);
                 shuffle($indices);
 
-                // Map to A, B, C, D (or more if there are more options)
                 $letters = range('A', 'Z');
                 $mapping = [];
                 foreach ($indices as $i => $originalIndex) {
                     $letter = $letters[$i];
-                    $mapping[$letter] = $originalIndex; // Store which original index this letter represents
+                    $mapping[$letter] = $originalIndex;
                 }
 
                 CertificateAttemptQuestion::create([
@@ -523,19 +542,25 @@ class CertificateController extends Controller
                     'options_mapping' => $mapping,
                 ]);
             }
+
+            // Re-fetch attempt questions after generation
+            $attemptQuestions = CertificateAttemptQuestion::where('certificate_attempt_id', $attempt->id)
+                ->with('question')
+                ->get();
         }
 
         // Return the mapped questions to the frontend
-        $attemptQuestions = CertificateAttemptQuestion::where('certificate_attempt_id', $attempt->id)
-            ->with('question')
-            ->get();
-
         $publicQuestions = [];
         foreach ($attemptQuestions as $aq) {
             $q = $aq->question;
+            if (!$q || !isset($q->options) || !is_array($aq->options_mapping)) {
+                continue;
+            }
             $optionsToPresent = [];
             foreach ($aq->options_mapping as $letter => $originalIndex) {
-                $optionsToPresent[$letter] = $q->options[$originalIndex];
+                if (isset($q->options[$originalIndex])) {
+                    $optionsToPresent[$letter] = $q->options[$originalIndex];
+                }
             }
 
             $publicQuestions[] = [
@@ -595,10 +620,11 @@ class CertificateController extends Controller
         foreach ($attemptQuestions as $aq) {
             $submittedLetter = $answers[$aq->id] ?? null;
             $isCorrect = false;
+            $q = $aq->question;
 
-            if ($submittedLetter && isset($aq->options_mapping[$submittedLetter])) {
+            if ($q && $submittedLetter && is_array($aq->options_mapping) && isset($aq->options_mapping[$submittedLetter])) {
                 $mappedOriginalIndex = $aq->options_mapping[$submittedLetter];
-                if ($mappedOriginalIndex === $aq->question->correct_answer_index) {
+                if ($mappedOriginalIndex === $q->correct_answer_index) {
                     $isCorrect = true;
                     $correctCount++;
                 }
@@ -627,10 +653,15 @@ class CertificateController extends Controller
         $resultsDetails = [];
         foreach ($attemptQuestions as $aq) {
             $q = $aq->question;
+            if (!$q || !is_array($aq->options_mapping)) {
+                continue;
+            }
             
             $optionsToPresent = [];
             foreach ($aq->options_mapping as $letter => $originalIndex) {
-                $optionsToPresent[$letter] = $q->options[$originalIndex];
+                if (isset($q->options[$originalIndex])) {
+                    $optionsToPresent[$letter] = $q->options[$originalIndex];
+                }
             }
 
             // Find the correct letter for this attempt
@@ -647,7 +678,7 @@ class CertificateController extends Controller
                 'options' => $optionsToPresent,
                 'selected_option' => $aq->selected_option_key,
                 'correct_option' => $correctLetter,
-                'is_correct' => $aq->is_correct,
+                'is_correct' => (bool)$aq->is_correct,
                 'explanation' => $q->explanation
             ];
         }

@@ -46,20 +46,20 @@ const tracks = [
 const HomeTrainingTracks = () => {
   return (
     <section className="w-full bg-[#FAFAFA] py-12 lg:py-20">
-      <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40">
-        <div className="max-w-3xl mx-auto text-center mb-12">
-          <p className="text-sm uppercase tracking-[0.3em] text-brand-600 font-semibold mb-4">
+      <div className="w-full px-4 sm:px-6 md:px-10 lgmid:px-16 xlmid:px-24 2xl:px-32">
+        <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12">
+          <p className="text-sm uppercase tracking-[0.3em] text-brand-600 font-semibold mb-3 sm:mb-4">
             AI Training Tracks
           </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#0F172A] leading-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lgmid:text-5xl font-bold text-[#0F172A] leading-tight">
             Learning pathways built for professionals and teams.
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600">
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-slate-600">
             Start with the right program for your role and objectives — training designed to move your organisation from strategy to execution.
           </p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lgmid:grid-cols-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lgmid:grid-cols-3 gap-4 sm:gap-6">
           {tracks.map((track) => {
             const Icon = track.icon;
             return (

@@ -126,19 +126,19 @@ const HomeServicesAixx: React.FC<HomeServicesProps> = ({ isHomePage = true }) =>
         </>
       )}
 
-      <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 relative z-10">
+      <div className="w-full px-4 sm:px-6 md:px-10 lgmid:px-16 xlmid:px-24 2xl:px-32 relative z-10">
 
         {/* ── HOME PAGE HEADER ── */}
         {isHomePage && (
-          <div className="max-w-4xl mx-auto text-center mb-14">
+          <div className="max-w-4xl mx-auto text-center mb-10 sm:mb-14">
             <div className="flex items-center justify-center gap-2 mb-3 text-brand-600">
               <FaAtom className="animate-[spin_4s_linear_infinite]" />
-              <p className="text-base sm:text-lg font-semibold uppercase tracking-wider m-0">AI Training & Learning Tracks</p>
+              <p className="text-sm sm:text-base font-semibold uppercase tracking-wider m-0">AI Training & Learning Tracks</p>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#191E42] leading-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lgmid:text-5xl font-bold text-[#191E42] leading-tight">
               Practical AI training for every role and industry
             </h2>
-            <p className="mt-5 text-base sm:text-lg text-[#4B5563] max-w-3xl mx-auto">
+            <p className="mt-3 sm:mt-5 text-sm sm:text-base md:text-lg text-[#4B5563] max-w-3xl mx-auto">
               Discover AIXX’s learning pathways for executives, developers, and enterprise teams — from generative AI to applied automation and certification-ready skill training.
             </p>
           </div>
@@ -146,14 +146,14 @@ const HomeServicesAixx: React.FC<HomeServicesProps> = ({ isHomePage = true }) =>
 
         {/* ── SERVICES PAGE HEADER ── */}
         {!isHomePage && (
-          <div className="max-w-3xl mx-auto text-center mb-20 relative z-10 mt-8">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[#191E42] leading-tight mb-6 tracking-tight">
+          <div className="max-w-3xl mx-auto text-center mb-12 sm:mb-20 relative z-10 mt-4 sm:mt-8">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lgmid:text-6xl font-extrabold text-[#191E42] leading-tight mb-4 sm:mb-6 tracking-tight">
               Everything We{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-[#191E42]">
                 Offer
               </span>
             </h2>
-            <p className="text-lg text-slate-500 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-slate-500 leading-relaxed max-w-2xl mx-auto">
               Explore our full spectrum of AI and Quantum-powered sectors — from deep tech to professional training and knowledge.
             </p>
           </div>
@@ -172,7 +172,7 @@ const HomeServicesAixx: React.FC<HomeServicesProps> = ({ isHomePage = true }) =>
 
             {/* ── HOME: SWIPER CAROUSEL ── */}
             {isHomePage ? (
-              <div className="relative px-0 sm:px-12">
+              <div className="relative px-6 sm:px-12">
                 <Swiper
                   modules={[Pagination, Autoplay, Navigation]}
                   spaceBetween={24}
@@ -184,7 +184,7 @@ const HomeServicesAixx: React.FC<HomeServicesProps> = ({ isHomePage = true }) =>
                   pagination={{ clickable: true, dynamicBullets: true }}
                   autoplay={{ delay: 3500, disableOnInteraction: false }}
                   breakpoints={{
-                    640: { slidesPerView: 2 },
+                    768: { slidesPerView: 2 },
                     1024: { slidesPerView: 3 },
                     1280: { slidesPerView: 4 },
                   }}
@@ -196,11 +196,11 @@ const HomeServicesAixx: React.FC<HomeServicesProps> = ({ isHomePage = true }) =>
                     </SwiperSlide>
                   ))}
                 </Swiper>
-                <button className="swiper-button-prev-custom absolute top-[calc(50%-2.5rem)] left-0 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow-lg border border-slate-100 flex items-center justify-center text-brand-600 hover:bg-brand-50 hover:scale-110 transition-all cursor-pointer">
-                  <FaChevronLeft className="w-4 h-4" />
+                <button className="swiper-button-prev-custom absolute top-[calc(50%-2.5rem)] left-0 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white shadow-lg border border-slate-100 flex items-center justify-center text-brand-600 hover:bg-brand-50 hover:scale-110 transition-all cursor-pointer">
+                  <FaChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
-                <button className="swiper-button-next-custom absolute top-[calc(50%-2.5rem)] right-0 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow-lg border border-slate-100 flex items-center justify-center text-brand-600 hover:bg-brand-50 hover:scale-110 transition-all cursor-pointer">
-                  <FaChevronRight className="w-4 h-4" />
+                <button className="swiper-button-next-custom absolute top-[calc(50%-2.5rem)] right-0 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white shadow-lg border border-slate-100 flex items-center justify-center text-brand-600 hover:bg-brand-50 hover:scale-110 transition-all cursor-pointer">
+                  <FaChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
               </div>
 

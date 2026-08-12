@@ -111,7 +111,7 @@ export default function ProductDetailsPage() {
   return (
     <div className="overflow-x-hidden overflow-y-auto"> {/* ✅ Ensures scrollbars appear only when needed */}
       {selectedProduct ? (
-      <div className="container mx-auto sm:px-[16px] md:px-[24px] xl:px-[60px] 2xl:px-[240px]">
+      <div className="w-full px-4 sm:px-6 md:px-10 lgmid:px-16 xlmid:px-24 2xl:px-32 py-6 sm:py-10">
                   <div className="max-w-7xl mx-auto min-[1920px]:max-w-full">
 
             <BreadcrumbDynamic

@@ -11,8 +11,8 @@ const Footer = () => {
     <>
 
       <footer className="bg-[#171b3c] text-white text-sm font-sans overflow-hidden">
-        <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40">
-          <div className="py-10 flex flex-col justify-between gap-8 lg:gap-12 xl:flex-row">
+        <div className="w-full px-4 sm:px-6 md:px-10 lgmid:px-16 xlmid:px-24 2xl:px-32">
+          <div className="py-8 sm:py-10 flex flex-col justify-between gap-8 lgmid:gap-12 xlmid:flex-row">
 
             {/* Left Section - Logo, Paragraph */}
             <div className="flex-1 max-w-full space-y-4 md:space-y-6 flex flex-col items-start">
@@ -23,7 +23,7 @@ const Footer = () => {
                   <img
                     src="/images/logo/logo.png"
                     alt="AIXX Logo"
-                    className="w-40 md:w-44 h-auto cursor-pointer hover:opacity-90 transition-opacity"
+                    className="w-36 sm:w-40 md:w-44 h-auto cursor-pointer hover:opacity-90 transition-opacity"
                   />
                 </a>
               </div>
@@ -40,7 +40,7 @@ const Footer = () => {
             </div>
 
             {/* Right Section - Columns */}
-            <div className="flex-1 grid grid-cols-1 gap-8 sm:grid-cols-3 lg:gap-12">
+            <div className="flex-1 grid grid-cols-1 gap-8 sm:grid-cols-2 lgmid:grid-cols-3 lgmid:gap-12">
 
               {/* Quick Links */}
               <div className="text-left">
@@ -65,33 +65,31 @@ const Footer = () => {
               </div>
 
               {/* Get In Touch */}
-              <div className="text-left">
+              <div className="text-left sm:col-span-2 lgmid:col-span-1">
                 <h3 className="text-brand-600 text-base md:text-lg font-semibold mb-2 md:mb-3">
                   Get In Touch
                 </h3>
                 <ul className="space-y-2 md:space-y-3 text-gray-400">
-                                    <li className="flex flex-col md:flex-row items-start gap-1 md:gap-2">
-                    <div className="flex items-center gap-2 hover:text-brand-600">
-                       <MapPin className="flex-shrink-0 w-5 h-5 " />
-                      <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(getSetting('contact_address', 'Singapore'))}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="transition-colors whitespace-nowrap"
-                      >
-                        {getSetting('contact_address', 'Singapore')}
-                      </a>
-                    </div>
+                  <li className="flex items-start gap-2 hover:text-brand-600">
+                    <MapPin className="flex-shrink-0 w-5 h-5 mt-0.5" />
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(getSetting('contact_address', 'Singapore'))}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors break-words"
+                    >
+                      {getSetting('contact_address', 'Singapore')}
+                    </a>
                   </li>
                   <li className="flex items-center gap-2 hover:text-brand-600">
                     <Phone className="flex-shrink-0 w-5 h-5 " />
-                    <a href={`tel:${getSetting('contact_phone', '+65 9771 0677').replace(/\s+/g, '')}`} className=" transition-colors">
+                    <a href={`tel:${getSetting('contact_phone', '+65 9771 0677').replace(/\s+/g, '')}`} className="transition-colors break-all">
                       {getSetting('contact_phone', '+65 9771 0677')}
                     </a>
                   </li>
-                  <li className="flex items-center gap-2  hover:text-brand-600">
+                  <li className="flex items-center gap-2 hover:text-brand-600">
                     <Mail className="flex-shrink-0 w-5 h-5 " />
-                    <a href={`mailto:${getSetting('contact_email', 'cs@aixx.com.sg')}?subject=Enquiry%20from%20Website`} className="transition-colors">
+                    <a href={`mailto:${getSetting('contact_email', 'cs@aixx.com.sg')}?subject=Enquiry%20from%20Website`} className="transition-colors break-all">
                       {getSetting('contact_email', 'cs@aixx.com.sg')}
                     </a>
                   </li>
@@ -102,13 +100,13 @@ const Footer = () => {
           </div>
 
           {/* Bottom Bar */}
-          <div className="bg-[#0f1231] py-3 md:py-4">
-            <div className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40">
-              <div className="flex flex-wrap gap-2 justify-between items-center text-gray-500 text-xs">
+          <div className="bg-[#0f1231] py-3 md:py-4 -mx-4 sm:-mx-6 md:-mx-10 lgmid:-mx-16 xlmid:-mx-24 2xl:-mx-32">
+            <div className="w-full px-4 sm:px-6 md:px-10 lgmid:px-16 xlmid:px-24 2xl:px-32">
+              <div className="flex flex-col sm:flex-row gap-2 justify-between items-center text-gray-500 text-xs">
                 <span>
                   {getSetting('footer_copyright', `© ${currentYear} AIXX`)}
                 </span>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2 flex-wrap justify-center">
                   <a href="/privacy-policy" className="hover:underline hover:text-brand-600 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-600 px-1 rounded">
                     Privacy Policy
                   </a>

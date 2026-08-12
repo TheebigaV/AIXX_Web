@@ -7,13 +7,13 @@ import { useSettings } from "@/hooks/useSettings";
 const AboutContent: React.FC = () => {
   const { getSetting } = useSettings();
   return (
-    <section className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 py-16 lg:py-20">
+    <section className="w-full px-4 sm:px-6 md:px-10 lgmid:px-16 xlmid:px-24 2xl:px-32 py-10 sm:py-16 lgmid:py-20">
       <div className="">
-      <div className="flex flex-col lg:flex-row items-start xlmid:gap-[35px] xl:gap-[56px]">
+      <div className="flex flex-col lgmid:flex-row items-start xlmid:gap-[35px] xl:gap-[56px]">
 
-        {/* Desktop Grid (only for ≥1400px) */}
+        {/* Desktop Grid */}
         {/* Desktop Single Image */}
-        <div className="hidden lg:block w-full lg:w-1/2 self-stretch">
+        <div className="hidden lgmid:block w-full lgmid:w-1/2 self-stretch">
           <div className="relative w-full h-full min-h-[500px]">
             <Image
               src="/images/aboutus/ai_chip.png"
@@ -35,9 +35,8 @@ const AboutContent: React.FC = () => {
             {getSetting('about_content_desc', 'AIXX partners with global enterprises to integrate AI, Quantum computing, cybersecurity, and autonomous systems, creating ecosystems that are safer, smarter, and infinitely more capable.')}
           </p>
 
-          {/* Mobile + Tablet Grid (360px → 1399px) */}
-          {/* Mobile Single Image */}
-          <div className="block lg:hidden w-full my-6">
+          {/* Mobile + Tablet Image */}
+          <div className="block lgmid:hidden w-full my-6">
             <div className="relative w-full aspect-[4/3] overflow-hidden">
               <Image
                 src="/images/aboutus/ai_chip.png"

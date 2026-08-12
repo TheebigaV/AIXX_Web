@@ -474,7 +474,7 @@ export default function CourseDetailPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
                   <a
                     href={`mailto:info@aixx.com.sg?subject=Enrollment%20Inquiry%20for%20${encodeURIComponent(course.title)}`}
                     className="w-full bg-[#43933E] hover:bg-[#387D34] text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer text-center"
