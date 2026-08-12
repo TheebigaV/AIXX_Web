@@ -42,18 +42,18 @@ const TrainingHighlights = () => {
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xlmid:grid-cols-4 gap-6">
           {highlights.map((item) => {
             const Icon = item.icon;
             return (
-              <div key={item.title} className="rounded-[28px] border border-slate-200 bg-[#FAFAFA] p-8 text-center shadow-sm hover:shadow-lg transition-shadow duration-300">
-                <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-brand-50 text-brand-600 mb-5">
-                  <Icon className="h-6 w-6" />
+              <div key={item.title} className="rounded-2xl sm:rounded-[28px] border border-slate-200 bg-[#FAFAFA] p-6 sm:p-8 text-center shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <div className="mx-auto inline-flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-brand-50 text-brand-600 mb-4 sm:mb-5">
+                  <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
-                <h3 className="text-xl font-semibold text-[#111827] mb-3">
+                <h3 className="text-lg sm:text-xl font-bold text-[#111827] mb-2 sm:mb-3">
                   {item.title}
                 </h3>
-                <p className="text-sm leading-relaxed text-slate-600">
+                <p className="text-xs sm:text-sm leading-relaxed text-slate-600">
                   {item.description}
                 </p>
               </div>
