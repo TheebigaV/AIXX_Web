@@ -753,3 +753,27 @@ span.flatpickr-weekday,
 .swiper-slide {
   height: auto !important;
 }
+
+/* Responsive global safety rules */
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Table container horizontal overflow wrapper fallback */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom scrollbar for horizontal scrollable elements */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 9999px;
+}
+

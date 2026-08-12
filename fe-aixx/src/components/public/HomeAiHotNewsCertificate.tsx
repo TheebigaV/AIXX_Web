@@ -61,8 +61,8 @@ const HomeAiHotNewsCertificate: React.FC = () => {
   return (
     <section id="ai-hot-news" className="w-full relative py-12 sm:py-16 lg:py-24 bg-white text-slate-900 overflow-hidden">
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="relative rounded-[40px] sm:rounded-[60px] lg:rounded-[80px] bg-gradient-to-br from-blue-50/90 via-slate-50 to-indigo-50/40 border border-brand-200/80 shadow-2xl p-6 sm:p-10 lg:p-14 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lgmid:px-8 relative z-10">
+        <div className="relative rounded-3xl sm:rounded-[40px] lgmid:rounded-[60px] bg-gradient-to-br from-blue-50/90 via-slate-50 to-indigo-50/40 border border-brand-200/80 shadow-2xl p-5 sm:p-8 lgmid:p-12 overflow-hidden">
           
           <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[750px] h-[380px] rounded-[100%] bg-gradient-to-r from-brand-400/25 via-purple-400/20 to-indigo-400/20 blur-3xl pointer-events-none" />
           <div className="absolute -bottom-40 -right-20 w-[550px] h-[280px] rounded-[100%] bg-gradient-to-l from-indigo-500/20 via-sky-400/20 to-brand-300/20 blur-3xl pointer-events-none" />
@@ -73,26 +73,26 @@ const HomeAiHotNewsCertificate: React.FC = () => {
           </svg>
 
           {/* ── Latest News Ticker (clickable → free course material) ── */}
-          <div className="inline-flex items-center gap-3 bg-white/90 backdrop-blur-md border border-amber-200/80 px-4 py-2 rounded-full mb-8 shadow-sm relative z-10 group">
+          <div className="inline-flex items-center gap-3 bg-white/90 backdrop-blur-md border border-amber-200/80 px-4 py-2 rounded-full mb-8 shadow-sm relative z-10 group max-w-full">
             <span className="flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-red-500 text-white text-[11px] font-black uppercase tracking-wider px-3 py-0.5 rounded-full shadow-sm animate-pulse flex-shrink-0">
               <FaFire className="text-yellow-200" size={12} />
               AI-HOT NEWS
             </span>
             <Link
               href="/ai-certificate/study"
-              className="text-xs sm:text-sm font-semibold text-slate-800 flex items-center gap-2 hover:text-brand-600 transition-colors duration-200 cursor-pointer"
+              className="text-xs sm:text-sm font-semibold text-slate-800 flex items-center gap-2 hover:text-brand-600 transition-colors duration-200 cursor-pointer truncate"
               title="Access Free Course Material"
             >
-              <span className="group-hover:underline underline-offset-2">
+              <span className="group-hover:underline underline-offset-2 truncate">
                 AIXX Free AI Knowledge Certification Program 2026 is officially live!
               </span>
               <FaExternalLinkAlt size={10} className="text-brand-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lgmid:grid-cols-12 gap-8 lgmid:gap-12 items-center">
             
-            <div className="lg:col-span-7 space-y-6">
+            <div className="lgmid:col-span-7 space-y-6">
               <div className="space-y-3">
                 <span className="text-brand-600 font-extrabold text-xs sm:text-sm tracking-widest uppercase flex items-center gap-2">
                   <FaAward className="text-brand-600" />
@@ -106,7 +106,7 @@ const HomeAiHotNewsCertificate: React.FC = () => {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-2">
                 <div className="flex items-start gap-3 bg-white border border-slate-200/80 p-3.5 rounded-2xl shadow-sm hover:shadow-md hover:border-brand-500/50 transition-all duration-300">
                   <div className="p-2.5 bg-brand-50 text-brand-600 rounded-xl flex-shrink-0"><FaBolt size={18} /></div>
                   <div>
@@ -155,7 +155,7 @@ const HomeAiHotNewsCertificate: React.FC = () => {
               </div>
             </div>
 
-            <div className="lg:col-span-5 flex justify-center">
+            <div className="lgmid:col-span-5 flex justify-center">
               <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl relative group hover:border-brand-500/50 transition-all duration-500">
                 <div className="absolute -top-3.5 right-6 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 text-[11px] font-black uppercase tracking-wider px-3.5 py-1 rounded-full shadow-md flex items-center gap-1.5">
                   <FaAward size={13} />

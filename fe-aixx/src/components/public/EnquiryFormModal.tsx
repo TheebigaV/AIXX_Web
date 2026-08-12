@@ -61,7 +61,7 @@ export default function EnquiryFormModal({ visible, onClose, productTitle, produ
       <div className="fixed inset-0 backdrop-blur-sm z-40" onClick={onClose} />
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
         <div
-          className="bg-white shadow-xl max-w-2xl w-full relative px-8 py-6 mx-4 border border-gray-200 my-8"
+          className="bg-white shadow-xl max-w-2xl w-full relative px-4 sm:px-8 py-6 mx-2 sm:mx-4 border border-gray-200 my-auto max-h-[90vh] overflow-y-auto rounded-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           <button

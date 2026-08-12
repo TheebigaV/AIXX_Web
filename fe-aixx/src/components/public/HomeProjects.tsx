@@ -83,15 +83,9 @@ const HomeProjects = () => {
   }
 
   return (
-    <div className={`w-full container mx-auto px-2 sm:px-[16px] lg:px-[24px] xl:px-[80px] 2xl:px-[240px] bg-[#FAFAFA] 
-  ${windowWidth <= 360
-        ? '-mt-16 pt-2 pb-16'
-        : windowWidth <= 767
-          ? '-mt-12 pt-2 pb-16'
-          : 'py-18'}
-`}>
+    <div className={`w-full px-4 sm:px-6 md:px-10 lgmid:px-16 xlmid:px-24 2xl:px-32 bg-[#FAFAFA] py-12 sm:py-16 lgmid:py-20`}>
       {/* Section Header */}
-      <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 ${windowWidth <= 600 ? 'mb-20' : 'mb-10'}`}>
+      <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 ${windowWidth <= 600 ? 'mb-12' : 'mb-10'}`}>
         <div className="text-left">
           <h2 className="text-base sm:text-lg lg:text-xl font-normal text-brand-500 mb-2 lg:mb-3">
             Projects

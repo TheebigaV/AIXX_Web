@@ -748,10 +748,10 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
         </div>
 
         {/* Saved Items / All Courses Toggle Navigation */}
-        <div className="mb-8 flex flex-wrap gap-2 border-b border-slate-200 pb-4">
+        <div className="mb-8 flex overflow-x-auto whitespace-nowrap gap-2 border-b border-slate-200 pb-4 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
           <button
             onClick={() => setFilterType('all')}
-            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 ${
+            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex-shrink-0 ${
               filterType === 'all'
                 ? 'bg-brand-500 text-white shadow-sm shadow-brand-100'
                 : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
@@ -761,7 +761,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
           </button>
           <button
             onClick={() => setFilterType('saved')}
-            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-1.5 ${
+            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-1.5 flex-shrink-0 ${
               filterType === 'saved'
                 ? 'bg-brand-500 text-white shadow-sm shadow-brand-100'
                 : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
@@ -776,7 +776,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
           </button>
           <button
             onClick={() => setFilterType('elearning')}
-            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-1.5 ${
+            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-1.5 flex-shrink-0 ${
               filterType === 'elearning'
                 ? 'bg-brand-500 text-white shadow-sm shadow-brand-100'
                 : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
@@ -787,7 +787,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
           </button>
           <button
             onClick={() => setFilterType('free-certificate')}
-            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-1.5 ${
+            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-1.5 flex-shrink-0 ${
               filterType === 'free-certificate'
                 ? 'bg-brand-500 text-white shadow-sm shadow-brand-100'
                 : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
@@ -819,7 +819,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
             No courses matched your search. Try a different keyword.
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
             {filteredCourses.map((course, idx) => {
               // Determine card theme
               let color = 'from-[#3A0CA3] to-[#7209B7]';

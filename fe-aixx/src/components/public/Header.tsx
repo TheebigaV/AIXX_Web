@@ -105,15 +105,15 @@ const Header = () => {
         }`}
     >
       {/* ── Main bar ── */}
-      <div className="w-full flex items-center justify-between px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 2xl:px-40 h-[72px]">
+      <div className="w-full flex items-center justify-between px-4 sm:px-6 md:px-10 lgmid:px-16 xlmid:px-24 2xl:px-32 h-[72px]">
 
         {/* ── Brand / Logo ── */}
         <Link
           href="/"
-          className="flex items-center gap-3 group flex-shrink-0"
+          className="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0"
           aria-label="AIXX Home"
         >
-          <div className="relative w-[48px] h-[48px] flex-shrink-0">
+          <div className="relative w-[40px] h-[40px] sm:w-[48px] sm:h-[48px] flex-shrink-0">
             <Image
               src="/images/logo/logo.png"
               alt="AIXX Logo"
@@ -134,12 +134,12 @@ const Header = () => {
         </Link>
 
         {/* ── Desktop Nav ── */}
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden lgmid:flex items-center gap-1">
           {NAV_LINKS.map(({ label, href }) => (
             <Link
               key={label}
               href={href}
-              className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 group
+              className={`relative px-3 xlmid:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 group
                 ${isActive(href)
                   ? "text-brand-600"
                   : "text-[#374151] hover:text-brand-600"
@@ -148,7 +148,7 @@ const Header = () => {
               {label}
               {/* animated underline */}
               <span
-                className={`absolute bottom-0 left-4 right-4 h-[2px] rounded-full bg-brand-500 transition-all duration-300 origin-left
+                className={`absolute bottom-0 left-3 xlmid:left-4 right-3 xlmid:right-4 h-[2px] rounded-full bg-brand-500 transition-all duration-300 origin-left
                   ${isActive(href) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}
               />
             </Link>
@@ -157,13 +157,13 @@ const Header = () => {
           {/* AI Training dropdown */}
           <div className="relative group">
             <button
-              className={`relative flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200
+              className={`relative flex items-center gap-1 px-3 xlmid:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200
                 ${isTrainingActive ? "text-brand-600" : "text-[#374151] hover:text-brand-600"}`}
             >
               AI Training
               <FiChevronDown className="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" />
               <span
-                className={`absolute bottom-0 left-4 right-4 h-[2px] rounded-full bg-brand-500 transition-all duration-300 origin-left
+                className={`absolute bottom-0 left-3 xlmid:left-4 right-3 xlmid:right-4 h-[2px] rounded-full bg-brand-500 transition-all duration-300 origin-left
                   ${isTrainingActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}
               />
             </button>
@@ -191,7 +191,7 @@ const Header = () => {
         </nav>
 
         {/* ── Desktop CTA ── */}
-        <div className="hidden lg:flex items-center gap-3">
+        <div className="hidden lgmid:flex items-center gap-3">
           <Link
             href="/contact"
             className="beveled-corner group inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white text-sm font-semibold px-5 py-2.5 transition-all duration-200 shadow-sm hover:shadow-md"
@@ -216,7 +216,7 @@ const Header = () => {
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
-          className="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+          className="lgmid:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
         >
           {menuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
         </button>
@@ -225,7 +225,7 @@ const Header = () => {
       {/* ── Mobile menu ── */}
       <div
         id="mobile-menu"
-        className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${menuOpen ? "max-h-[90vh] opacity-100" : "max-h-0 opacity-0"
+        className={`lgmid:hidden overflow-y-auto transition-all duration-300 ease-in-out ${menuOpen ? "max-h-[85vh] opacity-100" : "max-h-0 opacity-0"
           }`}
       >
         <div className="bg-white border-t border-gray-100 px-6 py-4 space-y-1 shadow-lg">
