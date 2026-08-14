@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { 
   FaBookOpen, FaUsers, FaNewspaper, FaBriefcase, 
-  FaChartPie, FaFire, FaAtom, FaHandshake, FaArrowRight, FaWhatsapp, FaEnvelope, FaSpinner
+  FaChartPie, FaFire, FaAtom, FaHandshake, FaArrowRight, FaWhatsapp, FaEnvelope, FaSpinner,
+  FaClock, FaMapMarkerAlt
 } from 'react-icons/fa';
 import { fetchPublicTrainings } from '@/lib/training';
 
@@ -27,6 +28,30 @@ export default function CoursesPage() {
 
   const [hotNews, setHotNews] = useState<any[]>([]);
   const [loadingNews, setLoadingNews] = useState(true);
+
+  useEffect(() => {
+    // Read the tab param from the URL on load
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get('tab');
+    if (tabParam === 'free_courses' || tabParam === 'elearning' || tabParam === 'all') {
+      setActiveTab(tabParam as 'all' | 'elearning' | 'free_courses');
+    }
+  }, []);
+
+  const handleTabChange = (tab: 'all' | 'elearning' | 'free_courses') => {
+    setActiveTab(tab);
+    // Enhance URL when tab is clicked without reloading the page
+    window.history.pushState(null, '', `?tab=${tab}`);
+  };
+
+  useEffect(() => {
+    let pageTitle = 'Courses | AIXX';
+    if (activeTab === 'elearning') pageTitle = 'E-Learning Modules | AIXX';
+    else if (activeTab === 'free_courses') pageTitle = 'Free Certificates | AIXX';
+    else if (activeTab === 'all') pageTitle = 'All Courses | AIXX';
+    
+    document.title = pageTitle;
+  }, [activeTab]);
 
   useEffect(() => {
     let isMounted = true;
@@ -119,19 +144,19 @@ export default function CoursesPage() {
       <section className="px-4 sm:px-6 max-w-7xl mx-auto relative z-10 mb-8" id="courses-catalog">
         <div className="flex flex-wrap items-center justify-center gap-4 bg-white p-2 rounded-2xl shadow-sm border border-slate-200">
           <button 
-            onClick={() => setActiveTab('all')}
+            onClick={() => handleTabChange('all')}
             className={`px-6 py-3 rounded-xl font-bold transition-all ${activeTab === 'all' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'}`}
           >
             All Courses
           </button>
           <button 
-            onClick={() => setActiveTab('elearning')}
+            onClick={() => handleTabChange('elearning')}
             className={`px-6 py-3 rounded-xl font-bold transition-all ${activeTab === 'elearning' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'}`}
           >
             E-Learning Modules
           </button>
           <button 
-            onClick={() => setActiveTab('free_courses')}
+            onClick={() => handleTabChange('free_courses')}
             className={`px-6 py-3 rounded-xl font-bold transition-all ${activeTab === 'free_courses' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'}`}
           >
             Free Certificates
@@ -166,9 +191,20 @@ export default function CoursesPage() {
                   <h3 className="font-bold text-lg text-slate-800 mb-2 group-hover:text-brand-600 transition-colors">
                     {course.name}
                   </h3>
-                  <p className="text-slate-500 text-sm line-clamp-3 mb-4 flex-1">
+                  <p className="text-slate-500 text-sm line-clamp-2 mb-4 flex-1">
                     {course.description || 'Enhance your AI knowledge with this comprehensive course module.'}
                   </p>
+
+                  <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-2 mb-4">
+                    <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                      <FaClock className="text-slate-400" />
+                      <span>{course.duration || '2h 15m'}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                      <FaMapMarkerAlt className="text-slate-400" />
+                      <span>{course.delivery_method || 'Live Virtual'}</span>
+                    </div>
+                  </div>
                   
                   <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
                     <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">

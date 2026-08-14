@@ -24,7 +24,7 @@ class StudentController extends Controller
 
         $student = Student::create([
             'uuid' => $uuid,
-            'name' => $validated['name'],
+            'full_name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
@@ -36,7 +36,7 @@ class StudentController extends Controller
             'message' => 'Registration successful!',
             'uuid' => $uuid,
             'registration_id' => $registrationId,
-            'name' => $student->name,
+            'full_name' => $student->full_name,
             'email' => $student->email,
         ], 201);
     }

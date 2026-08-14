@@ -29,7 +29,9 @@ import {
   FaAtom,
   FaFire,
   FaNewspaper,
-  FaHandshake
+  FaHandshake,
+  FaClock,
+  FaMapMarkerAlt
 } from 'react-icons/fa';
 import { fetchPublicTrainings } from '@/lib/training';
 import { storeInquiry } from '@/lib/public/inquiries';
@@ -410,6 +412,7 @@ interface CourseCardItem {
   id: string;
   title: string;
   description: string;
+  duration?: string;
   domestic: string;
   international: string;
   rating: number;
@@ -434,6 +437,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
       id: course.id,
       title: course.title,
       description: course.description,
+      duration: course.duration,
       domestic: course.domestic,
       international: course.international,
       rating: course.rating,
@@ -609,6 +613,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
               id: item.slug || item.id,
               title: item.name || 'Untitled course',
               description: item.description || 'More details will be shared soon.',
+              duration: item.duration || fallback.duration,
               domestic: item.domestic_fee || fallback.domestic,
               international: item.international_fee || fallback.international,
               rating: item.rating || 5.0,
@@ -629,6 +634,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
             id: course.id,
             title: course.title,
             description: course.description,
+            duration: course.duration,
             domestic: course.domestic,
             international: course.international,
             rating: course.rating,
@@ -650,6 +656,7 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
             id: course.id,
             title: course.title,
             description: course.description,
+            duration: course.duration,
             domestic: course.domestic,
             international: course.international,
             rating: course.rating,
@@ -847,30 +854,58 @@ const CourseCatalog: React.FC<CourseCatalogProps> = ({ onFilterChange }) => {
                 icon = theme.icon;
               }
 
+              let categoryLabel = course.type === 'free_courses' ? 'Free Certificate' 
+                : course.type === 'elearning' ? 'E-Learning' 
+                : course.type === 'seminars' ? 'Seminar'
+                : course.type === 'workshops' ? 'Workshop'
+                : 'Course';
+
               return (
                 <Link 
                   href={`/courses/${course.id}`}
                   key={course.id} 
-                  className={`group block relative overflow-hidden rounded-2xl bg-gradient-to-r ${color} hover:scale-[1.02] transition-transform duration-300 shadow-lg border border-white/10 min-h-[110px]`}
+                  className="group flex flex-col h-full bg-white rounded-3xl border border-slate-200/60 overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:border-brand-300 transition-all duration-500 hover:-translate-y-1 relative"
                 >
-                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  
-                  <div className="w-full h-full p-4 sm:p-5 flex items-center gap-4 sm:gap-5 relative z-10">
-                    <div className="text-white drop-shadow-md flex-shrink-0 opacity-90 transition-transform group-hover:scale-110">
-                      {icon}
-                    </div>
-                    
-                    <div className="flex-1 min-w-0 flex flex-col justify-center">
-                      <h3 className="font-bold text-white tracking-wide text-base sm:text-lg leading-snug uppercase drop-shadow-sm truncate">
-                        {course.title}
-                      </h3>
-                      <p className="text-white/90 text-xs sm:text-sm mt-1 line-clamp-2 leading-relaxed">
-                        {course.description}
-                      </p>
+                  {/* Accent Top Bar */}
+                  <div className={`h-2 w-full bg-gradient-to-r ${color}`} />
+
+                  <div className="p-6 sm:p-8 flex flex-col flex-grow">
+                    <div className="flex items-start justify-between mb-5">
+                      <div className={`flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br ${color} text-white shadow-md group-hover:scale-110 transition-transform duration-500`}>
+                        {React.cloneElement(icon as React.ReactElement<any>, { size: 24 })}
+                      </div>
+                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider group-hover:bg-brand-50 group-hover:text-brand-600 transition-colors">
+                        {categoryLabel}
+                      </span>
                     </div>
 
-                    <div className="flex-shrink-0 bg-white/20 p-2.5 rounded-full group-hover:bg-white/30 transition shadow-sm backdrop-blur-sm ml-2">
-                      <FaArrowRight size={16} className="text-white drop-shadow-sm group-hover:translate-x-0.5 transition-transform" />
+                    <h3 className="text-xl font-bold text-slate-900 leading-snug mb-3 group-hover:text-brand-600 transition-colors">
+                      {course.title}
+                    </h3>
+
+                    <p className="text-sm text-slate-500 line-clamp-3 leading-relaxed mb-6 flex-grow">
+                      {course.description}
+                    </p>
+
+                    <div className="pt-5 mt-auto border-t border-slate-100 flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                        {course.duration && (
+                          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                            <FaClock className="text-slate-400" />
+                            <span>{course.duration}</span>
+                          </div>
+                        )}
+                        {course.deliveryMethod && (
+                          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                            <FaMapMarkerAlt className="text-slate-400" />
+                            <span>{course.deliveryMethod}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-brand-500 group-hover:text-white text-slate-400 transition-colors duration-300">
+                        <FaArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
+                      </div>
                     </div>
                   </div>
                 </Link>

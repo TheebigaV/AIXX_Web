@@ -19,6 +19,7 @@ export interface ProjectTableData {
   description: string;
   date: string; // ISO format string (e.g., "2025-09-21")
   is_active: boolean;
+  thumbnail_image?: ProjectImage;
   banner_image?: File | string;
   images ?: ProjectImage[]; // array of image URLs
 }

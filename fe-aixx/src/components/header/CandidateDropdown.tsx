@@ -61,6 +61,20 @@ export default function CandidateDropdown({
 
   const userInitial = candidateName ? candidateName.charAt(0).toUpperCase() : "U";
 
+  if (!isLoggedIn) {
+    return (
+      <Link
+        href="/signin"
+        className="beveled-corner group flex w-full lgmid:w-auto items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white text-sm font-semibold px-5 py-3 lgmid:py-2.5 transition-all duration-200 shadow-sm hover:shadow-md"
+      >
+        <svg className="w-4 h-4 transition-transform group-hover:rotate-12" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 6C13.66 6 15 7.34 15 9C15 10.66 13.66 12 12 12C10.34 12 9 10.66 9 9C9 7.34 10.34 6 12 6ZM12 20.2C9.5 20.2 7.29 18.92 6 16.98C6.03 14.99 10 13.9 12 13.9C13.99 13.9 17.97 14.99 18 16.98C16.71 18.92 14.5 20.2 12 20.2Z" />
+        </svg>
+        Sign In
+      </Link>
+    );
+  }
+
   return (
     <div className="relative">
       {/* ── Trigger button ── */}
@@ -119,7 +133,7 @@ export default function CandidateDropdown({
         onClose={closeDropdown}
         className="absolute right-0 mt-3 w-[240px] flex flex-col rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-xl shadow-gray-200/60 dark:shadow-gray-900/80 p-2 overflow-hidden"
       >
-        {isLoggedIn ? (
+        {isLoggedIn && (
           <>
             {/* Profile header inside dropdown */}
             <div className="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl bg-gradient-to-r from-brand-50 to-green-50 dark:from-brand-900/20 dark:to-green-900/20 border border-brand-100 dark:border-brand-800/30">
@@ -185,54 +199,6 @@ export default function CandidateDropdown({
               </span>
               Sign Out
             </button>
-          </>
-        ) : (
-          <>
-            {/* Guest header */}
-            <div className="flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl bg-gray-50 dark:bg-gray-800/50">
-              <span className="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" />
-                </svg>
-              </span>
-              <div>
-                <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">Welcome!</p>
-                <p className="text-xs text-gray-400">Sign in to your account</p>
-              </div>
-            </div>
-
-            <ul className="flex flex-col gap-0.5">
-              <li>
-                <Link
-                  href="/signin"
-                  onClick={closeDropdown}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/20 hover:text-brand-600 dark:hover:text-brand-400 transition-colors group"
-                >
-                  <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 group-hover:bg-brand-100 dark:group-hover:bg-brand-900/30 transition-colors">
-                    <svg className="w-4 h-4 text-gray-500 group-hover:text-brand-600 transition-colors" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 6C13.66 6 15 7.34 15 9C15 10.66 13.66 12 12 12C10.34 12 9 10.66 9 9C9 7.34 10.34 6 12 6ZM12 20.2C9.5 20.2 7.29 18.92 6 16.98C6.03 14.99 10 13.9 12 13.9C13.99 13.9 17.97 14.99 18 16.98C16.71 18.92 14.5 20.2 12 20.2Z" />
-                    </svg>
-                  </span>
-                  Sign In
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/signup"
-                  onClick={closeDropdown}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-brand-50 dark:hover:bg-brand-900/20 hover:text-brand-600 dark:hover:text-brand-400 transition-colors group"
-                >
-                  <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 group-hover:bg-brand-100 dark:group-hover:bg-brand-900/30 transition-colors">
-                    <svg className="w-4 h-4 text-gray-500 group-hover:text-brand-600 transition-colors" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M15 12C17.21 12 19 10.21 19 8C19 5.79 17.21 4 15 4C12.79 4 11 5.79 11 8C11 10.21 12.79 12 15 12ZM6 10V7H4V10H1V12H4V15H6V12H9V10H6ZM15 14C12.33 14 7 15.34 7 18V20H23V18C23 15.34 17.67 14 15 14Z" />
-                    </svg>
-                  </span>
-                  Create Account
-                </Link>
-              </li>
-            </ul>
-
-            {/* CTA footer removed */}
           </>
         )}
       </Dropdown>
