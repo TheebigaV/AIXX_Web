@@ -7,7 +7,8 @@ const ServicesPage: React.FC = () => {
   return (
     <div className="bg-white">
       <Banner 
-        altText="AIXX Services Banner" 
+        altText="AIXX Technologies Banner" 
+        paths={[{ name: 'Home', href: '/' }, { name: 'Technologies' }]}
       />
       <Suspense fallback={<div>Loading services...</div>}>
         <HomeServices isHomePage={false} />

@@ -45,22 +45,22 @@ const Footer = () => {
               {/* Quick Links */}
               <div className="text-left">
                 <h3 className="text-brand-600 text-base md:text-lg font-semibold mb-2 md:mb-3">Quick Links</h3>
-                                <ul className="space-y-1.5 md:space-y-2 text-gray-400">
+                <ul className="space-y-1.5 md:space-y-2 text-gray-400">
                   <li><a href="/about-us" className="hover:text-brand-600 transition-colors block py-1 md:py-0">About Us</a></li>
-                  <li><a href="/services" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Services</a></li>
+                  <li><a href="/technologies" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Technologies</a></li>
                   <li><a href="/contact" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Contact Us</a></li>
                 </ul>
               </div>
 
-              {/* Services */}
+              {/* Technologies */}
               <div className="text-left">
-                <h3 className="text-brand-600 text-base md:text-lg font-semibold mb-2 md:mb-3">Services</h3>
-                                <ul className="space-y-1.5 md:space-y-2 text-gray-400">
-                  <li><a href="/services" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Artificial Intelligence</a></li>
-                  <li><a href="/services" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Quantum Technology</a></li>
-                  <li><a href="/services" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Cyber Security</a></li>
-                  <li><a href="/services" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Autonomous Mobility</a></li>
-                  <li><a href="/services" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Logistics & Transport</a></li>
+                <h3 className="text-brand-600 text-base md:text-lg font-semibold mb-2 md:mb-3">Technologies</h3>
+                <ul className="space-y-1.5 md:space-y-2 text-gray-400">
+                  <li><a href="/technologies" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Artificial Intelligence</a></li>
+                  <li><a href="/technologies" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Quantum Technology</a></li>
+                  <li><a href="/technologies" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Cyber Security</a></li>
+                  <li><a href="/technologies" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Autonomous Mobility</a></li>
+                  <li><a href="/technologies" className="hover:text-brand-600 transition-colors block py-1 md:py-0">Logistics & Transport</a></li>
                 </ul>
               </div>
 

@@ -145,13 +145,6 @@ const HomeAiHotNewsCertificate: React.FC = () => {
                   <span>Get Free Certificate Now</span>
                   <FaArrowRight size={14} />
                 </button>
-                <Link
-                  href="/ai-hot-news"
-                  className="bg-white hover:bg-slate-100 text-slate-800 font-bold px-6 py-4 rounded-2xl border border-slate-200 shadow-sm transition-all duration-300 flex items-center gap-2 text-sm"
-                >
-                  <FaBookOpen size={14} className="text-brand-600" />
-                  <span>Read Full Announcement &amp; FAQ</span>
-                </Link>
               </div>
             </div>
 

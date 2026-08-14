@@ -12,13 +12,13 @@ import CandidateDropdown from "@/components/header/CandidateDropdown";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about-us" },
-  { label: "Technologies", href: "/services" },
+  { label: "Technologies", href: "/technologies" },
   { label: "Innovative Products", href: "/innovative-products" },
   { label: "AI-Hot News", href: "/ai-hot-news" },
 ];
 
 const AI_TRAINING_LINKS = [
-  { label: "Free AI Knowledge Certificate", href: "/ai-hot-news" },
+  { label: "Free AI Knowledge Certificate", href: "/courses?tab=free_courses" },
   { label: "Seminars", href: "/training-and-certification/seminars" },
   { label: "Workshops", href: "/training-and-certification/workshops" },
   { label: "Courses", href: "/courses" },
@@ -92,7 +92,7 @@ const Header = () => {
   const isActive = (href: string) =>
     pathname === href ||
     (href === "/training-and-certification" && pathname?.startsWith("/training-and-certification")) ||
-    (href === "/services" && pathname?.startsWith("/services")) ||
+    (href === "/technologies" && pathname?.startsWith("/technologies")) ||
     (href === "/innovative-products" && pathname?.startsWith("/innovative-products"));
 
   const isTrainingActive = pathname?.startsWith("/training-and-certification") || pathname?.startsWith("/courses");
@@ -194,7 +194,7 @@ const Header = () => {
         <div className="hidden lgmid:flex items-center gap-3">
           <Link
             href="/contact"
-            className="beveled-corner group inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white text-sm font-semibold px-5 py-2.5 transition-all duration-200 shadow-sm hover:shadow-md"
+            className="group inline-flex items-center justify-center gap-2 px-5 py-2 text-sm font-semibold text-brand-600 bg-brand-50 hover:bg-brand-100 rounded-lg transition-colors border border-brand-100"
           >
             Contact Us
             <FaBolt className="w-3 h-3 transition-transform group-hover:rotate-12" />
@@ -283,13 +283,13 @@ const Header = () => {
           <div className="pt-3 pb-1 space-y-3">
             <Link
               href="/contact"
-              className="beveled-corner group flex items-center justify-center gap-2 w-full bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-5 py-3 transition-colors shadow-sm"
+              className="group flex items-center justify-center gap-2 w-full px-5 py-3 text-sm font-semibold text-brand-600 bg-brand-50 hover:bg-brand-100 rounded-lg transition-colors border border-brand-100"
             >
               Contact Us
               <FaBolt className="w-3 h-3 transition-transform group-hover:rotate-12" />
             </Link>
 
-            <div className="flex justify-center border-t border-gray-100 pt-3">
+            <div className="flex justify-center w-full border-t border-gray-100 pt-3">
               <CandidateDropdown 
                 candidateName={candidateName} 
                 candidateRegId={candidateRegId} 

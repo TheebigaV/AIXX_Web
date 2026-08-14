@@ -49,6 +49,11 @@ const nextConfig: NextConfig = {
         hostname: '47.128.222.47',
         pathname: '/storage/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'api.aixx.com.sg',
+        pathname: '/storage/**',
+      },
     ],
     // Allow SVG images
     dangerouslyAllowSVG: true,

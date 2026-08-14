@@ -330,11 +330,11 @@ export default function CourseDetailPage() {
               </span>
             </div>
 
-            {/* Enrolment / Call To Action */}
+            {/* Enrollment / Call To Action */}
             <div className="mt-8 rounded-3xl bg-emerald-50/50 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 shadow-md">
               <div className="space-y-1">
                 <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 flex-wrap">
-                  <span>Enrol in this Course</span>
+                  <span>Enroll in this Course</span>
                   <span className="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800">
                     25% PROMO ACTIVE
                   </span>

@@ -78,7 +78,9 @@ export default function ProductDetailsPage() {
 
   useEffect(() => {
     const loadProduct = async () => {
-      await getProduct(productSlug);
+      if (typeof productSlug === 'string') {
+        await getProduct(productSlug);
+      }
     };
     loadProduct();
   }, [productSlug, getProduct]);
@@ -137,7 +139,7 @@ export default function ProductDetailsPage() {
                 </div>
                 {selectedProduct.sub_product_images.length > 0 && (
                   <div className="grid gap-2 grid-cols-3">
-                    {selectedProduct.sub_product_images.map((sub, index) => (
+                    {selectedProduct.sub_product_images.map((sub: any, index: number) => (
                       <div key={index} className="relative aspect-square bg-gray-50 overflow-hidden border border-gray-200">
                         <Image
                           src={sub.url}
@@ -233,7 +235,7 @@ export default function ProductDetailsPage() {
 
               {selectedProduct.sub_product_images.length > 0 && (
                 <div className="grid gap-2 grid-cols-3">
-                  {selectedProduct.sub_product_images.map((sub, index) => (
+                  {selectedProduct.sub_product_images.map((sub: any, index: number) => (
                     <div
                       key={index}
                       className="relative aspect-square bg-gray-50 overflow-hidden border border-gray-200"
