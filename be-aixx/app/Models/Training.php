@@ -66,4 +66,16 @@ class Training extends Model
     {
         return $this->hasMany(CertificateQuestion::class);
     }
+
+    public function learningPaths()
+    {
+        return $this->belongsToMany(LearningPath::class, 'learning_path_training')
+            ->withPivot('sort_order')
+            ->orderBy('learning_path_training.sort_order');
+    }
+
+    public function surveys()
+    {
+        return $this->hasMany(Survey::class);
+    }
 }

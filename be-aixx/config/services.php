@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'maribank' => [
+        'webhook_secret' => env('MARIBANK_WEBHOOK_SECRET'),
+    ],
+
 ];
