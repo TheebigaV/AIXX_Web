@@ -18,6 +18,13 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TrainingController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\Admin\TenantController;
+use App\Http\Controllers\Admin\AmbassadorController as AdminAmbassadorController;
+use App\Http\Controllers\Admin\CourseCmsController;
+use App\Http\Controllers\Admin\ContributorController;
+use App\Http\Controllers\Admin\CertificateController as AdminCertificateController;
+use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\Admin\AnalyticsController as AdminAnalyticsController;
 
 
 
@@ -97,6 +104,38 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Students (public sign-up / sign-in)
         Route::apiResource('students', AdminStudentController::class)->only(['index', 'destroy']);
+
+        // Tenants (Enterprise / B2B mobile learners)
+        Route::get('tenants', [TenantController::class, 'index']);
+        Route::post('tenants', [TenantController::class, 'store']);
+        Route::get('tenants/{id}/dashboard', [TenantController::class, 'dashboard']);
+        Route::get('tenants/{id}/departments', [TenantController::class, 'departments']);
+        Route::patch('tenants/{id}/target', [TenantController::class, 'setTarget']);
+        Route::get('tenants/{id}/recommended-actions', [TenantController::class, 'recommendedActions']);
+
+        // Ambassadors (Commercial & Payouts) — admin management
+        Route::get('ambassadors', [AdminAmbassadorController::class, 'index']);
+        Route::patch('ambassadors/{id}/status', [AdminAmbassadorController::class, 'updateStatus']);
+        Route::patch('ambassadors/{id}/commission', [AdminAmbassadorController::class, 'updateCommission']);
+        Route::post('ambassadors/{id}/payout', [AdminAmbassadorController::class, 'payout']);
+
+        // Course CMS — question library
+        Route::get('course-cms/questions', [CourseCmsController::class, 'questions']);
+        Route::patch('course-cms/questions/{id}/status', [CourseCmsController::class, 'updateQuestionStatus']);
+
+        // Contributors
+        Route::get('contributors', [ContributorController::class, 'index']);
+        Route::get('contributors/{id}', [ContributorController::class, 'show']);
+
+        // Certificate issuance (manual)
+        Route::post('certificate/issue', [AdminCertificateController::class, 'issue']);
+        Route::patch('certificate/{id}/revoke', [AdminCertificateController::class, 'revoke']);
+
+        // Payments reconciliation
+        Route::get('payments', [AdminPaymentController::class, 'index']);
+
+        // Analytics
+        Route::get('analytics/funnel', [AdminAnalyticsController::class, 'funnel']);
     });
 });
 
@@ -110,6 +149,13 @@ Route::get('categories/all', [\App\Http\Controllers\Guest\CategoryController::cl
 Route::get('categories', [\App\Http\Controllers\Guest\CategoryController::class,'index']);
 Route::get('trainings/all', [\App\Http\Controllers\Guest\TrainingController::class, 'all']);
 Route::get('courses', [CourseController::class, 'index']);
+Route::get('courses/hub', [CourseController::class, 'hub']);
+Route::get('courses/{slug}', [CourseController::class, 'show']);
+Route::get('courses/{slug}/contents', [CourseController::class, 'contents']);
+Route::get('courses/{slug}/modules/{moduleIndex}', [CourseController::class, 'getModule']);
+Route::post('courses/{slug}/modules/{moduleIndex}/submit-quiz', [CourseController::class, 'submitModuleQuiz']);
+Route::post('courses/{slug}/start', [CourseController::class, 'startCourse']);
+Route::get('courses/{slug}/progress', [CourseController::class, 'getProgress']);
 Route::get('trainings', [\App\Http\Controllers\Guest\TrainingController::class, 'index']);
 Route::get('trainings/{slug}/modules', [\App\Http\Controllers\Guest\TrainingController::class, 'getModules']);
 Route::post('inquiries', [\App\Http\Controllers\Guest\InquiryController::class, 'store']);
