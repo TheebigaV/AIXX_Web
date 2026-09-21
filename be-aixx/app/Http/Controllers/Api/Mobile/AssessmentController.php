@@ -113,6 +113,7 @@ class AssessmentController extends Controller
             return response()->json(['success' => false, 'message' => 'No questions found for this attempt.'], 400);
         }
 
+        $questionBreakdown = [];
         $correct = 0;
         foreach ($attemptQuestions as $aq) {
             $isCorrect = $this->gradeAnswer($aq);
@@ -120,6 +121,21 @@ class AssessmentController extends Controller
             if ($isCorrect) {
                 $correct++;
             }
+
+            $q = $aq->question;
+            $selectedOptionText = null;
+            if ($aq->selected_option_key && is_array($aq->options_mapping) && isset($aq->options_mapping[$aq->selected_option_key])) {
+                $origIndex = $aq->options_mapping[$aq->selected_option_key];
+                $selectedOptionText = $q->options[$origIndex] ?? $aq->selected_option_key;
+            }
+
+            $questionBreakdown[] = [
+                'question_id'      => $q ? $q->id : $aq->certificate_question_id,
+                'question_text'    => $q ? $q->question : '',
+                'selected_option'  => $selectedOptionText,
+                'is_correct'       => (bool) $isCorrect,
+                'consequence_text' => $isCorrect ? null : ($q->explanation ?? 'Cost/Consequence: Incorrect choice selected.'),
+            ];
         }
 
         $score = (int) round(($correct / $total) * 100);
@@ -135,14 +151,15 @@ class AssessmentController extends Controller
         $snapshot = $this->aiks->recordSnapshot($student, $score, 'assessment', $attempt->id);
 
         return response()->json([
-            'success' => true,
-            'attempt_id' => $attempt->id,
-            'score' => $score,
-            'correct_count' => $correct,
-            'total_questions' => $total,
-            'passed' => $passed,
-            'certificate_token' => $attempt->fresh()->certificate_token,
-            'aiks' => ['score' => $snapshot->score, 'level' => $snapshot->level],
+            'success'            => true,
+            'attempt_id'          => $attempt->id,
+            'score'               => $score,
+            'correct_count'       => $correct,
+            'total_questions'     => $total,
+            'passed'              => $passed,
+            'certificate_token'   => $attempt->fresh()->certificate_token,
+            'aiks'                => ['score' => $snapshot->score, 'level' => $snapshot->level],
+            'question_breakdown'  => $questionBreakdown,
         ], 200);
     }
 
