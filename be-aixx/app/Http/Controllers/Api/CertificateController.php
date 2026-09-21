@@ -651,6 +651,7 @@ class CertificateController extends Controller
 
         // Include the actual questions and answers mapped out so the frontend can display the results UI
         $resultsDetails = [];
+        $questionBreakdown = [];
         foreach ($attemptQuestions as $aq) {
             $q = $aq->question;
             if (!$q || !is_array($aq->options_mapping)) {
@@ -673,6 +674,12 @@ class CertificateController extends Controller
                 }
             }
 
+            $selectedOptionText = null;
+            if ($aq->selected_option_key && isset($aq->options_mapping[$aq->selected_option_key])) {
+                $mappedIdx = $aq->options_mapping[$aq->selected_option_key];
+                $selectedOptionText = $q->options[$mappedIdx] ?? $aq->selected_option_key;
+            }
+
             $resultsDetails[] = [
                 'question' => $q->question,
                 'options' => $optionsToPresent,
@@ -681,16 +688,26 @@ class CertificateController extends Controller
                 'is_correct' => (bool)$aq->is_correct,
                 'explanation' => $q->explanation
             ];
+
+            $questionBreakdown[] = [
+                'question_id' => $q->id,
+                'question_text' => $q->question,
+                'selected_option' => $selectedOptionText,
+                'is_correct' => (bool)$aq->is_correct,
+                'consequence_text' => $aq->is_correct ? null : ($q->explanation ?? 'Cost/Consequence: Incorrect choice selected.')
+            ];
         }
 
         return response()->json([
+            'success' => true,
             'passed' => $hasPassed,
             'score' => $percentageScore,
             'correct_count' => $correctCount,
             'total_questions' => $totalQuestions,
             'full_name' => $candidate->full_name,
             'passed_at' => $candidate->passed_at ? $candidate->passed_at->format('d M Y') : Carbon::now()->format('d M Y'),
-            'results_details' => $resultsDetails
+            'results_details' => $resultsDetails,
+            'question_breakdown' => $questionBreakdown
         ], 200);
     }
 }
