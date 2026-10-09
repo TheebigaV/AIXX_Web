@@ -35,20 +35,39 @@ class AssessmentController extends Controller
 
         $student = $request->user();
 
+        $passedAttempt = CertificateAttempt::where('student_id', $student->id)
+            ->where('training_id', $training->id)
+            ->where('passed', true)
+            ->whereNull('revoked_at')
+            ->first();
+
+        if ($passedAttempt) {
+            return response()->json([
+                'success' => false,
+                'code' => 'ALREADY_PASSED',
+                'message' => 'You have already passed this assessment.',
+                'certificate_id' => $passedAttempt->id,
+                'certificate_token' => $passedAttempt->certificate_token,
+            ], 409);
+        }
+
         $attempt = CertificateAttempt::firstOrCreate([
             'student_id' => $student->id,
             'training_id' => $training->id,
             'is_completed' => false,
         ]);
 
+        $isResumed = !$attempt->wasRecentlyCreated;
+
         $this->ensureQuestionsGenerated($attempt, $training);
 
         return response()->json([
             'success' => true,
             'attempt_id' => $attempt->id,
+            'is_resumed' => $isResumed,
             'training' => ['id' => $training->id, 'name' => $training->name, 'slug' => $training->slug],
-            'questions' => $this->presentQuestions($attempt),
-        ], 201);
+            'questions' => $this->presentQuestions($attempt, true),
+        ], $isResumed ? 200 : 201);
     }
 
     /**
@@ -150,6 +169,14 @@ class AssessmentController extends Controller
 
         $snapshot = $this->aiks->recordSnapshot($student, $score, 'assessment', $attempt->id);
 
+        $attempt->refresh();
+        $certificate = $passed && $attempt->certificate_token ? [
+            'id'                => $attempt->id,
+            'certificate_token' => $attempt->certificate_token,
+            'issued_at'         => $attempt->issued_at?->toIso8601String(),
+            'verify_url'        => "/api/certificate/verify/{$attempt->certificate_token}",
+        ] : null;
+
         return response()->json([
             'success'            => true,
             'attempt_id'          => $attempt->id,
@@ -157,7 +184,8 @@ class AssessmentController extends Controller
             'correct_count'       => $correct,
             'total_questions'     => $total,
             'passed'              => $passed,
-            'certificate_token'   => $attempt->fresh()->certificate_token,
+            'certificate_token'   => $attempt->certificate_token,
+            'certificate'         => $certificate,
             'aiks'                => ['score' => $snapshot->score, 'level' => $snapshot->level],
             'question_breakdown'  => $questionBreakdown,
         ], 200);
