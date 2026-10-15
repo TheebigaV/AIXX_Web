@@ -240,6 +240,26 @@ class AuthController extends Controller
     }
 
     /**
+     * PUT /api/me — Update editable profile fields.
+     */
+    public function updateProfile(Request $request)
+    {
+        $validated = $request->validate([
+            'full_name' => 'sometimes|required|string|max:255',
+            'phone' => 'sometimes|nullable|string|max:30',
+            'country' => 'sometimes|nullable|string|max:100',
+        ]);
+
+        $student = $request->user();
+        $student->update($validated);
+
+        return response()->json([
+            'message' => 'Profile updated successfully.',
+            'profile' => $this->profile($student->fresh()),
+        ], 200);
+    }
+
+    /**
      * PATCH /api/me/preferences — Update user preferences.
      */
     public function updatePreferences(Request $request)
@@ -292,6 +312,7 @@ class AuthController extends Controller
             'gender' => $student->gender,
             'company_name' => $student->company_name,
             'academic_institution' => $student->academic_institution,
+            'avatar_url' => null, // populated once avatar upload is built
             'email_verified_at' => $student->email_verified_at?->toIso8601String(),
             'preferences' => $student->preferences ?? [],
             'last_login_at' => $student->last_login_at?->toIso8601String(),
