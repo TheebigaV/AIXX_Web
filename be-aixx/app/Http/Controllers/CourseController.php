@@ -207,12 +207,12 @@ class CourseController extends Controller
         $courseId = $course ? $course->id : 1;
         $courseSlug = $course ? $course->slug : $slug;
 
-        // Fetch student progress if token provided
-        $studentIdentifier = $request->query('token') ?: $request->query('registration_id') ?: $request->header('X-Student-Token');
-        $student = null;
-        if ($studentIdentifier) {
-            $student = Student::where('uuid', $studentIdentifier)->orWhere('registration_id', $studentIdentifier)->first();
-        }
+        // Fetch student progress: bearer token first, then legacy uuid / registration ID
+        $student = $this->resolveStudent(
+            $request,
+            $request->query('token') ?: $request->header('X-Student-Token'),
+            $request->query('registration_id')
+        );
 
         $savedProgress = $student ? $this->extractStudentCourseProgress($student, $courseSlug) : null;
 
@@ -235,8 +235,8 @@ class CourseController extends Controller
                     'title' => $m->title,
                     'study_notes' => $m->study_notes,
                     'questions_count' => $qCount,
-                    'status' => $mProgress['completed'] ? 'Completed' : 'Available',
-                    'is_completed' => (bool)($mProgress['completed'] ?? false),
+                    'status' => $this->isModuleCompleted($mProgress) ? 'Completed' : 'Available',
+                    'is_completed' => $this->isModuleCompleted($mProgress),
                     'score' => $mProgress['score'] ?? null,
                     'passed' => (bool)($mProgress['passed'] ?? false),
                     'action_url' => "/api/courses/{$courseSlug}/modules/{$mIndex}"
@@ -260,8 +260,8 @@ class CourseController extends Controller
                     'title' => $m['title'],
                     'study_notes' => $m['study_notes_preview'],
                     'questions_count' => $m['questions_count'],
-                    'status' => $mProgress['completed'] ? 'Completed' : 'Available',
-                    'is_completed' => (bool)($mProgress['completed'] ?? false),
+                    'status' => $this->isModuleCompleted($mProgress) ? 'Completed' : 'Available',
+                    'is_completed' => $this->isModuleCompleted($mProgress),
                     'score' => $mProgress['score'] ?? null,
                     'passed' => (bool)($mProgress['passed'] ?? false),
                     'action_url' => "/api/courses/{$courseSlug}/modules/{$mIndex}"
@@ -365,7 +365,7 @@ class CourseController extends Controller
 
         $answers = $validated['answers'];
         $token = $validated['token'] ?? $request->header('X-Student-Token');
-        $regId = $validated['registration_id'];
+        $regId = $validated['registration_id'] ?? null;
 
         $totalQuestions = count($answers);
         if ($totalQuestions === 0) {
@@ -408,13 +408,10 @@ class CourseController extends Controller
         $passed = ($percentageScore >= 70); // 70% module pass mark
 
         // Save progress to student record if student identified
-        $student = null;
-        if ($token || $regId) {
-            $student = Student::where('uuid', $token)->orWhere('registration_id', $regId)->first();
-            if ($student) {
-                $this->updateStudentModuleProgress($student, $slug, $moduleIndex, $percentageScore, $passed);
-            }
-        }
+        $student = $this->resolveStudent($request, $token, $regId);
+        $moduleProgress = $student
+            ? $this->updateStudentModuleProgress($student, $slug, $moduleIndex, (int) $percentageScore, $passed)
+            : null;
 
         $nextModuleIndex = $moduleIndex < 5 ? $moduleIndex + 1 : null;
 
@@ -425,6 +422,9 @@ class CourseController extends Controller
             'correct_count' => $correctCount,
             'total_questions' => $totalQuestions,
             'passed' => $passed,
+            'progress_saved' => $moduleProgress !== null,
+            'best_score' => $moduleProgress['best_score'] ?? null,
+            'is_completed' => $moduleProgress ? $this->isModuleCompleted($moduleProgress) : $passed,
             'message' => $passed ? "Congratulations! You completed Module {$moduleIndex} with {$percentageScore}% score." : "You scored {$percentageScore}%. Review the study notes and try again.",
             'next_module' => $nextModuleIndex ? [
                 'module_index' => $nextModuleIndex,
@@ -442,11 +442,7 @@ class CourseController extends Controller
     public function startCourse(string $slug, Request $request): JsonResponse
     {
         $identifier = $request->input('token') ?: $request->input('registration_id');
-        $student = null;
-
-        if ($identifier) {
-            $student = Student::where('uuid', $identifier)->orWhere('registration_id', $identifier)->first();
-        }
+        $student = $this->resolveStudent($request, $identifier);
 
         if ($student) {
             $enrolled = $student->enrolled_courses ?? [];
@@ -499,11 +495,11 @@ class CourseController extends Controller
     public function getProgress(string $slug, Request $request): JsonResponse
     {
         $identifier = $request->query('token') ?: $request->query('registration_id');
-        if (!$identifier) {
+        $student = $this->resolveStudent($request, $identifier);
+        if (!$student && !$identifier) {
             return response()->json(['success' => false, 'message' => 'Student token or registration ID required.'], 400);
         }
 
-        $student = Student::where('uuid', $identifier)->orWhere('registration_id', $identifier)->first();
         if (!$student) {
             return response()->json(['success' => false, 'message' => 'Student not found.'], 404);
         }
@@ -549,53 +545,102 @@ class CourseController extends Controller
         ];
     }
 
-    protected function updateStudentModuleProgress(Student $student, string $slug, int $moduleIndex, int $score, bool $passed): void
+    /**
+     * Record a module quiz attempt. A module only counts as completed once it is
+     * passed (70%+), the best score is kept, and a later failed attempt never
+     * undoes an earlier pass. Returns the module's updated progress entry.
+     */
+    protected function updateStudentModuleProgress(Student $student, string $slug, int $moduleIndex, int $score, bool $passed): array
     {
         $enrolled = $student->enrolled_courses ?? [];
-        $found = false;
+        $courseIdx = null;
 
-        foreach ($enrolled as &$c) {
+        foreach ($enrolled as $i => $c) {
             if (isset($c['course_id']) && ($c['course_id'] === $slug || $c['course_id'] === "AIXX-{$slug}")) {
-                $found = true;
-                $modulesProgress = $c['modules_progress'] ?? [];
-                $modulesProgress[(string)$moduleIndex] = [
-                    'completed' => true,
-                    'score' => $score,
-                    'passed' => $passed,
-                    'completed_at' => Carbon::now()->toIso8601String()
-                ];
-                $c['modules_progress'] = $modulesProgress;
-
-                $completedCount = collect($modulesProgress)->where('completed', true)->count();
-                $c['completed_modules_count'] = $completedCount;
-                $c['progress_percentage'] = round(($completedCount / 5) * 100);
-                $c['status'] = $c['progress_percentage'] >= 100 ? 'Completed' : 'In Progress';
+                $courseIdx = $i;
                 break;
             }
         }
 
-        if (!$found) {
+        if ($courseIdx === null) {
+            $course = Training::where('slug', $slug)->first();
             $enrolled[] = [
                 'course_id' => $slug,
-                'title' => ucwords(str_replace('-', ' ', $slug)),
+                'title' => $course ? $course->name : ucwords(str_replace('-', ' ', $slug)),
                 'status' => 'In Progress',
-                'progress_percentage' => 20,
-                'completed_modules_count' => 1,
+                'progress_percentage' => 0,
+                'completed_modules_count' => 0,
                 'total_modules' => 5,
                 'enrolled_at' => Carbon::now()->toIso8601String(),
-                'modules_progress' => [
-                    (string)$moduleIndex => [
-                        'completed' => true,
-                        'score' => $score,
-                        'passed' => $passed,
-                        'completed_at' => Carbon::now()->toIso8601String()
-                    ]
-                ]
+                'modules_progress' => [],
             ];
+            $courseIdx = array_key_last($enrolled);
         }
+
+        $c = $enrolled[$courseIdx];
+        $modulesProgress = $c['modules_progress'] ?? [];
+        $previous = $modulesProgress[(string)$moduleIndex] ?? [];
+        $now = Carbon::now()->toIso8601String();
+
+        $wasPassed = $this->isModuleCompleted($previous);
+        $previousBest = $previous['best_score'] ?? $previous['score'] ?? null;
+        $bestScore = $previousBest === null ? $score : max((int) $previousBest, $score);
+
+        $entry = [
+            'completed' => $wasPassed || $passed,
+            'passed' => $wasPassed || $passed,
+            'score' => $bestScore,
+            'best_score' => $bestScore,
+            'last_score' => $score,
+            'attempts' => (int)($previous['attempts'] ?? (isset($previous['score']) ? 1 : 0)) + 1,
+            'completed_at' => $wasPassed ? ($previous['completed_at'] ?? $now) : ($passed ? $now : null),
+            'last_attempted_at' => $now,
+        ];
+        $modulesProgress[(string)$moduleIndex] = $entry;
+
+        $totalModules = (int)($c['total_modules'] ?? 5) ?: 5;
+        $completedCount = collect($modulesProgress)->filter(fn ($m) => $this->isModuleCompleted($m))->count();
+
+        $c['modules_progress'] = $modulesProgress;
+        $c['completed_modules_count'] = $completedCount;
+        $c['progress_percentage'] = min(100, round(($completedCount / $totalModules) * 100));
+        $c['status'] = $c['progress_percentage'] >= 100 ? 'Completed' : 'In Progress';
+        $enrolled[$courseIdx] = $c;
 
         $student->enrolled_courses = $enrolled;
         $student->save();
+
+        return $entry;
+    }
+
+    /**
+     * A module is completed only once it has been passed. Older saves flagged
+     * failed attempts as completed, so 'passed' is the source of truth.
+     */
+    protected function isModuleCompleted(?array $progress): bool
+    {
+        return (bool)($progress['passed'] ?? false);
+    }
+
+    /**
+     * Identify the student: Sanctum bearer token (mobile app) first, then the
+     * legacy uuid token / registration ID used by the web app.
+     */
+    protected function resolveStudent(Request $request, ?string $token = null, ?string $registrationId = null): ?Student
+    {
+        $user = $request->user('student');
+        if ($user instanceof Student) {
+            return $user;
+        }
+
+        if ($token) {
+            $student = Student::where('uuid', $token)->orWhere('registration_id', $token)->first();
+            if ($student) {
+                return $student;
+            }
+        }
+
+        return $registrationId ? Student::where('registration_id', $registrationId)->first() : null;
     }
 
     protected function generateDefault5ModulesStructure(string $courseName): array

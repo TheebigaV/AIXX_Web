@@ -59,7 +59,9 @@ Route::middleware('auth:student')->group(function () {
     // 1. Authentication & Profile
     Route::post('auth/logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
+    Route::put('me', [AuthController::class, 'updateProfile']);
     Route::patch('me/preferences', [AuthController::class, 'updatePreferences']);
+    Route::get('me/module-results', [CourseController::class, 'moduleResults']);
 
     // 3. Assessments
     Route::post('assessment/attempts', [AssessmentController::class, 'start']);
