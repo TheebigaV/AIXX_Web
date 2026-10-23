@@ -51,7 +51,9 @@ Route::get('assessment/questions/{moduleId}', [AssessmentController::class, 'leg
 // and both delegate to the exact same WebCourseController methods as these do,
 // so whichever route object matches first, the response is identical.
 Route::get('courses', [CourseController::class, 'index']);
-Route::get('courses/{id}', [CourseController::class, 'show']);
+Route::get('courses/{slug}', [CourseController::class, 'show']);
+// Overrides the routes/api.php definition (mobile.php is registered last) to clean question/option text.
+Route::get('courses/{slug}/modules/{moduleIndex}', [CourseController::class, 'getModule'])->whereNumber('moduleIndex');
 Route::get('learning-paths', [CourseController::class, 'learningPaths']);
 Route::get('learning-paths/{id}', [CourseController::class, 'showLearningPath']);
 

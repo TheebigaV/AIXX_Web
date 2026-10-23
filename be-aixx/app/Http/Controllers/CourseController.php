@@ -643,7 +643,7 @@ class CourseController extends Controller
         return $registrationId ? Student::where('registration_id', $registrationId)->first() : null;
     }
 
-    protected function generateDefault5ModulesStructure(string $courseName): array
+    public function generateDefault5ModulesStructure(string $courseName): array
     {
         return [
             [

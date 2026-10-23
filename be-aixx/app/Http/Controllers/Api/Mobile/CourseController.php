@@ -8,6 +8,7 @@ use App\Models\LearningPath;
 use App\Models\Training;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CourseController extends Controller
@@ -16,21 +17,91 @@ class CourseController extends Controller
     {
     }
 
+    /** Training types that are actual learnable courses (excludes seminars, workshops, newsletters, media_gallery). */
+    protected const COURSE_TYPES = ['courses', 'elearning', 'free_courses', 'certification'];
+
     /**
      * GET /api/courses — List available courses.
      * Reuses the same course catalog logic as the web app.
+     * Optional ?type= filter (comma-separated, or "all"); defaults to COURSE_TYPES.
      */
     public function index(Request $request): JsonResponse
     {
-        return $this->webCourses->hub($request);
+        $response = $this->webCourses->hub($request);
+        $payload = $response->getData(true);
+
+        $typeParam = trim((string) $request->query('type', ''));
+        $types = $typeParam === ''
+            ? self::COURSE_TYPES
+            : array_filter(array_map('trim', explode(',', $typeParam)));
+
+        $courses = collect($payload['data'] ?? [])
+            ->when(!in_array('all', $types, true), fn ($cs) => $cs->filter(fn ($c) => in_array($c['type'] ?? 'courses', $types, true)))
+            ->map(function ($c) {
+                $c['highlights'] = $this->cleanHighlights($c['highlights'] ?? []);
+                $c['thumbnail_url'] = $this->absoluteUrl($c['thumbnail_url'] ?? null);
+                return $c;
+            })
+            ->values();
+
+        $payload['count'] = $courses->count();
+        $payload['data'] = $courses;
+
+        return response()->json($payload, $response->status());
     }
 
     /**
-     * GET /api/courses/{id} — Get single course details.
+     * GET /api/courses/{slug} — Get single course details (slug or numeric id).
      */
-    public function show(string $id, Request $request): JsonResponse
+    public function show(string $slug, Request $request): JsonResponse
     {
-        return $this->webCourses->show($id, $request);
+        $response = $this->webCourses->show($slug, $request);
+        $payload = $response->getData(true);
+
+        if (isset($payload['data'])) {
+            $payload['data']['highlights'] = $this->cleanHighlights($payload['data']['highlights'] ?? []);
+            if (array_key_exists('thumbnail_url', $payload['data'])) {
+                $payload['data']['thumbnail_url'] = $this->absoluteUrl($payload['data']['thumbnail_url']);
+            }
+        }
+
+        return response()->json($payload, $response->status());
+    }
+
+    /**
+     * GET /api/courses/{slug}/modules/{moduleIndex} — Module study notes and MCQs.
+     * Keeps placeholder module titles in sync with /contents and strips the
+     * "Question N:" / "Option X:" prefixes the app renders itself.
+     */
+    public function getModule(string $slug, int $moduleIndex, Request $request): JsonResponse
+    {
+        $response = $this->webCourses->getModule($slug, $moduleIndex, $request);
+        $payload = $response->getData(true);
+
+        $training = Training::where('slug', $slug)
+            ->orWhere('id', is_numeric($slug) ? (int) $slug : 0)
+            ->first();
+        $hasDbModule = $training && $training->modules()->where('module_index', $moduleIndex)->exists();
+
+        $oldTitle = $payload['title'] ?? '';
+        if (!$hasDbModule) {
+            $default = collect($this->webCourses->generateDefault5ModulesStructure($payload['course_name'] ?? ''))
+                ->firstWhere('module_index', $moduleIndex);
+            if ($default) {
+                $payload['title'] = $default['title'];
+            }
+        }
+
+        $payload['questions'] = collect($payload['questions'] ?? [])->map(function ($q) use ($oldTitle, $payload) {
+            $text = preg_replace('/^\s*Question\s+\d+\s*:\s*/i', '', (string) ($q['question'] ?? ''));
+            $q['question'] = $oldTitle !== '' ? str_replace($oldTitle, $payload['title'], $text) : $text;
+            $q['options'] = collect($q['options'] ?? [])
+                ->map(fn ($opt) => is_string($opt) ? preg_replace('/^\s*Option\s+[A-F]\s*[:.)]\s*/i', '', $opt) : $opt)
+                ->all();
+            return $q;
+        })->values();
+
+        return response()->json($payload, $response->status());
     }
 
     /**
@@ -116,6 +187,32 @@ class CourseController extends Controller
         })->values();
 
         return response()->json(['success' => true, 'count' => $results->count(), 'data' => $results], 200);
+    }
+
+    /** Split-safe highlights: drop stray \r / whitespace and empty lines. */
+    protected function cleanHighlights(array $highlights): array
+    {
+        return collect($highlights)
+            ->map(fn ($h) => trim((string) $h))
+            ->filter(fn ($h) => $h !== '')
+            ->values()
+            ->all();
+    }
+
+    /** Turn stored thumbnail paths ("/storage/x.png" or "trainings/x.png") into absolute URLs. */
+    protected function absoluteUrl(?string $path): ?string
+    {
+        if ($path === null || $path === '') {
+            return null;
+        }
+        if (Str::startsWith($path, ['http://', 'https://'])) {
+            return $path;
+        }
+        if (Str::startsWith($path, '/')) {
+            return url($path);
+        }
+
+        return Storage::disk('public')->url($path);
     }
 
     protected function formatLearningPath(LearningPath $path, bool $detailed): array
