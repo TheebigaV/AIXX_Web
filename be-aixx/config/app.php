@@ -54,6 +54,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    // Public website (fe-aixx) — used to build shareable links such as certificate verification.
+    'frontend_url' => env('FRONTEND_URL', 'https://aixx.com.sg'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
