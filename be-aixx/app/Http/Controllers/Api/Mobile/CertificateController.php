@@ -74,7 +74,8 @@ class CertificateController extends Controller
             'course_slug' => $attempt->training?->slug,
             'score' => $attempt->score,
             'issued_at' => $attempt->issued_at?->toIso8601String(),
-            'verify_url' => "/api/certificate/verify/{$attempt->certificate_token}",
+            'verify_url' => rtrim(config('app.frontend_url'), '/') . "/certificate/verify/{$attempt->certificate_token}",
+            'verify_api_url' => "/api/certificate/verify/{$attempt->certificate_token}",
         ];
     }
 }
