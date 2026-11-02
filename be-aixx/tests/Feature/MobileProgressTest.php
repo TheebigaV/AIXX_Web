@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Student;
+use App\Models\Training;
+use App\Models\TrainingModule;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -30,12 +32,13 @@ class MobileProgressTest extends TestCase
         ];
     }
 
-    // Unknown question ids fall back to simulated grading: A-D correct, anything else wrong.
-    protected function answers(int $correct, int $total = 10): array
+    // Modules without CMS questions use 30 placeholder questions (ids moduleIndex*100 + 1..30) whose correct answer is B.
+    protected function answers(int $percent, int $moduleIndex = 1): array
     {
+        $correct = (int) round($percent * 30 / 100);
         $answers = [];
-        for ($i = 0; $i < $total; $i++) {
-            $answers["q{$i}"] = $i < $correct ? 'A' : 'Z';
+        for ($i = 1; $i <= 30; $i++) {
+            $answers[(string) ($moduleIndex * 100 + $i)] = $i <= $correct ? 'B' : 'A';
         }
         return $answers;
     }
@@ -72,7 +75,7 @@ class MobileProgressTest extends TestCase
         $url = '/api/courses/ai-foundation/modules/1/submit-quiz';
 
         // Fail: saved, but not completed
-        $this->postJson($url, ['answers' => $this->answers(5)], $headers)
+        $this->postJson($url, ['answers' => $this->answers(50)], $headers)
             ->assertOk()
             ->assertJson(['passed' => false, 'progress_saved' => true, 'is_completed' => false, 'best_score' => 50]);
 
@@ -82,12 +85,12 @@ class MobileProgressTest extends TestCase
             ->assertJsonPath('modules.0.is_completed', false);
 
         // Pass with 80
-        $this->postJson($url, ['answers' => $this->answers(8)], $headers)
+        $this->postJson($url, ['answers' => $this->answers(80)], $headers)
             ->assertJson(['passed' => true, 'is_completed' => true, 'best_score' => 80]);
 
         // Lower pass and a fail afterwards keep best score and completion
-        $this->postJson($url, ['answers' => $this->answers(7)], $headers)->assertJson(['best_score' => 80]);
-        $this->postJson($url, ['answers' => $this->answers(2)], $headers)
+        $this->postJson($url, ['answers' => $this->answers(70)], $headers)->assertJson(['best_score' => 80]);
+        $this->postJson($url, ['answers' => $this->answers(20)], $headers)
             ->assertJson(['passed' => false, 'is_completed' => true, 'best_score' => 80]);
 
         $this->getJson('/api/courses/ai-foundation/contents', $headers)
@@ -114,7 +117,7 @@ class MobileProgressTest extends TestCase
         $student = $this->makeStudent();
         $other = $this->makeStudent(['registration_id' => null]);
 
-        $this->postJson('/api/courses/ai-foundation/modules/2/submit-quiz', ['answers' => $this->answers(9)], [
+        $this->postJson('/api/courses/ai-foundation/modules/2/submit-quiz', ['answers' => $this->answers(90, 2)], [
             'X-Student-Token' => $student->uuid,
         ])->assertOk()->assertJson(['progress_saved' => true, 'is_completed' => true]);
 
@@ -126,8 +129,47 @@ class MobileProgressTest extends TestCase
 
     public function test_anonymous_submit_quiz_grades_without_saving(): void
     {
-        $this->postJson('/api/courses/ai-foundation/modules/1/submit-quiz', ['answers' => $this->answers(9)])
+        $this->postJson('/api/courses/ai-foundation/modules/1/submit-quiz', ['answers' => $this->answers(90)])
             ->assertOk()
             ->assertJson(['passed' => true, 'progress_saved' => false, 'best_score' => null]);
+    }
+
+    public function test_placeholder_module_only_accepts_b_and_scores_over_all_30_questions(): void
+    {
+        $url = '/api/courses/ai-foundation/modules/2/submit-quiz';
+        $cycling = [];
+        foreach (range(1, 30) as $i) {
+            $cycling[(string) (200 + $i)] = ['A', 'B', 'C', 'D'][($i - 1) % 4];
+        }
+
+        $this->postJson($url, ['answers' => $cycling])
+            ->assertOk()
+            ->assertJson(['correct_count' => 8, 'total_questions' => 30, 'score' => 27, 'passed' => false]);
+
+        // One correct answer is 1/30, not 100%
+        $this->postJson($url, ['answers' => ['201' => 'B']])
+            ->assertJson(['correct_count' => 1, 'total_questions' => 30, 'score' => 3, 'passed' => false]);
+    }
+
+    public function test_cms_module_is_graded_against_its_own_questions_only(): void
+    {
+        $course = Training::create(['name' => 'Real Course', 'slug' => 'real-course', 'type' => 'courses']);
+        $module = TrainingModule::create(['training_id' => $course->id, 'module_index' => 1, 'title' => 'Intro']);
+        $q1 = $module->questions()->create(['question' => 'Q1', 'options' => ['a', 'b', 'c', 'd'], 'correct_answer' => 'C']);
+        $q2 = $module->questions()->create(['question' => 'Q2', 'options' => ['a', 'b', 'c', 'd'], 'correct_answer' => 'A']);
+
+        $other = TrainingModule::create(['training_id' => $course->id, 'module_index' => 2, 'title' => 'Other']);
+        $foreign = $other->questions()->create(['question' => 'X', 'options' => ['a', 'b'], 'correct_answer' => 'B']);
+
+        $url = '/api/courses/real-course/modules/1/submit-quiz';
+
+        $this->postJson($url, ['answers' => [$q1->id => 'C', $q2->id => 'B', $foreign->id => 'B']])
+            ->assertOk()
+            ->assertJson(['correct_count' => 1, 'total_questions' => 2, 'score' => 50, 'passed' => false])
+            ->assertJsonCount(2, 'results');
+
+        // A plain list is matched to the module's questions by position
+        $this->postJson($url, ['answers' => ['C', 'A']])
+            ->assertJson(['correct_count' => 2, 'total_questions' => 2, 'score' => 100, 'passed' => true]);
     }
 }
