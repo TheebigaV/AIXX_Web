@@ -367,30 +367,47 @@ class CourseController extends Controller
         $token = $validated['token'] ?? $request->header('X-Student-Token');
         $regId = $validated['registration_id'] ?? null;
 
-        $totalQuestions = count($answers);
-        if ($totalQuestions === 0) {
+        if (count($answers) === 0) {
             return response()->json(['success' => false, 'message' => 'No answers provided.'], 400);
         }
 
-        // Grade submission
+        // Build the answer key for this module only: CMS questions when the module exists in the DB,
+        // otherwise the 30 generated placeholder questions (ids moduleIndex*100 + 1..30, correct answer B).
+        $defaultExplanation = 'Correct answer aligns with module theoretical principles.';
+        $course = Training::where('slug', $slug)
+            ->orWhere('id', is_numeric($slug) ? (int)$slug : 0)
+            ->first();
+        $module = $course
+            ? TrainingModule::where('training_id', $course->id)->where('module_index', $moduleIndex)->with('questions')->first()
+            : null;
+
+        if ($module && $module->questions->isNotEmpty()) {
+            $answerKey = $module->questions->mapWithKeys(fn ($q) => [
+                $q->id => ['correct' => $q->correct_answer, 'explanation' => $q->explanation ?? $defaultExplanation],
+            ]);
+        } else {
+            $answerKey = collect(range(1, 30))->mapWithKeys(fn ($i) => [
+                ($moduleIndex * 100) + $i => ['correct' => 'B', 'explanation' => $defaultExplanation],
+            ]);
+        }
+
+        // A plain list of answers is matched to the questions by position.
+        if (array_is_list($answers)) {
+            $answers = array_combine(
+                $answerKey->keys()->take(count($answers))->all(),
+                array_slice($answers, 0, $answerKey->count())
+            );
+        }
+
+        // Grade every question in the module; unanswered questions count as wrong.
+        $totalQuestions = $answerKey->count();
         $correctCount = 0;
         $resultsBreakdown = [];
 
-        foreach ($answers as $qId => $selectedOption) {
-            // Resolve question if in database
-            $q = is_numeric($qId) ? TrainingQuestion::find($qId) : null;
-            $isCorrect = false;
-            $correctLetter = 'B'; // default reference
-            $explanation = 'Correct answer aligns with module theoretical principles.';
-
-            if ($q) {
-                $correctLetter = $q->correct_answer ?? 'A';
-                $isCorrect = (strtoupper(trim((string)$selectedOption)) === strtoupper(trim((string)$correctLetter)));
-                $explanation = $q->explanation ?? $explanation;
-            } else {
-                // Fallback simulation: grade option
-                $isCorrect = (in_array(strtoupper((string)$selectedOption), ['A', 'B', 'C', 'D']));
-            }
+        foreach ($answerKey as $qId => $key) {
+            $selectedOption = $answers[$qId] ?? null;
+            $isCorrect = $selectedOption !== null
+                && strtoupper(trim((string)$selectedOption)) === strtoupper(trim((string)$key['correct']));
 
             if ($isCorrect) {
                 $correctCount++;
@@ -400,7 +417,7 @@ class CourseController extends Controller
                 'question_id' => $qId,
                 'selected_option' => $selectedOption,
                 'is_correct' => $isCorrect,
-                'explanation' => $explanation
+                'explanation' => $key['explanation']
             ];
         }
 
