@@ -73,12 +73,12 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'email' => 'required|email',
-            'otp' => 'required|string',
+            'otp' => 'required|digits:6',
         ]);
 
         $student = Student::where('email', $validated['email'])->first();
 
-        $this->assertValidOtp($student, $validated['otp']);
+        $this->assertValidOtp($student, (string) $validated['otp']);
 
         $student->update([
             'email_verified_at' => Carbon::now(),
@@ -195,13 +195,13 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'email' => 'required|email',
-            'otp' => 'required|string',
+            'otp' => 'required|digits:6',
             'password' => 'required|string|min:8',
         ]);
 
         $student = Student::where('email', $validated['email'])->first();
 
-        $this->assertValidOtp($student, $validated['otp']);
+        $this->assertValidOtp($student, (string) $validated['otp']);
 
         $student->update([
             'password' => Hash::make($validated['password']),
