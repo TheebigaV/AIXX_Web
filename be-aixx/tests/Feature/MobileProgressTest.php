@@ -172,4 +172,41 @@ class MobileProgressTest extends TestCase
         $this->postJson($url, ['answers' => ['C', 'A']])
             ->assertJson(['correct_count' => 2, 'total_questions' => 2, 'score' => 100, 'passed' => true]);
     }
+
+    public function test_completing_a_passed_assessment_twice_returns_the_stored_result(): void
+    {
+        $student = $this->makeStudent();
+        $headers = $this->bearer($student);
+        $training = Training::create(['name' => 'Cert Course', 'slug' => 'cert-course', 'type' => 'courses']);
+        \App\Models\CertificateQuestion::create([
+            'training_id' => $training->id,
+            'question' => 'Pick a', 'options' => ['a', 'b'], 'correct_answer_index' => 0, 'is_active' => true,
+        ]);
+
+        $start = $this->postJson('/api/assessment/attempts', ['training_id' => $training->id], $headers)->assertCreated();
+        $attemptId = $start->json('attempt_id');
+        $question = $start->json('questions.0');
+        $this->postJson("/api/assessment/attempts/{$attemptId}/answers", [
+            'attempt_question_id' => $question['attempt_question_id'],
+            'selected_option' => array_search('a', $question['options'], true),
+        ], $headers)->assertOk();
+
+        $first = $this->postJson("/api/assessment/attempts/{$attemptId}/complete", [], $headers)
+            ->assertOk()
+            ->assertJson(['score' => 100, 'passed' => true, 'already_completed' => false]);
+        $this->assertStringStartsWith('http', $first->json('certificate.verify_url'));
+
+        $this->postJson("/api/assessment/attempts/{$attemptId}/complete", [], $headers)
+            ->assertOk()
+            ->assertJson([
+                'score' => 100,
+                'passed' => true,
+                'correct_count' => 1,
+                'already_completed' => true,
+                'certificate' => $first->json('certificate'),
+                'aiks' => $first->json('aiks'),
+                'question_breakdown' => $first->json('question_breakdown'),
+            ]);
+        $this->assertSame(1, $student->aiksSnapshots()->count());
+    }
 }
