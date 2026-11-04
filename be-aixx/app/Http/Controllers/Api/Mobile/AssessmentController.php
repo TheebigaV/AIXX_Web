@@ -114,14 +114,14 @@ class AssessmentController extends Controller
 
     /**
      * POST /api/assessment/attempts/{id}/complete — Complete and score the attempt.
+     * Idempotent: calling it again on a completed attempt returns the stored result.
      */
     public function complete(int $id, Request $request): JsonResponse
     {
         $student = $request->user();
 
-        $attempt = CertificateAttempt::where('student_id', $student->id)
-            ->where('is_completed', false)
-            ->findOrFail($id);
+        $attempt = CertificateAttempt::where('student_id', $student->id)->findOrFail($id);
+        $alreadyCompleted = $attempt->is_completed;
 
         $attemptQuestions = CertificateAttemptQuestion::where('certificate_attempt_id', $attempt->id)
             ->with('question')
@@ -135,8 +135,12 @@ class AssessmentController extends Controller
         $questionBreakdown = [];
         $correct = 0;
         foreach ($attemptQuestions as $aq) {
-            $isCorrect = $this->gradeAnswer($aq);
-            $aq->update(['is_correct' => $isCorrect]);
+            if ($alreadyCompleted) {
+                $isCorrect = (bool) $aq->is_correct;
+            } else {
+                $isCorrect = $this->gradeAnswer($aq);
+                $aq->update(['is_correct' => $isCorrect]);
+            }
             if ($isCorrect) {
                 $correct++;
             }
@@ -157,36 +161,44 @@ class AssessmentController extends Controller
             ];
         }
 
-        $score = (int) round(($correct / $total) * 100);
-        $passed = $score >= 80;
+        if ($alreadyCompleted) {
+            $score = (int) $attempt->score;
+            $passed = (bool) $attempt->passed;
+            $snapshot = $student->aiksSnapshots()->where('source', "assessment#{$attempt->id}")->first();
+        } else {
+            $score = (int) round(($correct / $total) * 100);
+            $passed = $score >= 80;
 
-        $attempt->update([
-            'is_completed' => true,
-            'score' => $score,
-            'passed' => $passed,
-            'completed_at' => now(),
-        ]);
+            $attempt->update([
+                'is_completed' => true,
+                'score' => $score,
+                'passed' => $passed,
+                'completed_at' => now(),
+            ]);
 
-        $snapshot = $this->aiks->recordSnapshot($student, $score, 'assessment', $attempt->id);
+            $snapshot = $this->aiks->recordSnapshot($student, $score, 'assessment', $attempt->id);
+        }
 
         $attempt->refresh();
         $certificate = $passed && $attempt->certificate_token ? [
             'id'                => $attempt->id,
             'certificate_token' => $attempt->certificate_token,
             'issued_at'         => $attempt->issued_at?->toIso8601String(),
-            'verify_url'        => "/api/certificate/verify/{$attempt->certificate_token}",
+            'verify_url'        => rtrim(config('app.frontend_url'), '/') . "/certificate/verify/{$attempt->certificate_token}",
+            'verify_api_url'    => "/api/certificate/verify/{$attempt->certificate_token}",
         ] : null;
 
         return response()->json([
             'success'            => true,
             'attempt_id'          => $attempt->id,
+            'already_completed'   => $alreadyCompleted,
             'score'               => $score,
             'correct_count'       => $correct,
             'total_questions'     => $total,
             'passed'              => $passed,
             'certificate_token'   => $attempt->certificate_token,
             'certificate'         => $certificate,
-            'aiks'                => ['score' => $snapshot->score, 'level' => $snapshot->level],
+            'aiks'                => $snapshot ? ['score' => $snapshot->score, 'level' => $snapshot->level] : null,
             'question_breakdown'  => $questionBreakdown,
         ], 200);
     }
