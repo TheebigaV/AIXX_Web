@@ -157,23 +157,24 @@ class CourseController extends Controller
             ->when($courseFilter, fn ($cs) => $cs->where('slug', $courseFilter));
 
         $trainings = Training::whereIn('slug', $courses->pluck('slug'))
-            ->with('modules:id,training_id,module_index,title')
+            ->with(['modules' => fn ($q) => $q->where('is_published', true)->select('id', 'training_id', 'module_index', 'title')])
             ->get(['id', 'name', 'slug'])
             ->keyBy('slug');
 
         $results = $courses->flatMap(function ($c) use ($trainings) {
             $training = $trainings->get($c['slug']);
+            $moduleTitles = $this->moduleTitles($training, $c['slug']);
 
             return collect($c['modules_progress'] ?? [])
                 ->filter(fn ($m) => ($m['score'] ?? null) !== null)
-                ->map(function ($m, $index) use ($c, $training) {
+                ->map(function ($m, $index) use ($c, $training, $moduleTitles) {
                     $bestScore = $m['best_score'] ?? $m['score'];
 
                     return [
                         'course' => $training?->name ?? ($c['title'] ?? null),
                         'course_slug' => $c['slug'],
                         'module_index' => (int) $index,
-                        'module_title' => $training?->modules->firstWhere('module_index', (int) $index)?->title,
+                        'module_title' => $moduleTitles[(int) $index] ?? null,
                         'best_score' => $bestScore,
                         'last_score' => $m['last_score'] ?? $m['score'],
                         'passed' => (bool) ($m['passed'] ?? false),
@@ -187,6 +188,25 @@ class CourseController extends Controller
         })->values();
 
         return response()->json(['success' => true, 'count' => $results->count(), 'data' => $results], 200);
+    }
+
+    /**
+     * module_index => title, matching /contents: published DB modules when the
+     * course has any, otherwise the default 5-module structure.
+     */
+    protected function moduleTitles(?Training $training, string $slug): array
+    {
+        if ($training && $training->modules->isNotEmpty()) {
+            return $training->modules->values()
+                ->mapWithKeys(fn ($m, $idx) => [($m->module_index ?: $idx + 1) => $m->title])
+                ->all();
+        }
+
+        $courseName = $training?->name ?? ucwords(str_replace('-', ' ', $slug));
+
+        return collect($this->webCourses->generateDefault5ModulesStructure($courseName))
+            ->pluck('title', 'module_index')
+            ->all();
     }
 
     /** Split-safe highlights: drop stray \r / whitespace and empty lines. */
