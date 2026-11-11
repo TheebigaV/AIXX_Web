@@ -104,12 +104,31 @@ class MobileProgressTest extends TestCase
             ->assertJsonPath('count', 1)
             ->assertJsonPath('data.0.course_slug', 'ai-foundation')
             ->assertJsonPath('data.0.module_index', 1)
+            ->assertJsonPath('data.0.module_title', 'Module 1: Foundations & Core Concepts')
             ->assertJsonPath('data.0.best_score', 80)
             ->assertJsonPath('data.0.last_score', 20)
             ->assertJsonPath('data.0.attempts', 4)
             ->assertJsonPath('data.0.passed', true);
 
         $this->getJson('/api/me/module-results?course=other-course', $headers)->assertJsonPath('count', 0);
+    }
+
+    public function test_module_results_titles_match_contents_for_cms_courses(): void
+    {
+        $course = Training::create(['name' => 'Real Course', 'slug' => 'real-course', 'type' => 'courses']);
+        TrainingModule::create(['training_id' => $course->id, 'module_index' => 1, 'title' => 'Intro to Real', 'is_published' => true]);
+        $student = $this->makeStudent([
+            'enrolled_courses' => [[
+                'course_id' => 'AIXX-real-course',
+                'modules_progress' => [1 => ['score' => 90, 'passed' => true]],
+            ]],
+        ]);
+        $headers = $this->bearer($student);
+
+        $this->getJson('/api/courses/real-course/contents', $headers)->assertJsonPath('modules.0.title', 'Intro to Real');
+        $this->getJson('/api/me/module-results', $headers)
+            ->assertOk()
+            ->assertJsonPath('data.0.module_title', 'Intro to Real');
     }
 
     public function test_x_student_token_header_still_works_without_registration_id(): void
