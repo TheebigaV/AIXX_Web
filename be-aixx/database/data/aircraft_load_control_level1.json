@@ -1,0 +1,2161 @@
+{
+  "course": {
+    "name": "Level 1 Certificate in Aircraft Load Control Fundamentals",
+    "slug": "aircraft-load-control-level-1",
+    "type": "certification",
+    "level": 1,
+    "level_name": "Level 1 - Foundation Certificate",
+    "pathway": "Aircraft Load Control Professional Development Pathway",
+    "pathway_slug": "aircraft-load-control",
+    "target_learner": "Aspiring aircraft load-control personnel and airport/airline staff seeking foundation knowledge",
+    "delivery": "Self-paced digital learning with images, scenarios, knowledge checks and dynamic MCQs",
+    "duration": "Approximately 24-30 hours",
+    "boundary_statement": "This course is educational and non-aircraft-specific; it does not qualify or authorise a learner to perform live aircraft load control.",
+    "safety_boundary": "This curriculum is designed for education, professional development and preparation for further approved training. It does not provide aircraft-specific operational instructions, numerical loading limits, live mass-and-balance calculations, proprietary DCS procedures, loading-position assignments or authority to release an aircraft. In real operations, learners must use the current approved operator manuals, aircraft data, system configuration, contingency procedures and employer/regulatory authorisation.",
+    "outcomes": [
+      "Explain the purpose of aircraft load control and where it sits within airline and airport operations.",
+      "Describe, at a conceptual level, why aircraft mass and the distribution of mass affect safe operation.",
+      "Recognise common load-control terminology and the categories of information that feed a load-control process.",
+      "Describe how passengers, baggage, cargo and mail become part of an aircraft loading picture.",
+      "Explain the importance of accurate and timely communication between load control, ramp, passenger services, cargo, operations and flight crew.",
+      "Describe the purpose of load planning, load documentation, reconciliation and controlled changes without performing aircraft-specific calculations.",
+      "Explain the role of digital systems, DCS data, interfaces, validation and audit trails.",
+      "Identify common human-factor risks such as distraction, assumption, time pressure and communication breakdown.",
+      "Recognise when uncertainty, discrepancy or unexpected change should be escalated rather than guessed.",
+      "Understand that competence in generic theory is only one step toward employer-specific operational qualification."
+    ],
+    "version": "1.0",
+    "effective_date": "2026-11-17"
+  },
+  "next_levels": [
+    {
+      "level": 2,
+      "level_name": "Intermediate Certificate",
+      "description": "Scenario complexity increases and more technical concepts are introduced."
+    },
+    {
+      "level": 3,
+      "level_name": "Advanced Certificate",
+      "description": "Progressively more complex scenario reasoning with stronger employer/SME validation."
+    },
+    {
+      "level": 4,
+      "level_name": "Professional Certificate",
+      "description": "Professional-level scenario reasoning with employer/SME validation."
+    }
+  ],
+  "blueprint": {
+    "total_questions": 50,
+    "pass_mark": 70,
+    "topics": [
+      {
+        "module_index": 1,
+        "topic": "Role and ecosystem",
+        "min": 4,
+        "max": 5
+      },
+      {
+        "module_index": 2,
+        "topic": "Flight / mass / balance concepts",
+        "min": 5,
+        "max": 6
+      },
+      {
+        "module_index": 3,
+        "topic": "Terminology",
+        "min": 5,
+        "max": 6
+      },
+      {
+        "module_index": 4,
+        "topic": "Traffic load and physical loading",
+        "min": 5,
+        "max": 6
+      },
+      {
+        "module_index": 5,
+        "topic": "Information flow",
+        "min": 4,
+        "max": 5
+      },
+      {
+        "module_index": 6,
+        "topic": "Load-planning concepts",
+        "min": 4,
+        "max": 5
+      },
+      {
+        "module_index": 7,
+        "topic": "Documentation and records",
+        "min": 4,
+        "max": 5
+      },
+      {
+        "module_index": 8,
+        "topic": "Digital systems / data quality",
+        "min": 4,
+        "max": 5
+      },
+      {
+        "module_index": 9,
+        "topic": "Human factors / safety",
+        "min": 5,
+        "max": 6
+      },
+      {
+        "module_index": 10,
+        "topic": "Change management",
+        "min": 4,
+        "max": 5
+      },
+      {
+        "module_index": 11,
+        "topic": "Quality / professional conduct",
+        "min": 3,
+        "max": 4
+      }
+    ]
+  },
+  "competency_areas": [
+    {
+      "area": "Role Awareness",
+      "description": "Understanding of load control purpose and interfaces"
+    },
+    {
+      "area": "Mass & Balance Concepts",
+      "description": "Conceptual understanding of why mass and distribution matter"
+    },
+    {
+      "area": "Terminology",
+      "description": "Recognition and correct use of controlled language"
+    },
+    {
+      "area": "Loading Awareness",
+      "description": "Understanding passengers, baggage, cargo, mail and reconciliation"
+    },
+    {
+      "area": "Information Discipline",
+      "description": "Source control, timing, handover and communication"
+    },
+    {
+      "area": "Documentation",
+      "description": "Understanding records, versions and amendments"
+    },
+    {
+      "area": "Digital Systems",
+      "description": "DCS concepts, data quality and access control"
+    },
+    {
+      "area": "Human Factors",
+      "description": "Awareness of workload, distraction, fatigue and bias"
+    },
+    {
+      "area": "Safety & Escalation",
+      "description": "Recognition of red flags and limits of authority"
+    },
+    {
+      "area": "Professional Conduct",
+      "description": "Integrity, quality, recurrent learning and confidentiality"
+    }
+  ],
+  "modules": [
+    {
+      "module_index": 1,
+      "title": "The Load Control Role and the Airport/Airline Ecosystem",
+      "level": "Foundation",
+      "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+      "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+      "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+      "competency_area": "Role Awareness",
+      "objectives": [
+        "Describe the purpose of load control.",
+        "Identify the main airport and airline teams that exchange information with load control.",
+        "Explain the difference between station-based and centralised load-control concepts.",
+        "Recognise why load control is a coordination function as well as a technical function.",
+        "Explain why generic learning does not replace employer-specific operational qualification."
+      ],
+      "terminology": [
+        "Load control",
+        "Ground handling",
+        "Turnaround",
+        "Flight crew",
+        "Ramp",
+        "Passenger services",
+        "Cargo",
+        "Operations control",
+        "Centralised load control"
+      ],
+      "cards": [
+        {
+          "heading": "Why load control exists",
+          "body": "Aircraft do not depart safely simply because all passengers and bags have arrived. Before departure, the operator needs a reliable picture of what is planned to be carried, what has actually been accepted for carriage, how the load is distributed and whether the final operating condition remains within the operator-approved limits. Load control is one of the functions that brings these pieces of information together. At foundation level, the learner should understand load control as a safety-sensitive coordination activity: it converts operational information into controlled load information that other authorised personnel can rely on.",
+          "type": "text"
+        },
+        {
+          "heading": "Where load control sits in the operation",
+          "body": "Load control usually sits between several functions. Passenger services provides information about boarded passengers and special categories of travellers. Baggage operations provides information about baggage flows. Cargo and mail teams provide shipment information. Ramp teams know what is physically being loaded and unloaded. Operations and dispatch functions may provide aircraft and flight information. The flight crew ultimately requires reliable information about the aircraft condition for departure. The exact organisational arrangement differs by airline and ground handler, but the principle is constant: load control depends on timely, accurate inputs from several parties.",
+          "type": "text"
+        },
+        {
+          "heading": "Station and centralised concepts",
+          "body": "Some organisations perform load control locally at the airport. Others use centralised or remote load-control centres that support many flights or stations. Centralisation can improve consistency and specialist utilisation, but it also increases dependence on reliable communication, systems, timestamps and clear ownership. A remote load controller cannot see the aircraft directly, so the accuracy of information flowing from the station becomes especially important.",
+          "type": "text"
+        },
+        {
+          "heading": "The difference between information and authority",
+          "body": "A load controller may receive many pieces of information, but not every piece of information is automatically valid for operational use. Authorised data, current manuals, approved system values and verified operational messages matter. A professional must distinguish between informal information and controlled information. If two sources conflict, the correct response is to follow the organisation's escalation and verification process rather than choosing the value that appears more convenient.",
+          "type": "text"
+        },
+        {
+          "heading": "Professional mindset",
+          "body": "A foundation learner should start developing three habits: accuracy before speed, verification before assumption and escalation before improvisation. Turnaround operations are time-sensitive, but saving a few seconds by guessing can create larger problems. A good load-control professional communicates clearly, records changes, protects data integrity and understands the limits of personal authority.",
+          "type": "text"
+        },
+        {
+          "heading": "Career pathway",
+          "body": "Completion of this module does not make a learner a qualified load controller. It creates awareness of the role and prepares the learner for deeper study. Operational qualification normally requires employer-specific training, aircraft or fleet familiarisation, current manuals, system training, supervised practice and competency assessment.",
+          "type": "text"
+        }
+      ],
+      "scenarios": [
+        "Process map showing Passenger Services, Baggage, Cargo, Ramp, Operations and Flight Crew feeding or receiving information through a central Load Control node.",
+        "Split-screen scenario: local station load-control desk on the left and centralised remote load-control centre on the right, with secure data links between them."
+      ],
+      "knowledge_checks": [
+        {
+          "question": "Why does load control depend on many other teams?",
+          "suggested_answer": "Because the final load picture is built from information generated across passenger, baggage, cargo, ramp and operations activities."
+        },
+        {
+          "question": "What should happen if two operational data sources conflict?",
+          "suggested_answer": "The discrepancy should be verified and escalated according to the organisation's approved process; it should not be guessed."
+        },
+        {
+          "question": "Does completing a generic online course authorise someone to perform live load control?",
+          "suggested_answer": "No. Employer-specific training, approved data, supervised competency and authorisation are still required."
+        },
+        {
+          "question": "Why can centralised load control require strong communication discipline?",
+          "suggested_answer": "The controller may be remote from the physical aircraft and depends on accurate, timely station information."
+        },
+        {
+          "question": "Name one professional habit important in load control.",
+          "suggested_answer": "Examples include accuracy before speed, verification before assumption, and escalation before improvisation."
+        }
+      ],
+      "summary": [
+        "Aircraft do not depart safely simply because all passengers and bags have arrived.",
+        "Describe the purpose of load control.",
+        "Identify the main airport and airline teams that exchange information with load control.",
+        "Explain the difference between station-based and centralised load-control concepts.",
+        "Recognise why load control is a coordination function as well as a technical function."
+      ],
+      "mcqs": [
+        {
+          "question": "Which statement best describes the foundation purpose of aircraft load control?",
+          "options": [
+            "To coordinate reliable load information for safe and controlled aircraft operation",
+            "To sell additional baggage allowance",
+            "To schedule airport retail staff",
+            "To select the flight route"
+          ],
+          "correct_answer": "A",
+          "explanation": "Load control brings together controlled information about what is carried and how the load is represented for departure.",
+          "competency_tag": "Role awareness / safety purpose"
+        },
+        {
+          "question": "Why does load control communicate with passenger, baggage, cargo and ramp teams?",
+          "options": [
+            "Because each team provides part of the operational load picture",
+            "Because load control manages all airport shops",
+            "Because load control decides airline fares",
+            "Because these teams operate the aircraft engines"
+          ],
+          "correct_answer": "A",
+          "explanation": "The load picture is assembled from several operational information sources.",
+          "competency_tag": "Stakeholder coordination"
+        },
+        {
+          "question": "A remote load controller receives two conflicting figures. What is the best foundation-level response?",
+          "options": [
+            "Use the larger figure",
+            "Use the smaller figure",
+            "Verify and escalate the discrepancy according to the approved process",
+            "Average the two figures"
+          ],
+          "correct_answer": "C",
+          "explanation": "Conflicting operational data must be resolved through verification and escalation, not assumption.",
+          "competency_tag": "Data integrity / escalation"
+        },
+        {
+          "question": "What is one important characteristic of centralised load control?",
+          "options": [
+            "It can support multiple stations from a remote location",
+            "It removes the need for station communication",
+            "It allows unverified data to be used",
+            "It replaces the flight crew"
+          ],
+          "correct_answer": "A",
+          "explanation": "Centralised teams can support multiple stations but remain dependent on reliable information exchange.",
+          "competency_tag": "Operating models"
+        },
+        {
+          "question": "Which professional habit is most appropriate in a safety-sensitive load-control environment?",
+          "options": [
+            "Guess quickly when information is incomplete",
+            "Verify before assuming",
+            "Ignore small discrepancies",
+            "Use unofficial values if they save time"
+          ],
+          "correct_answer": "B",
+          "explanation": "Verification and controlled escalation are core professional behaviours.",
+          "competency_tag": "Professional conduct"
+        },
+        {
+          "question": "What normally remains necessary after completing a generic foundation course?",
+          "options": [
+            "Employer-specific operational training and authorisation",
+            "Nothing else",
+            "Only a social-media profile",
+            "A retail-service certificate"
+          ],
+          "correct_answer": "A",
+          "explanation": "Generic learning supports knowledge but does not replace operator-specific competency and authorisation.",
+          "competency_tag": "Qualification boundary"
+        }
+      ]
+    },
+    {
+      "module_index": 2,
+      "title": "Foundations of Flight, Mass and Balance",
+      "level": "Foundation",
+      "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+      "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+      "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+      "competency_area": "Mass & Balance Concepts",
+      "objectives": [
+        "Name the four basic forces commonly used to explain flight.",
+        "Explain why total aircraft mass matters operationally.",
+        "Explain why distribution of mass matters in addition to total mass.",
+        "Describe centre of gravity at a conceptual level.",
+        "Recognise that safe operation depends on approved aircraft and operator limits rather than generic values."
+      ],
+      "terminology": [
+        "Lift",
+        "Weight",
+        "Thrust",
+        "Drag",
+        "Mass",
+        "Balance",
+        "Centre of gravity (CG)",
+        "Stability",
+        "Operational limit"
+      ],
+      "cards": [
+        {
+          "heading": "Four-force picture of flight",
+          "body": "A simple foundation model describes four forces acting on an aircraft: lift, weight, thrust and drag. The purpose of this model is not to turn the learner into a pilot or engineer. It helps explain why the amount and distribution of mass matter. Weight acts downward, lift acts primarily upward, thrust moves the aircraft forward and drag resists motion. The relationship among these forces changes across phases of operation.",
+          "type": "text"
+        },
+        {
+          "heading": "Why total mass matters",
+          "body": "Every aircraft has approved limits that are established through design, certification and operator procedures. The load-control learner does not invent or estimate these limits. At foundation level, the key idea is that adding passengers, baggage, cargo, mail and fuel changes the aircraft's operating mass. The final operating condition must be assessed using the current approved data for the specific aircraft and flight.",
+          "type": "text"
+        },
+        {
+          "heading": "Why distribution matters",
+          "body": "Two aircraft can have the same total mass but different distributions of that mass. Distribution affects where the combined mass is effectively concentrated. That is why load control is not only about counting kilograms; it is also about where items and people are located. A safe loading concept therefore considers both total mass and balance.",
+          "type": "text"
+        },
+        {
+          "heading": "Centre of gravity concept",
+          "body": "Centre of gravity is the conceptual point through which the aircraft's total mass can be considered to act. Moving load forward or aft can move the centre of gravity. The allowable region is defined by approved aircraft and operator data. A Level 1 learner only needs to understand the relationship conceptually; detailed calculations, indexes and aircraft-specific envelopes belong in later or operator-specific training.",
+          "type": "text"
+        },
+        {
+          "heading": "Stability and controllability",
+          "body": "Aircraft are designed to operate within defined balance conditions. If loading falls outside approved limits, controllability, handling qualities or structural considerations may be affected. This is why final load information is safety-sensitive. The correct professional response is never to approximate an unknown limit or rely on memory when current approved data should be used.",
+          "type": "text"
+        },
+        {
+          "heading": "Learning principle",
+          "body": "The most important Level 1 message is simple: mass and balance are controlled using approved data, accurate inputs and disciplined processes. Generic diagrams can teach concepts, but live operations require the exact current data for the aircraft and operator.",
+          "type": "text"
+        }
+      ],
+      "scenarios": [
+        "Simple aircraft side-view showing lift, weight, thrust and drag arrows; no numerical values.",
+        "Two identical aircraft silhouettes with the same total load icons but different forward/aft distribution, illustrating that equal total mass does not mean equal balance."
+      ],
+      "knowledge_checks": [
+        {
+          "question": "What four forces are commonly used in a basic explanation of flight?",
+          "suggested_answer": "Lift, weight, thrust and drag."
+        },
+        {
+          "question": "Why is total mass alone not enough to describe loading?",
+          "suggested_answer": "Because the distribution of mass also affects balance and the centre of gravity."
+        },
+        {
+          "question": "What is centre of gravity in simple terms?",
+          "suggested_answer": "The conceptual point through which the aircraft's combined mass can be considered to act."
+        },
+        {
+          "question": "Should a learner use a generic internet value as an aircraft operating limit?",
+          "suggested_answer": "No. Only current approved aircraft/operator data should be used in operations."
+        },
+        {
+          "question": "Why is this module conceptual rather than calculation-based?",
+          "suggested_answer": "Because Level 1 builds understanding; aircraft-specific calculations require approved data and supervised operational training."
+        }
+      ],
+      "summary": [
+        "A simple foundation model describes four forces acting on an aircraft: lift, weight, thrust and drag.",
+        "Name the four basic forces commonly used to explain flight.",
+        "Explain why total aircraft mass matters operationally.",
+        "Explain why distribution of mass matters in addition to total mass.",
+        "Describe centre of gravity at a conceptual level."
+      ],
+      "mcqs": [
+        {
+          "question": "Which pair of ideas must both be considered when thinking about aircraft loading?",
+          "options": [
+            "Mass and balance",
+            "Ticket price and meal choice",
+            "Weather and retail sales",
+            "Gate number and uniform colour"
+          ],
+          "correct_answer": "A",
+          "explanation": "Aircraft loading is concerned with both how much mass is carried and how it is distributed.",
+          "competency_tag": "Mass/balance concept"
+        },
+        {
+          "question": "What can happen when load is moved forward or aft?",
+          "options": [
+            "The centre of gravity can change",
+            "The aircraft registration changes",
+            "The runway number changes",
+            "The ticket class changes"
+          ],
+          "correct_answer": "A",
+          "explanation": "Moving mass changes its distribution and can move the centre of gravity.",
+          "competency_tag": "CG concept"
+        },
+        {
+          "question": "Which statement about aircraft limits is correct?",
+          "options": [
+            "They should come from current approved aircraft/operator data",
+            "They can be guessed from experience",
+            "They are the same for every aircraft",
+            "They can be replaced by a generic training illustration"
+          ],
+          "correct_answer": "A",
+          "explanation": "Operational limits are aircraft- and operator-specific and must come from approved data.",
+          "competency_tag": "Approved-data awareness"
+        },
+        {
+          "question": "Why does a Level 1 course avoid teaching live aircraft-specific calculations?",
+          "options": [
+            "Because those require current approved data and supervised qualification",
+            "Because calculations are never used in aviation",
+            "Because only pilots may learn mathematics",
+            "Because balance is unrelated to loading"
+          ],
+          "correct_answer": "A",
+          "explanation": "Foundation learning should explain concepts without pretending to replace operator-specific technical qualification.",
+          "competency_tag": "Training boundary"
+        },
+        {
+          "question": "Which force acts primarily downward in the basic four-force model?",
+          "options": [
+            "Weight",
+            "Lift",
+            "Thrust",
+            "Drag"
+          ],
+          "correct_answer": "A",
+          "explanation": "Weight acts downward due to gravity.",
+          "competency_tag": "Basic flight theory"
+        },
+        {
+          "question": "Two aircraft have the same total mass but different load distribution. What may differ?",
+          "options": [
+            "Their balance condition",
+            "Their airline brand",
+            "Their airport code",
+            "Their flight number format"
+          ],
+          "correct_answer": "A",
+          "explanation": "Distribution affects balance even when total mass is unchanged.",
+          "competency_tag": "Distribution awareness"
+        }
+      ]
+    },
+    {
+      "module_index": 3,
+      "title": "Load-Control Terminology and Aircraft Weight Concepts",
+      "level": "Foundation",
+      "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+      "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+      "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+      "competency_area": "Terminology",
+      "objectives": [
+        "Recognise common categories of aircraft and traffic-load terminology.",
+        "Distinguish between fixed/basic aircraft-related information and traffic-load information at a conceptual level.",
+        "Understand that fuel, passengers, baggage, cargo and mail contribute different categories of operational information.",
+        "Explain why terminology must be interpreted according to the operator's approved definitions.",
+        "Use common abbreviations carefully and avoid assuming that every organisation uses identical labels."
+      ],
+      "terminology": [
+        "Operating mass concepts",
+        "Traffic load",
+        "Payload",
+        "Passenger",
+        "Baggage",
+        "Cargo",
+        "Mail",
+        "Fuel",
+        "Dry operating concepts",
+        "Zero-fuel concepts",
+        "Take-off concepts",
+        "Landing concepts"
+      ],
+      "cards": [
+        {
+          "heading": "Why terminology matters",
+          "body": "Load control uses specialised terms because different categories of mass and operational information have different meanings. If staff use the same word to mean different things, errors can occur. Foundation learners should therefore become comfortable with the vocabulary while also understanding that exact definitions and abbreviations must follow the current operator documentation.",
+          "type": "text"
+        },
+        {
+          "heading": "Aircraft-related versus traffic-related information",
+          "body": "A useful conceptual distinction is between information associated with the aircraft and its operating configuration, and information added for a particular flight. Passengers, baggage, cargo and mail are examples of traffic-related items. Fuel is another important operational input. The exact technical combination of these items into formal aircraft weights is taught using approved operator methods.",
+          "type": "text"
+        },
+        {
+          "heading": "Payload and traffic-load language",
+          "body": "In everyday speech, people may use terms such as payload loosely. In operational documentation, terms have controlled meanings. AIXX should therefore teach learners to look up the organisation's approved definition rather than relying on casual interpretation. This habit becomes increasingly important as learners progress to more technical levels.",
+          "type": "text"
+        },
+        {
+          "heading": "Flight-stage concepts",
+          "body": "Aircraft operating data is often expressed at different stages of a flight, such as before fuel is added, before take-off or before landing. At Level 1, the learner should recognise that the relevant value changes with the operating stage. Detailed equations and aircraft-specific calculations are outside this course.",
+          "type": "text"
+        },
+        {
+          "heading": "Abbreviations and standardisation",
+          "body": "Aviation uses many abbreviations. Abbreviations improve speed only when everyone interprets them correctly. New learners should avoid pretending to understand an unfamiliar abbreviation. Asking for clarification is safer than assuming. Company systems, manuals and training material should provide controlled definitions.",
+          "type": "text"
+        },
+        {
+          "heading": "Professional use of language",
+          "body": "Good load-control communication is concise, specific and unambiguous. When possible, staff should use approved terminology and avoid local slang in safety-sensitive messages. This supports standardisation across stations, shifts and organisations.",
+          "type": "text"
+        }
+      ],
+      "scenarios": [
+        "Layered infographic: aircraft/base operating information + fuel information + traffic load (passengers, bags, cargo, mail) forming a complete operational picture, without formulas.",
+        "Glossary card design showing a technical term, plain-language meaning, approved-definition reminder and example context."
+      ],
+      "knowledge_checks": [
+        {
+          "question": "Why is controlled terminology important?",
+          "suggested_answer": "It reduces misunderstanding when different teams exchange safety-sensitive information."
+        },
+        {
+          "question": "Give two examples of traffic-load items.",
+          "suggested_answer": "Passengers, baggage, cargo or mail."
+        },
+        {
+          "question": "Should an unfamiliar abbreviation be guessed?",
+          "suggested_answer": "No. It should be checked against approved definitions or clarified."
+        },
+        {
+          "question": "Why can values differ by flight stage?",
+          "suggested_answer": "Because the aircraft operating condition changes as fuel and other factors change across the flight."
+        },
+        {
+          "question": "Does AIXX Level 1 define aircraft-specific equations?",
+          "suggested_answer": "No. It teaches terminology and concepts; technical equations belong to approved operator training."
+        }
+      ],
+      "summary": [
+        "Load control uses specialised terms because different categories of mass and operational information have different meanings.",
+        "Recognise common categories of aircraft and traffic-load terminology.",
+        "Distinguish between fixed/basic aircraft-related information and traffic-load information at a conceptual level.",
+        "Understand that fuel, passengers, baggage, cargo and mail contribute different categories of operational information.",
+        "Explain why terminology must be interpreted according to the operator's approved definitions."
+      ],
+      "mcqs": [
+        {
+          "question": "Which item is typically part of traffic load?",
+          "options": [
+            "Passenger baggage",
+            "Airport terminal furniture",
+            "Runway lighting",
+            "Check-in counter signage"
+          ],
+          "correct_answer": "A",
+          "explanation": "Baggage carried on the flight is part of the traffic-load picture.",
+          "competency_tag": "Terminology"
+        },
+        {
+          "question": "Why should load-control terminology follow approved definitions?",
+          "options": [
+            "To reduce ambiguity and support consistent interpretation",
+            "To make messages longer",
+            "To avoid using any abbreviations",
+            "To replace system training"
+          ],
+          "correct_answer": "A",
+          "explanation": "Controlled definitions help different teams understand the same information consistently.",
+          "competency_tag": "Standardisation"
+        },
+        {
+          "question": "A learner sees an unfamiliar abbreviation in an operational context. What is the best response?",
+          "options": [
+            "Guess based on the first letter",
+            "Check the approved glossary or ask for clarification",
+            "Ignore it",
+            "Invent a local meaning"
+          ],
+          "correct_answer": "B",
+          "explanation": "Unknown terminology should be verified rather than assumed.",
+          "competency_tag": "Professional communication"
+        },
+        {
+          "question": "Why does Level 1 introduce flight-stage weight concepts without detailed equations?",
+          "options": [
+            "To build conceptual understanding before operator-specific technical training",
+            "Because aircraft weight never changes",
+            "Because equations are prohibited in aviation",
+            "Because fuel is unrelated to aircraft mass"
+          ],
+          "correct_answer": "A",
+          "explanation": "Foundation learning prepares learners for later approved technical instruction.",
+          "competency_tag": "Learning progression"
+        },
+        {
+          "question": "Which group contains only flight-related load inputs?",
+          "options": [
+            "Passengers, baggage, cargo, mail",
+            "Retail sales, parking fees, uniforms, gates",
+            "Weather radar, runway lights, terminal seats, buses",
+            "Catering menu, website banner, office printer, taxi queue"
+          ],
+          "correct_answer": "A",
+          "explanation": "These are common categories of traffic load.",
+          "competency_tag": "Traffic-load awareness"
+        },
+        {
+          "question": "Which communication style is most suitable for load control?",
+          "options": [
+            "Clear approved terminology with minimal ambiguity",
+            "Local slang understood by one shift",
+            "Unverified abbreviations",
+            "Informal estimates without sources"
+          ],
+          "correct_answer": "A",
+          "explanation": "Safety-sensitive communication benefits from standard, controlled language.",
+          "competency_tag": "Communication"
+        }
+      ]
+    },
+    {
+      "module_index": 4,
+      "title": "What Is Loaded on an Aircraft: Passengers, Baggage, Cargo and Mail",
+      "level": "Foundation",
+      "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+      "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+      "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+      "competency_area": "Loading Awareness",
+      "objectives": [
+        "Identify the main categories of traffic carried on passenger and cargo aircraft.",
+        "Explain why the physical location of load matters.",
+        "Recognise that different load categories can have special handling or information requirements.",
+        "Describe the purpose of compartments and unit-load devices at a high level.",
+        "Explain why the planned load and the physically loaded condition must ultimately agree."
+      ],
+      "terminology": [
+        "Passenger distribution",
+        "Checked baggage",
+        "Cargo",
+        "Mail",
+        "Compartment",
+        "Hold",
+        "Unit Load Device (ULD)",
+        "Special load",
+        "Physical loading",
+        "Reconciliation"
+      ],
+      "cards": [
+        {
+          "heading": "Traffic becomes physical load",
+          "body": "Load-control information ultimately represents real people and real items placed in real locations. Passengers occupy seats. Baggage, cargo and mail are placed in approved holds, compartments or loading positions according to operator procedures. This physical reality is why data quality is critical: a system entry that does not match what is actually loaded can create a discrepancy.",
+          "type": "text"
+        },
+        {
+          "heading": "Passenger distribution",
+          "body": "Passenger numbers are not only commercial information. Where passengers are seated can contribute to the distribution of mass. Airlines have procedures for seating, special categories and changes. A foundation learner should understand the link without attempting to apply aircraft-specific seating rules.",
+          "type": "text"
+        },
+        {
+          "heading": "Baggage, cargo and mail",
+          "body": "These categories may enter the operation through different systems and teams. Baggage normally follows passenger-processing flows, cargo follows cargo-acceptance and build-up processes, and mail may have its own documentation. Load control depends on receiving authorised information that accurately reflects what is intended to be carried.",
+          "type": "text"
+        },
+        {
+          "heading": "Compartments and ULDs",
+          "body": "Aircraft may have several loading areas. Some operations use Unit Load Devices such as containers or pallets; others use bulk loading. Each aircraft type has approved structural and loading limitations. Level 1 learners should recognise the concepts but should never use generic training images to determine a live loading position or limit.",
+          "type": "text"
+        },
+        {
+          "heading": "Special loads",
+          "body": "Some shipments or items require extra attention because of handling, restraint, segregation, passenger needs, dangerous-goods rules or other operational requirements. Detailed procedures belong to the relevant specialised and operator-approved training. The Level 1 principle is that special information must be identified and communicated through the approved process.",
+          "type": "text"
+        },
+        {
+          "heading": "Planned versus actual",
+          "body": "The strongest conceptual lesson is that the planned load must be reconciled with what is physically loaded. If something changes, the information chain must also change. A bag offloaded at the aircraft but left in the system as loaded is an example of a mismatch that needs controlled correction.",
+          "type": "text"
+        }
+      ],
+      "scenarios": [
+        "Cutaway aircraft diagram showing passenger cabin, forward hold, aft hold and generic ULD/bulk areas with no aircraft-specific limits.",
+        "Before/after scenario: planned load icons versus actual loaded icons, with one item removed and a red \"update required\" indicator."
+      ],
+      "knowledge_checks": [
+        {
+          "question": "Why does load location matter?",
+          "suggested_answer": "Because distribution of mass affects balance, not just total mass."
+        },
+        {
+          "question": "What is a ULD in general terms?",
+          "suggested_answer": "A container or pallet system used to group and handle load on suitable aircraft."
+        },
+        {
+          "question": "Can generic training diagrams be used to decide live compartment limits?",
+          "suggested_answer": "No. Live limits come from current approved aircraft/operator data."
+        },
+        {
+          "question": "What does reconciliation mean conceptually?",
+          "suggested_answer": "Making sure the recorded load information matches the actual physical load condition."
+        },
+        {
+          "question": "Why do special loads need controlled communication?",
+          "suggested_answer": "They may require additional handling, restraint, segregation or operational consideration."
+        }
+      ],
+      "summary": [
+        "Load-control information ultimately represents real people and real items placed in real locations.",
+        "Identify the main categories of traffic carried on passenger and cargo aircraft.",
+        "Explain why the physical location of load matters.",
+        "Recognise that different load categories can have special handling or information requirements.",
+        "Describe the purpose of compartments and unit-load devices at a high level."
+      ],
+      "mcqs": [
+        {
+          "question": "Why is passenger seating relevant to load control?",
+          "options": [
+            "It contributes to the distribution of mass",
+            "It determines the airport runway number",
+            "It sets the ticket price",
+            "It selects the aircraft registration"
+          ],
+          "correct_answer": "A",
+          "explanation": "Passenger location contributes to how mass is distributed.",
+          "competency_tag": "Passenger distribution"
+        },
+        {
+          "question": "What is the foundation purpose of load reconciliation?",
+          "options": [
+            "To make recorded load information agree with the physical loading condition",
+            "To count airport shops",
+            "To calculate crew salaries",
+            "To allocate parking spaces"
+          ],
+          "correct_answer": "A",
+          "explanation": "Reconciliation checks that system/documented information reflects what is actually loaded.",
+          "competency_tag": "Reconciliation"
+        },
+        {
+          "question": "What is a ULD used for in general terms?",
+          "options": [
+            "Grouping and handling load on suitable aircraft",
+            "Controlling runway lights",
+            "Checking passports",
+            "Powering aircraft engines"
+          ],
+          "correct_answer": "A",
+          "explanation": "ULDs are containers or pallets used in cargo/baggage handling on compatible aircraft.",
+          "competency_tag": "Loading equipment awareness"
+        },
+        {
+          "question": "A baggage item is physically removed after the planned load was prepared. What principle applies?",
+          "options": [
+            "The load information should be updated through the approved process",
+            "No action is needed because the plan was already made",
+            "The discrepancy should be hidden",
+            "The original record should never change"
+          ],
+          "correct_answer": "A",
+          "explanation": "Physical changes must be reflected in controlled load information.",
+          "competency_tag": "Change/reconciliation"
+        },
+        {
+          "question": "Which statement about aircraft compartments is correct?",
+          "options": [
+            "Their live limitations come from approved aircraft/operator data",
+            "All aircraft compartments have identical limits",
+            "Generic diagrams define live limits",
+            "Only colour determines where items may go"
+          ],
+          "correct_answer": "A",
+          "explanation": "Aircraft-specific limitations must come from current approved data.",
+          "competency_tag": "Operational boundary"
+        },
+        {
+          "question": "Why can special loads require extra information?",
+          "options": [
+            "They may have additional handling or operational requirements",
+            "They always weigh nothing",
+            "They are never recorded",
+            "They replace passenger data"
+          ],
+          "correct_answer": "A",
+          "explanation": "Special loads can require specific handling and communication under approved procedures.",
+          "competency_tag": "Special-load awareness"
+        }
+      ]
+    },
+    {
+      "module_index": 5,
+      "title": "Information Flow and Stakeholder Coordination",
+      "level": "Foundation",
+      "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+      "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+      "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+      "competency_area": "Information Discipline",
+      "objectives": [
+        "Map the major information sources feeding a load-control process.",
+        "Explain why timing, ownership and source reliability matter.",
+        "Recognise the importance of closed-loop communication.",
+        "Describe the difference between an update, an acknowledgement and a verified change.",
+        "Identify when escalation is more appropriate than informal problem-solving."
+      ],
+      "terminology": [
+        "Source data",
+        "Authoritative source",
+        "Timestamp",
+        "Acknowledgement",
+        "Closed-loop communication",
+        "Handover",
+        "Escalation",
+        "Operational message",
+        "Data ownership"
+      ],
+      "cards": [
+        {
+          "heading": "Information is the raw material",
+          "body": "Load control is data-intensive. Passenger counts, baggage information, cargo and mail details, aircraft configuration, operational changes and loading status may arrive from different systems or people. The accuracy of the result depends on the quality of the inputs. A sophisticated system cannot correct information that was never updated at source.",
+          "type": "text"
+        },
+        {
+          "heading": "Source reliability",
+          "body": "Professional staff should know which system or role is the authoritative source for each type of information. An informal chat message may alert the team that something changed, but the approved workflow may still require an update in a controlled system or message. Foundation learners should understand the difference between being informed and having the official record updated.",
+          "type": "text"
+        },
+        {
+          "heading": "Timing and timestamps",
+          "body": "Airline turnarounds are dynamic. Information that was correct ten minutes ago may no longer be correct. Timestamps, version status and clear handovers help people understand whether they are looking at current information. This becomes particularly important when load control is remote or when shifts change.",
+          "type": "text"
+        },
+        {
+          "heading": "Closed-loop communication",
+          "body": "A good safety-critical message is not simply sent; it is received, understood and, where required, confirmed. Closed-loop communication means the sender has confidence that the receiver understood the intended message. This principle is valuable when changes affect more than one team.",
+          "type": "text"
+        },
+        {
+          "heading": "Handover discipline",
+          "body": "Shift changes or responsibility changes can create hidden risk. A strong handover identifies outstanding issues, unresolved discrepancies, recent changes and tasks still awaiting confirmation. \"Everything is fine\" is not a useful handover if important items remain open.",
+          "type": "text"
+        },
+        {
+          "heading": "Escalation",
+          "body": "Escalation is not a sign of weakness. It is a control mechanism. When data conflicts, authority is unclear, a system appears unreliable or the situation falls outside trained competence, the correct response is to use the approved escalation route.",
+          "type": "text"
+        }
+      ],
+      "scenarios": [
+        "Data-flow diagram with source systems (check-in, baggage, cargo, aircraft/ops) feeding a controlled load-control workspace, each arrow labelled with source owner and timestamp.",
+        "Communication sequence showing Sender → Message → Receiver → Readback/acknowledgement → Confirmed update."
+      ],
+      "knowledge_checks": [
+        {
+          "question": "Why can an informal message be insufficient?",
+          "suggested_answer": "Because the authoritative operational record may still need to be updated through the approved process."
+        },
+        {
+          "question": "Why do timestamps matter?",
+          "suggested_answer": "They help users judge whether information is current in a fast-changing operation."
+        },
+        {
+          "question": "What is closed-loop communication?",
+          "suggested_answer": "A communication process in which receipt and understanding are confirmed where required."
+        },
+        {
+          "question": "What should a strong handover include?",
+          "suggested_answer": "Outstanding issues, recent changes, unresolved discrepancies and pending actions."
+        },
+        {
+          "question": "When should escalation be used?",
+          "suggested_answer": "When information conflicts, authority is unclear, systems are unreliable or the situation is outside trained competence."
+        }
+      ],
+      "summary": [
+        "Load control is data-intensive.",
+        "Map the major information sources feeding a load-control process.",
+        "Explain why timing, ownership and source reliability matter.",
+        "Recognise the importance of closed-loop communication.",
+        "Describe the difference between an update, an acknowledgement and a verified change."
+      ],
+      "mcqs": [
+        {
+          "question": "What makes an information source \"authoritative\" in an operational process?",
+          "options": [
+            "It is the approved source designated by the organisation",
+            "It is the message received first",
+            "It is the easiest source to access",
+            "It is the opinion of the most senior person nearby"
+          ],
+          "correct_answer": "A",
+          "explanation": "Authoritative sources are defined by the organisation's controlled process and system design.",
+          "competency_tag": "Data governance"
+        },
+        {
+          "question": "Why are timestamps useful in load-control information?",
+          "options": [
+            "They help users determine whether information is current",
+            "They replace all verification",
+            "They determine ticket prices",
+            "They show staff birthdays"
+          ],
+          "correct_answer": "A",
+          "explanation": "Operations change quickly, so knowing when information was produced or updated is important.",
+          "competency_tag": "Data currency"
+        },
+        {
+          "question": "Which example best reflects closed-loop communication?",
+          "options": [
+            "A change is sent, acknowledged and understood by the receiving team",
+            "A message is sent with no confirmation",
+            "A rumour is repeated",
+            "An update is written on scrap paper"
+          ],
+          "correct_answer": "A",
+          "explanation": "Closed-loop communication confirms that critical information has been received and understood.",
+          "competency_tag": "Communication"
+        },
+        {
+          "question": "What should happen when a situation falls outside a learner's trained authority?",
+          "options": [
+            "Use the approved escalation route",
+            "Improvise a new procedure",
+            "Hide the issue",
+            "Copy an old answer from another flight"
+          ],
+          "correct_answer": "A",
+          "explanation": "Escalation protects safety and data integrity when authority or competence is exceeded.",
+          "competency_tag": "Escalation"
+        },
+        {
+          "question": "Which item belongs in a good operational handover?",
+          "options": [
+            "Unresolved discrepancies and pending actions",
+            "Personal shopping plans",
+            "Unrelated social-media messages",
+            "Retail promotions"
+          ],
+          "correct_answer": "A",
+          "explanation": "Handovers should communicate operational status and outstanding risks.",
+          "competency_tag": "Handover"
+        },
+        {
+          "question": "A staff member receives an informal message saying a load changed. What is the foundation principle?",
+          "options": [
+            "Ensure the authorised operational record is updated through the approved process",
+            "Assume the informal message automatically changes all systems",
+            "Ignore the message",
+            "Use whichever value is easier"
+          ],
+          "correct_answer": "A",
+          "explanation": "Being informed does not necessarily mean the controlled record has been updated.",
+          "competency_tag": "Source control"
+        }
+      ]
+    },
+    {
+      "module_index": 6,
+      "title": "Introduction to Load Planning and Operational Constraints",
+      "level": "Foundation",
+      "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+      "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+      "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+      "competency_area": "Mass & Balance Concepts",
+      "objectives": [
+        "Explain the purpose of load planning.",
+        "Recognise that load planning balances safety, operational and commercial considerations within approved limits.",
+        "Identify categories of constraints that can affect a loading plan.",
+        "Explain why the plan must remain responsive to operational changes.",
+        "Understand that detailed position assignments and calculations are aircraft/operator-specific."
+      ],
+      "terminology": [
+        "Load plan",
+        "Constraint",
+        "Capacity",
+        "Distribution",
+        "Priority",
+        "Compatibility",
+        "Operational limitation",
+        "Loading instruction",
+        "Plan revision"
+      ],
+      "cards": [
+        {
+          "heading": "Purpose of a load plan",
+          "body": "A load plan is a controlled representation of how traffic load is intended to be accommodated within the aircraft and operation. At foundation level, it should be understood as a bridge between what the airline intends to carry and how the operation can safely and practically load it. The detailed method depends on the aircraft, operator and systems.",
+          "type": "text"
+        },
+        {
+          "heading": "Not just \"fill the available space\"",
+          "body": "Load planning is not the same as placing items wherever space appears available. A plan may need to consider structural limits, balance, loading positions, compatibility, operational sequence, special loads, transfer priorities, accessibility and other operator-defined restrictions. The Level 1 learner should understand the categories without attempting live allocation.",
+          "type": "text"
+        },
+        {
+          "heading": "Constraints",
+          "body": "A constraint is anything that limits or shapes the available plan. Examples include aircraft configuration, available loading positions, special handling requirements, operational restrictions, equipment status and time. The load controller must work within approved information rather than trying to bypass a constraint.",
+          "type": "text"
+        },
+        {
+          "heading": "Operational and commercial goals",
+          "body": "Airlines naturally want to carry passengers and revenue-generating load efficiently. However, commercial objectives operate inside safety and compliance boundaries. A load that cannot be accommodated within approved limits or procedures cannot simply be accepted because it is commercially valuable.",
+          "type": "text"
+        },
+        {
+          "heading": "Plan changes",
+          "body": "Turnarounds rarely remain perfectly static. Passenger changes, offloaded baggage, late cargo, equipment issues or aircraft changes can affect the plan. A good process controls revisions, identifies who must be informed and ensures the final documentation reflects the final authorised condition.",
+          "type": "text"
+        },
+        {
+          "heading": "Foundation boundary",
+          "body": "This module intentionally stops before teaching aircraft-specific compartment assignments, numerical limitations or detailed loading instructions. Those belong to current operator material, system training and supervised qualification.",
+          "type": "text"
+        }
+      ],
+      "scenarios": [
+        "Generic planning board with aircraft silhouette and icons for passengers, baggage, cargo and mail, surrounded by constraint icons such as special load, time, aircraft configuration and equipment.",
+        "Decision graphic: Commercial objective → check safety/approved constraints → feasible plan or escalation/re-plan."
+      ],
+      "knowledge_checks": [
+        {
+          "question": "What is the purpose of a load plan?",
+          "suggested_answer": "To represent how intended traffic load can be accommodated within the approved operational framework."
+        },
+        {
+          "question": "Why is load planning more than filling space?",
+          "suggested_answer": "Because distribution, limits, compatibility, special requirements and operational constraints also matter."
+        },
+        {
+          "question": "Can a commercial priority override an approved safety limitation?",
+          "suggested_answer": "No."
+        },
+        {
+          "question": "Why might a load plan need revision?",
+          "suggested_answer": "Because operational conditions and actual load can change during the turnaround."
+        },
+        {
+          "question": "Does Level 1 teach live compartment assignments?",
+          "suggested_answer": "No. Those are aircraft/operator-specific."
+        }
+      ],
+      "summary": [
+        "A load plan is a controlled representation of how traffic load is intended to be accommodated within the aircraft and operation.",
+        "Explain the purpose of load planning.",
+        "Recognise that load planning balances safety, operational and commercial considerations within approved limits.",
+        "Identify categories of constraints that can affect a loading plan.",
+        "Explain why the plan must remain responsive to operational changes."
+      ],
+      "mcqs": [
+        {
+          "question": "Which statement best describes load planning?",
+          "options": [
+            "A controlled way of arranging intended load within approved operational constraints",
+            "A method for setting ticket prices",
+            "A system for assigning airport shops",
+            "A process for choosing pilots"
+          ],
+          "correct_answer": "A",
+          "explanation": "Load planning translates intended traffic load into an operationally feasible loading concept.",
+          "competency_tag": "Planning purpose"
+        },
+        {
+          "question": "Which factor can act as a load-planning constraint?",
+          "options": [
+            "Aircraft configuration",
+            "Coffee-shop menu",
+            "Car-park colour",
+            "Website font"
+          ],
+          "correct_answer": "A",
+          "explanation": "Aircraft configuration is one of several operational factors that can shape a plan.",
+          "competency_tag": "Constraints"
+        },
+        {
+          "question": "What should happen if a commercial load cannot be accommodated within approved limits?",
+          "options": [
+            "It must be re-planned, restricted or escalated according to procedure",
+            "The limit should be ignored",
+            "The load should be hidden from the record",
+            "The value should be guessed"
+          ],
+          "correct_answer": "A",
+          "explanation": "Commercial objectives never override approved safety or compliance limits.",
+          "competency_tag": "Safety/commercial balance"
+        },
+        {
+          "question": "Why can load plans change during turnaround?",
+          "options": [
+            "Operational inputs such as passengers, baggage or cargo can change",
+            "Aircraft never receive updates",
+            "Plans are always random",
+            "Only weather can change a plan"
+          ],
+          "correct_answer": "A",
+          "explanation": "Turnaround inputs are dynamic and may require controlled revision.",
+          "competency_tag": "Change awareness"
+        },
+        {
+          "question": "What is the correct Level 1 approach to detailed loading-position limits?",
+          "options": [
+            "Learn the concept but use only current approved operator data in actual operations",
+            "Memorise generic internet values",
+            "Assume all aircraft are identical",
+            "Use training graphics as live instructions"
+          ],
+          "correct_answer": "A",
+          "explanation": "Aircraft-specific limits belong to approved operator data and training.",
+          "competency_tag": "Operational boundary"
+        },
+        {
+          "question": "Which principle best describes the relationship between efficiency and safety?",
+          "options": [
+            "Efficiency is pursued within safety and compliance boundaries",
+            "Efficiency always overrides safety",
+            "Safety matters only after departure",
+            "Commercial value determines allowable limits"
+          ],
+          "correct_answer": "A",
+          "explanation": "Operational efficiency must remain inside approved safety and compliance requirements.",
+          "competency_tag": "Professional judgement"
+        }
+      ]
+    },
+    {
+      "module_index": 7,
+      "title": "Load-Control Documentation, Reconciliation and Records",
+      "level": "Foundation",
+      "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+      "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+      "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+      "competency_area": "Documentation",
+      "objectives": [
+        "Explain why load-control documentation exists.",
+        "Describe the conceptual relationship between plan, actual load and final record.",
+        "Recognise that documents may be electronic or paper-based but still require control.",
+        "Explain the purpose of amendments and version control.",
+        "Understand why records support accountability, traceability and later review."
+      ],
+      "terminology": [
+        "Load information",
+        "Load sheet",
+        "Loading instruction",
+        "Final record",
+        "Amendment",
+        "Version control",
+        "Reconciliation",
+        "Audit trail",
+        "Record retention"
+      ],
+      "cards": [
+        {
+          "heading": "Why documentation matters",
+          "body": "Documentation turns a complex operational situation into a controlled record. It allows authorised users to understand what was planned, what changed and what final condition was accepted for departure. The document itself is not valuable because of its format; it is valuable because it represents verified information and a defined approval process.",
+          "type": "text"
+        },
+        {
+          "heading": "Plan, actual and final",
+          "body": "A common conceptual sequence is planned condition → physical loading activity → confirmation/reconciliation → final controlled record. If the physical operation changes, the information must be updated. The final record should not merely repeat the original plan if the actual condition changed.",
+          "type": "text"
+        },
+        {
+          "heading": "Paper and electronic records",
+          "body": "Modern load control is often electronic, but electronic does not mean automatically correct. Digital records still need source control, access permissions, validation, timestamps, versioning and audit trails. Paper processes similarly require clear control over which version is current.",
+          "type": "text"
+        },
+        {
+          "heading": "Amendments",
+          "body": "Operational changes may occur late. The organisation defines how changes are recorded, communicated and authorised. A foundation learner should understand that an amendment is a controlled change, not an informal correction made without traceability.",
+          "type": "text"
+        },
+        {
+          "heading": "Traceability",
+          "body": "Good records help answer: What information was used? Who changed it? When was it changed? Which version was final? Was the change acknowledged? Traceability supports operations, quality assurance, incident review and audit.",
+          "type": "text"
+        },
+        {
+          "heading": "Records and confidentiality",
+          "body": "Operational records can contain sensitive commercial, passenger or company information. Staff should access and share only what their role permits. Data protection and cybersecurity are part of professional document control.",
+          "type": "text"
+        }
+      ],
+      "scenarios": [
+        "Lifecycle diagram: Plan → Load → Confirm → Amend if needed → Final record → Archive/audit trail.",
+        "Version-control illustration showing V1 planned, V2 amended and FINAL clearly distinguished, with timestamps and user IDs."
+      ],
+      "knowledge_checks": [
+        {
+          "question": "Why is the final record important?",
+          "suggested_answer": "It represents the verified final operating load information used by authorised personnel."
+        },
+        {
+          "question": "Does electronic documentation remove the need for control?",
+          "suggested_answer": "No. Electronic records still require validation, access control, versioning and audit trails."
+        },
+        {
+          "question": "What is an amendment?",
+          "suggested_answer": "A controlled, traceable change to previously prepared information."
+        },
+        {
+          "question": "Why is version control important?",
+          "suggested_answer": "It prevents users from acting on outdated or superseded information."
+        },
+        {
+          "question": "What questions should traceability help answer?",
+          "suggested_answer": "Who changed what, when, using which source, and which version became final."
+        }
+      ],
+      "summary": [
+        "Documentation turns a complex operational situation into a controlled record.",
+        "Explain why load-control documentation exists.",
+        "Describe the conceptual relationship between plan, actual load and final record.",
+        "Recognise that documents may be electronic or paper-based but still require control.",
+        "Explain the purpose of amendments and version control."
+      ],
+      "mcqs": [
+        {
+          "question": "What is the main purpose of load-control documentation?",
+          "options": [
+            "To provide a controlled record of verified operational load information",
+            "To advertise the airline",
+            "To schedule airport shops",
+            "To replace all communication"
+          ],
+          "correct_answer": "A",
+          "explanation": "Documentation provides a controlled, traceable representation of the load condition.",
+          "competency_tag": "Documentation purpose"
+        },
+        {
+          "question": "What should happen if the physical load changes after the original plan?",
+          "options": [
+            "The controlled information should be updated according to procedure",
+            "The original plan should always remain unchanged",
+            "The change should be ignored",
+            "The final record should use the first value regardless"
+          ],
+          "correct_answer": "A",
+          "explanation": "Final records should reflect controlled changes to the actual operation.",
+          "competency_tag": "Reconciliation/change"
+        },
+        {
+          "question": "Why is version control important?",
+          "options": [
+            "It helps prevent use of outdated information",
+            "It increases ticket sales",
+            "It selects the aircraft type",
+            "It replaces access control"
+          ],
+          "correct_answer": "A",
+          "explanation": "Users need to know which information is current and final.",
+          "competency_tag": "Version control"
+        },
+        {
+          "question": "Which statement about electronic records is correct?",
+          "options": [
+            "They still require validation, permissions and audit trails",
+            "They are always correct automatically",
+            "They cannot be changed",
+            "They never contain sensitive data"
+          ],
+          "correct_answer": "A",
+          "explanation": "Digital systems still require governance and data-control disciplines.",
+          "competency_tag": "Digital records"
+        },
+        {
+          "question": "What is an audit trail used for?",
+          "options": [
+            "Tracing who changed information and when",
+            "Choosing passenger meals",
+            "Setting airport parking fees",
+            "Assigning retail stores"
+          ],
+          "correct_answer": "A",
+          "explanation": "Audit trails provide accountability and traceability.",
+          "competency_tag": "Traceability"
+        },
+        {
+          "question": "How should operational records be shared?",
+          "options": [
+            "According to role, authority and data-protection rules",
+            "With anyone who asks",
+            "On public social media",
+            "Without access control"
+          ],
+          "correct_answer": "A",
+          "explanation": "Operational information should be protected according to organisational and legal requirements.",
+          "competency_tag": "Information security"
+        }
+      ]
+    },
+    {
+      "module_index": 8,
+      "title": "Digital Load Control, DCS and Data Quality",
+      "level": "Foundation",
+      "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+      "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+      "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+      "competency_area": "Digital Systems",
+      "objectives": [
+        "Explain the role of a Departure Control System (DCS) at a high level.",
+        "Describe why system integration can improve speed but also create dependency on data quality.",
+        "Recognise that automation supports rather than removes professional responsibility.",
+        "Identify basic data-quality dimensions: accuracy, completeness, timeliness and consistency.",
+        "Explain the need for controlled fallback and escalation when systems or interfaces appear unreliable."
+      ],
+      "terminology": [
+        "Departure Control System (DCS)",
+        "Interface",
+        "Integration",
+        "Automation",
+        "Data validation",
+        "Accuracy",
+        "Completeness",
+        "Timeliness",
+        "Consistency",
+        "Fallback",
+        "System alert"
+      ],
+      "cards": [
+        {
+          "heading": "Digital environment",
+          "body": "Many modern airline processes are digital. A Departure Control System can support passenger processing, flight data and load-control functions, depending on the operator configuration. Other systems may provide cargo, baggage, flight-planning or aircraft data. Load control increasingly depends on interfaces among systems rather than manual re-entry alone.",
+          "type": "text"
+        },
+        {
+          "heading": "Benefits of integration",
+          "body": "Digital integration can reduce duplicate entry, improve speed, improve consistency and create stronger audit trails. It can also allow centralised teams to support multiple stations. However, integration creates a new professional responsibility: users must understand that an automatically populated value is only as reliable as the source and interface that produced it.",
+          "type": "text"
+        },
+        {
+          "heading": "Data quality",
+          "body": "Four useful foundation dimensions are accuracy, completeness, timeliness and consistency. Accurate data reflects reality. Complete data contains required information. Timely data is available when needed and reflects the current condition. Consistent data agrees across authorised sources or triggers a controlled investigation when it does not.",
+          "type": "text"
+        },
+        {
+          "heading": "Automation and human oversight",
+          "body": "Automation can calculate, validate, flag and distribute information quickly. It should not encourage blind acceptance. Professional users still need to respond appropriately to alerts, unusual values, missing fields or system conflicts. The aim is not to second-guess every system result but to understand when the process requires human verification.",
+          "type": "text"
+        },
+        {
+          "heading": "System failure and fallback",
+          "body": "Organisations define contingency and fallback processes for system outages or interface problems. Level 1 learners should understand the principle but should not invent a fallback procedure. If the system is unavailable or data integrity is uncertain, the correct response is to follow current approved contingency and escalation arrangements.",
+          "type": "text"
+        },
+        {
+          "heading": "Cybersecurity and access",
+          "body": "Access to load-control systems should follow role-based permissions. Password sharing, unauthorised data extraction or uncontrolled devices can undermine safety and confidentiality. Digital professionalism is part of operational professionalism.",
+          "type": "text"
+        }
+      ],
+      "scenarios": [
+        "System map showing DCS connected to passenger, baggage, cargo/ops and load-control services, with validation checkpoints at interfaces.",
+        "Data-quality dashboard with four indicators: Accuracy, Completeness, Timeliness, Consistency; one warning flag triggers verification."
+      ],
+      "knowledge_checks": [
+        {
+          "question": "What is a DCS at a high level?",
+          "suggested_answer": "A digital airline system that can support departure-related functions, with capabilities depending on operator configuration."
+        },
+        {
+          "question": "Name four basic data-quality dimensions.",
+          "suggested_answer": "Accuracy, completeness, timeliness and consistency."
+        },
+        {
+          "question": "Does automation remove the need for professional oversight?",
+          "suggested_answer": "No."
+        },
+        {
+          "question": "What should happen when an interface produces conflicting data?",
+          "suggested_answer": "Follow approved verification, contingency and escalation processes."
+        },
+        {
+          "question": "Why are role-based permissions important?",
+          "suggested_answer": "They protect safety-sensitive information and system integrity."
+        }
+      ],
+      "summary": [
+        "Many modern airline processes are digital.",
+        "Explain the role of a Departure Control System (DCS) at a high level.",
+        "Describe why system integration can improve speed but also create dependency on data quality.",
+        "Recognise that automation supports rather than removes professional responsibility.",
+        "Identify basic data-quality dimensions: accuracy, completeness, timeliness and consistency."
+      ],
+      "mcqs": [
+        {
+          "question": "What is one benefit of digital system integration?",
+          "options": [
+            "Reduced duplicate data entry and improved information flow",
+            "Removal of all human responsibility",
+            "Guaranteed perfect data",
+            "Elimination of all training needs"
+          ],
+          "correct_answer": "A",
+          "explanation": "Integration can improve speed and consistency, but it does not guarantee perfect inputs.",
+          "competency_tag": "Digital systems"
+        },
+        {
+          "question": "Which set lists four useful data-quality dimensions?",
+          "options": [
+            "Accuracy, completeness, timeliness, consistency",
+            "Colour, price, advertising, popularity",
+            "Speed, uniform, meal, gate",
+            "Brand, route, retail, parking"
+          ],
+          "correct_answer": "A",
+          "explanation": "These four dimensions help users think about whether operational data is fit for use.",
+          "competency_tag": "Data quality"
+        },
+        {
+          "question": "A system automatically populates a value. What should the user assume?",
+          "options": [
+            "Automation is useful, but unusual or conflicting values still require the approved verification response",
+            "Automatic values can never be wrong",
+            "The value should be changed manually without evidence",
+            "All source systems can be ignored"
+          ],
+          "correct_answer": "A",
+          "explanation": "Automation supports operations but does not eliminate data-quality controls.",
+          "competency_tag": "Automation oversight"
+        },
+        {
+          "question": "What should staff do if a critical system is unavailable?",
+          "options": [
+            "Follow the approved contingency and escalation process",
+            "Invent a new procedure",
+            "Use personal software without permission",
+            "Guess the missing values"
+          ],
+          "correct_answer": "A",
+          "explanation": "Fallback methods must be controlled and organisation-approved.",
+          "competency_tag": "Contingency awareness"
+        },
+        {
+          "question": "Why are access controls important in digital load control?",
+          "options": [
+            "They protect system integrity and sensitive information",
+            "They make systems slower",
+            "They replace training",
+            "They remove the need for audit logs"
+          ],
+          "correct_answer": "A",
+          "explanation": "Only authorised users should access or change safety-sensitive information.",
+          "competency_tag": "Cybersecurity/access"
+        },
+        {
+          "question": "Which statement about digital systems is most accurate?",
+          "options": [
+            "They can improve efficiency while increasing the importance of data governance",
+            "They make data governance unnecessary",
+            "They remove the need for source ownership",
+            "They guarantee that all interfaces always agree"
+          ],
+          "correct_answer": "A",
+          "explanation": "Digitalisation improves capability but also makes data lineage and governance critical.",
+          "competency_tag": "Digital professionalism"
+        }
+      ]
+    },
+    {
+      "module_index": 9,
+      "title": "Human Factors, Safety and Error Prevention",
+      "level": "Foundation",
+      "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+      "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+      "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+      "competency_area": "Human Factors",
+      "objectives": [
+        "Identify common human-factor risks in load-control environments.",
+        "Explain how time pressure and distraction can affect accuracy.",
+        "Describe why cross-checks and standard procedures are protective controls.",
+        "Recognise the value of reporting errors and near misses.",
+        "Explain why a just and learning-oriented safety culture supports better performance."
+      ],
+      "terminology": [
+        "Human factors",
+        "Distraction",
+        "Fatigue",
+        "Time pressure",
+        "Assumption",
+        "Confirmation bias",
+        "Cross-check",
+        "Near miss",
+        "Safety reporting",
+        "Just culture"
+      ],
+      "cards": [
+        {
+          "heading": "Humans are part of the system",
+          "body": "Load-control safety does not depend only on technical knowledge. People work under time pressure, interruptions, shift patterns and changing conditions. Human factors examines how people interact with tasks, systems, procedures and organisations. The goal is not to blame individuals; it is to design work so that errors are less likely and easier to detect.",
+          "type": "text"
+        },
+        {
+          "heading": "Time pressure",
+          "body": "Departure schedules create real pressure. Time pressure can tempt staff to skip a verification, accept incomplete information or delay reporting a problem. Professional behaviour means recognising that on-time performance is important but cannot justify bypassing safety controls.",
+          "type": "text"
+        },
+        {
+          "heading": "Distraction and interruption",
+          "body": "Load-control work can involve multiple flights, messages and systems. An interruption at the wrong moment can cause a step to be missed or information to be entered in the wrong place. Organisations use task design, checklists, handovers, screen layouts and cross-checks to reduce this risk.",
+          "type": "text"
+        },
+        {
+          "heading": "Assumption and confirmation bias",
+          "body": "People naturally look for information that confirms what they already expect. If the load \"looks normal,\" a user may overlook a small inconsistency. Good procedures encourage independent checks and attention to unexpected values rather than relying on familiarity.",
+          "type": "text"
+        },
+        {
+          "heading": "Reporting and learning",
+          "body": "If an error, near miss or recurring discrepancy occurs, reporting allows the organisation to learn. Hiding small errors prevents the system from improving. Effective safety culture distinguishes between honest mistakes, system weaknesses and unacceptable behaviour while still maintaining accountability.",
+          "type": "text"
+        },
+        {
+          "heading": "Personal readiness",
+          "body": "Fatigue, stress and workload can affect performance. Staff should follow organisation requirements concerning fitness for duty, breaks, workload management and escalation. Level 1 learners should understand that asking for help before performance deteriorates is professional behaviour.",
+          "type": "text"
+        }
+      ],
+      "scenarios": [
+        "Human-factors wheel showing Time Pressure, Fatigue, Distraction, Assumption, Workload, Communication, System Design around the central task.",
+        "Near-miss learning loop: Event → Report → Review → Improve process/training → Monitor outcome."
+      ],
+      "knowledge_checks": [
+        {
+          "question": "Why is time pressure a human-factor risk?",
+          "suggested_answer": "It can encourage shortcuts, missed checks or premature decisions."
+        },
+        {
+          "question": "What is confirmation bias in simple terms?",
+          "suggested_answer": "A tendency to notice information that supports what we already expect."
+        },
+        {
+          "question": "Why are cross-checks useful?",
+          "suggested_answer": "They help detect errors that one person or one step may miss."
+        },
+        {
+          "question": "Why report near misses?",
+          "suggested_answer": "They reveal weaknesses before they become more serious events."
+        },
+        {
+          "question": "Is asking for help when workload or fatigue affects performance unprofessional?",
+          "suggested_answer": "No. Appropriate escalation is a professional safety behaviour."
+        }
+      ],
+      "summary": [
+        "Load-control safety does not depend only on technical knowledge.",
+        "Identify common human-factor risks in load-control environments.",
+        "Explain how time pressure and distraction can affect accuracy.",
+        "Describe why cross-checks and standard procedures are protective controls.",
+        "Recognise the value of reporting errors and near misses."
+      ],
+      "mcqs": [
+        {
+          "question": "Which human factor can make a person skip a verification step?",
+          "options": [
+            "Time pressure",
+            "Aircraft paint colour",
+            "Terminal architecture",
+            "Retail opening hours"
+          ],
+          "correct_answer": "A",
+          "explanation": "Time pressure can encourage shortcuts if not managed by strong procedures and culture.",
+          "competency_tag": "Human factors"
+        },
+        {
+          "question": "What is one purpose of an independent cross-check?",
+          "options": [
+            "To detect errors that may have been missed",
+            "To make all tasks slower",
+            "To replace approved data",
+            "To avoid teamwork"
+          ],
+          "correct_answer": "A",
+          "explanation": "Cross-checks are designed to catch mistakes before they propagate.",
+          "competency_tag": "Error prevention"
+        },
+        {
+          "question": "Why should near misses be reported?",
+          "options": [
+            "They can reveal process weaknesses and support learning",
+            "They should always be hidden",
+            "They have no value if no damage occurred",
+            "They are only useful for marketing"
+          ],
+          "correct_answer": "A",
+          "explanation": "Near-miss learning helps organisations strengthen controls before a more serious event occurs.",
+          "competency_tag": "Safety reporting"
+        },
+        {
+          "question": "What is confirmation bias?",
+          "options": [
+            "A tendency to favour information that matches what we already expect",
+            "A type of aircraft fuel",
+            "A cargo container",
+            "A check-in document"
+          ],
+          "correct_answer": "A",
+          "explanation": "Confirmation bias can make unusual or contradictory information easier to overlook.",
+          "competency_tag": "Cognitive bias"
+        },
+        {
+          "question": "Which statement best reflects professional behaviour under heavy workload?",
+          "options": [
+            "Use approved workload and escalation controls when performance may be affected",
+            "Hide fatigue and continue regardless",
+            "Skip checks to save time",
+            "Guess missing information"
+          ],
+          "correct_answer": "A",
+          "explanation": "Recognising limits and using escalation controls is part of professional safety behaviour.",
+          "competency_tag": "Fitness/workload"
+        },
+        {
+          "question": "What is the best relationship between on-time performance and safety controls?",
+          "options": [
+            "On-time performance matters, but safety controls should not be bypassed to achieve it",
+            "On-time performance always comes first",
+            "Safety controls matter only after delay occurs",
+            "The two are unrelated"
+          ],
+          "correct_answer": "A",
+          "explanation": "Operational efficiency must remain inside safety and compliance boundaries.",
+          "competency_tag": "Safety culture"
+        }
+      ]
+    },
+    {
+      "module_index": 10,
+      "title": "Change Management and Irregular Operational Situations",
+      "level": "Foundation",
+      "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+      "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+      "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+      "competency_area": "Safety & Escalation",
+      "objectives": [
+        "Recognise that operational changes are normal and must be controlled.",
+        "Identify common categories of change that can affect load information.",
+        "Explain the purpose of last-minute change controls at a conceptual level.",
+        "Describe how an aircraft change can affect multiple data elements.",
+        "Use escalation appropriately when a change exceeds trained authority or system capability."
+      ],
+      "terminology": [
+        "Operational change",
+        "Last-minute change",
+        "Aircraft change",
+        "Offload",
+        "No-show",
+        "Late load",
+        "Re-plan",
+        "Reconciliation",
+        "Escalation"
+      ],
+      "cards": [
+        {
+          "heading": "Change is normal",
+          "body": "A plan is created using the best information available at a point in time. Airline operations then continue to evolve. Passengers may not travel, bags may be removed, cargo may arrive late, equipment may become unavailable or the aircraft assigned to the flight may change. Professional load control is therefore designed to manage change rather than assuming the first plan will remain final.",
+          "type": "text"
+        },
+        {
+          "heading": "Controlled change",
+          "body": "A change should be identified, assessed, reflected in the relevant system or document, communicated to the affected parties and confirmed according to the organisation's procedures. The exact workflow differs by operator. The Level 1 principle is that changes should be traceable and should not bypass the approved information chain.",
+          "type": "text"
+        },
+        {
+          "heading": "Last-minute changes",
+          "body": "Late changes are especially sensitive because there is less time for review and communication. Industry procedures define how permitted last-minute changes are handled. AIXX Level 1 does not teach numerical thresholds or airline-specific methods; it teaches the need for controlled processing and clear authority.",
+          "type": "text"
+        },
+        {
+          "heading": "Aircraft change",
+          "body": "An aircraft change can affect configuration, capacity, loading positions, approved data and system setup. It should never be treated as simply changing an aircraft registration text field. The approved process must ensure all relevant operational data follows the correct aircraft and configuration.",
+          "type": "text"
+        },
+        {
+          "heading": "Irregular operations",
+          "body": "Delays, diversions, disrupted connections, offloads and system problems can increase workload and communication complexity. During irregular operations, disciplined communication and version control become even more important because teams may be working with rapidly changing information.",
+          "type": "text"
+        },
+        {
+          "heading": "Escalate uncertainty",
+          "body": "The professional principle remains consistent: when a change is unclear, exceeds authority or creates conflicting data, escalate. Pressure to recover a delayed operation is not a reason to improvise outside approved procedures.",
+          "type": "text"
+        }
+      ],
+      "scenarios": [
+        "Timeline scenario with planned flight, passenger no-show, baggage offload, late cargo and final controlled update, showing each event generating a required information update.",
+        "Aircraft-change scenario showing old aircraft data replaced by new aircraft/configuration through an approved revalidation step, without numerical details."
+      ],
+      "knowledge_checks": [
+        {
+          "question": "Why should load-control processes expect change?",
+          "suggested_answer": "Because passenger, baggage, cargo, aircraft and operational conditions can change during turnaround."
+        },
+        {
+          "question": "Why are late changes especially sensitive?",
+          "suggested_answer": "There is less time for review, communication and error detection."
+        },
+        {
+          "question": "Why can an aircraft change affect more than the registration field?",
+          "suggested_answer": "Because configuration, capacity, loading positions and approved data can differ."
+        },
+        {
+          "question": "What happens to documentation when a significant operational change occurs?",
+          "suggested_answer": "It should be updated and controlled according to the approved process."
+        },
+        {
+          "question": "What should a learner do when a change exceeds trained authority?",
+          "suggested_answer": "Escalate through the approved route."
+        }
+      ],
+      "summary": [
+        "A plan is created using the best information available at a point in time.",
+        "Recognise that operational changes are normal and must be controlled.",
+        "Identify common categories of change that can affect load information.",
+        "Explain the purpose of last-minute change controls at a conceptual level.",
+        "Describe how an aircraft change can affect multiple data elements."
+      ],
+      "mcqs": [
+        {
+          "question": "Which statement best describes operational change in load control?",
+          "options": [
+            "It is expected and should be managed through controlled processes",
+            "It should never occur",
+            "It can always be handled informally",
+            "It does not affect documentation"
+          ],
+          "correct_answer": "A",
+          "explanation": "Turnarounds are dynamic, so systems and procedures must manage change safely.",
+          "competency_tag": "Change management"
+        },
+        {
+          "question": "Why can last-minute changes require extra discipline?",
+          "options": [
+            "There is less time for review and communication",
+            "They are never recorded",
+            "They always reduce aircraft mass",
+            "They remove the need for verification"
+          ],
+          "correct_answer": "A",
+          "explanation": "Time compression increases the importance of controlled updates and communication.",
+          "competency_tag": "Late-change awareness"
+        },
+        {
+          "question": "What is one risk of an aircraft change?",
+          "options": [
+            "Using data or configuration information that belongs to the previous aircraft",
+            "Changing the airport country",
+            "Changing employee uniforms",
+            "Changing the airline website"
+          ],
+          "correct_answer": "A",
+          "explanation": "Aircraft changes can affect multiple operational data elements and require revalidation.",
+          "competency_tag": "Aircraft-change awareness"
+        },
+        {
+          "question": "A late change creates conflicting information in two systems. What should happen?",
+          "options": [
+            "Verify and escalate according to the approved process",
+            "Choose the more convenient value",
+            "Average both values",
+            "Ignore the conflict because departure is close"
+          ],
+          "correct_answer": "A",
+          "explanation": "Time pressure does not justify guessing between conflicting operational data.",
+          "competency_tag": "Escalation/data integrity"
+        },
+        {
+          "question": "What is the purpose of controlling operational changes?",
+          "options": [
+            "To keep the final information accurate, traceable and communicated",
+            "To prevent any updates",
+            "To eliminate all delays",
+            "To replace staff training"
+          ],
+          "correct_answer": "A",
+          "explanation": "Controlled change management protects the integrity of the final operating picture.",
+          "competency_tag": "Change control"
+        },
+        {
+          "question": "During irregular operations, which discipline becomes even more important?",
+          "options": [
+            "Clear communication and version control",
+            "Informal assumptions",
+            "Unrecorded changes",
+            "Shared passwords"
+          ],
+          "correct_answer": "A",
+          "explanation": "Rapidly changing conditions increase the need for disciplined information management.",
+          "competency_tag": "Irregular operations"
+        }
+      ]
+    },
+    {
+      "module_index": 11,
+      "title": "Quality, Governance and Professional Conduct",
+      "level": "Foundation",
+      "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+      "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+      "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+      "competency_area": "Professional Conduct",
+      "objectives": [
+        "Explain the role of standardisation and quality assurance.",
+        "Recognise why procedures, training and competence records must be controlled.",
+        "Describe the purpose of audits and corrective action at a high level.",
+        "Explain professional responsibilities concerning confidentiality and integrity.",
+        "Recognise continuous learning as part of operational competence."
+      ],
+      "terminology": [
+        "Standardisation",
+        "Quality assurance",
+        "Competence",
+        "Audit",
+        "Corrective action",
+        "Procedure control",
+        "Recurrent training",
+        "Confidentiality",
+        "Integrity",
+        "Continuous improvement"
+      ],
+      "cards": [
+        {
+          "heading": "Standardisation",
+          "body": "Ground operations involve many people, stations and organisations. Standardisation reduces unnecessary variation and helps staff understand what is expected. IATA publicly emphasises standardisation as a means of improving safety, training quality, operational efficiency and oversight. Within an airline or ground handler, local procedures should align with the applicable approved standards and operator requirements.",
+          "type": "text"
+        },
+        {
+          "heading": "Quality assurance",
+          "body": "Quality assurance checks whether the defined process is being followed and whether it is effective. It can include observations, document reviews, trend analysis, competency checks and audits. Quality is not the responsibility of an auditor alone; every operational employee contributes by following procedures and reporting issues.",
+          "type": "text"
+        },
+        {
+          "heading": "Competence management",
+          "body": "Training completion is not automatically the same as competence. Organisations may use knowledge tests, practical observation, supervised practice, recurrent training and re-authorisation. AIXX can support the learning and knowledge-assessment part, but employer-specific competence and operational authority remain with the organisation.",
+          "type": "text"
+        },
+        {
+          "heading": "Audit and corrective action",
+          "body": "An audit looks for evidence that the required process exists and is being followed. If a gap is found, corrective action addresses the cause and reduces the chance of recurrence. Effective corrective action is more than reminding staff to \"be careful\"; it may involve procedure, system, training or supervision improvements.",
+          "type": "text"
+        },
+        {
+          "heading": "Professional integrity",
+          "body": "Load-control staff may handle safety-sensitive and commercially sensitive information. Professional integrity includes accurate records, honest reporting, appropriate access, confidentiality and refusal to hide discrepancies. Manipulating information to avoid delay, blame or scrutiny undermines safety culture.",
+          "type": "text"
+        },
+        {
+          "heading": "Continuous improvement",
+          "body": "Technology, standards, aircraft fleets and procedures change. A professional load controller remains current through recurrent learning and controlled updates. AIXX should therefore position the Level 1 certificate as the beginning of a learning pathway, not an end point.",
+          "type": "text"
+        }
+      ],
+      "scenarios": [
+        "Quality loop: Standard → Train → Perform → Monitor → Audit → Improve → Update training.",
+        "Competence ladder showing Knowledge → Practice → Supervised assessment → Authorisation → Recurrent learning, with AIXX covering the knowledge-development layer."
+      ],
+      "knowledge_checks": [
+        {
+          "question": "Why is standardisation valuable?",
+          "suggested_answer": "It reduces unnecessary variation and supports consistent safety and training quality."
+        },
+        {
+          "question": "Is passing an online test always the same as operational competence?",
+          "suggested_answer": "No. Practical supervised assessment and employer authorisation may still be required."
+        },
+        {
+          "question": "What is the purpose of corrective action?",
+          "suggested_answer": "To address the cause of a gap and reduce recurrence."
+        },
+        {
+          "question": "Give one example of professional integrity.",
+          "suggested_answer": "Accurate reporting, protecting confidentiality or refusing to hide discrepancies."
+        },
+        {
+          "question": "Why is recurrent learning important?",
+          "suggested_answer": "Standards, systems, fleets and procedures change over time."
+        }
+      ],
+      "summary": [
+        "Ground operations involve many people, stations and organisations.",
+        "Explain the role of standardisation and quality assurance.",
+        "Recognise why procedures, training and competence records must be controlled.",
+        "Describe the purpose of audits and corrective action at a high level.",
+        "Explain professional responsibilities concerning confidentiality and integrity."
+      ],
+      "mcqs": [
+        {
+          "question": "What is one benefit of standardisation in ground operations?",
+          "options": [
+            "More consistent safety and training expectations",
+            "More informal local variation",
+            "Less need for controlled procedures",
+            "Removal of all audits"
+          ],
+          "correct_answer": "A",
+          "explanation": "Standardisation helps reduce complexity and improve consistency.",
+          "competency_tag": "Quality/standardisation"
+        },
+        {
+          "question": "Why is passing a knowledge test not always enough for operational authorisation?",
+          "options": [
+            "Operational competence may also require supervised practical assessment and employer approval",
+            "Knowledge tests are never useful",
+            "Only managers may be competent",
+            "Authorisation is based on age alone"
+          ],
+          "correct_answer": "A",
+          "explanation": "Knowledge is one component of competence; live operational work normally requires additional controlled qualification.",
+          "competency_tag": "Competence management"
+        },
+        {
+          "question": "What is corrective action intended to do?",
+          "options": [
+            "Address causes of a gap and reduce recurrence",
+            "Hide audit findings",
+            "Punish every honest mistake",
+            "Replace procedures with reminders"
+          ],
+          "correct_answer": "A",
+          "explanation": "Good corrective action improves the system rather than merely reacting to symptoms.",
+          "competency_tag": "Quality improvement"
+        },
+        {
+          "question": "Which behaviour best demonstrates professional integrity?",
+          "options": [
+            "Recording a discrepancy accurately even when it may cause delay",
+            "Changing data to avoid questions",
+            "Sharing credentials with colleagues",
+            "Ignoring an inconvenient alert"
+          ],
+          "correct_answer": "A",
+          "explanation": "Integrity means preserving accurate information and reporting problems honestly.",
+          "competency_tag": "Professional conduct"
+        },
+        {
+          "question": "Why is recurrent learning important?",
+          "options": [
+            "Operational standards, systems and procedures change",
+            "Nothing changes after initial training",
+            "It is only needed for marketing",
+            "It replaces current manuals"
+          ],
+          "correct_answer": "A",
+          "explanation": "Competence must remain current as the operating environment evolves.",
+          "competency_tag": "Continuous learning"
+        },
+        {
+          "question": "Where does AIXX Level 1 fit within competence development?",
+          "options": [
+            "It supports foundation knowledge before employer-specific practical qualification",
+            "It replaces all airline training",
+            "It provides live aircraft authorisation",
+            "It removes the need for supervised assessment"
+          ],
+          "correct_answer": "A",
+          "explanation": "AIXX provides education and assessment support, not operator-specific operational authority.",
+          "competency_tag": "AIXX positioning"
+        }
+      ]
+    },
+    {
+      "module_index": 12,
+      "title": "Capstone Review and Professional Readiness",
+      "level": "Foundation",
+      "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+      "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+      "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+      "competency_area": "Safety & Escalation",
+      "objectives": [
+        "Integrate the main concepts from Modules 1-11.",
+        "Explain the end-to-end conceptual flow from source information to controlled final record.",
+        "Recognise common foundation-level red flags requiring verification or escalation.",
+        "Understand personal limits of competence and authority.",
+        "Create an individual next-step learning roadmap."
+      ],
+      "terminology": [
+        "Readiness",
+        "Competency profile",
+        "Escalation trigger",
+        "Integrated workflow",
+        "Learning gap",
+        "Professional development",
+        "Authorisation boundary"
+      ],
+      "cards": [
+        {
+          "heading": "Bringing the system together",
+          "body": "Load control can be visualised as a chain: approved aircraft and operational information + traffic-load information + physical loading status + controlled communication + system processing + verification/reconciliation + final controlled record. Every link matters. A weakness at one point can affect the reliability of the final picture.",
+          "type": "text"
+        },
+        {
+          "heading": "Foundation red flags",
+          "body": "A Level 1 learner should recognise warning signs even if they are not yet trained to solve the technical problem. Examples include conflicting data, missing information, unexplained late changes, uncertain aircraft/configuration data, system alerts, unclear source ownership, incomplete handover or a mismatch between recorded and physical status. The safe response is verification and escalation.",
+          "type": "text"
+        },
+        {
+          "heading": "Limits of competence",
+          "body": "Professionalism includes knowing what you are not yet authorised to do. A person who understands the theory but has not completed operator-specific qualification should not perform live load-control tasks independently. This boundary protects both the learner and the operation.",
+          "type": "text"
+        },
+        {
+          "heading": "Personal competency profile",
+          "body": "AIXX can convert assessment performance into a learner profile across areas such as role awareness, terminology, mass/balance concepts, information flow, documentation, digital systems, human factors and safety culture. The profile should show strengths and development areas rather than only one percentage score.",
+          "type": "text"
+        },
+        {
+          "heading": "Roadmap after Level 1",
+          "body": "Learners who successfully complete Level 1 can progress to the Intermediate Certificate, where scenario complexity increases and more technical concepts are introduced. Learners seeking employment should also pursue the airport, ground-handling or airline-specific prerequisites required by prospective employers.",
+          "type": "text"
+        },
+        {
+          "heading": "Professional identity",
+          "body": "The aim of the AIXX pathway is long-term learning. A learner can maintain an Aviation Career Passport containing completed modules, assessment history, competency indicators and next recommended learning. This creates continuity from initial curiosity to professional development.",
+          "type": "text"
+        }
+      ],
+      "scenarios": [
+        "End-to-end capstone flow: Authorised sources → Load-control workspace → Physical operation → Reconciliation → Final controlled record → Audit/learning.",
+        "AIXX learner dashboard mock-up showing competency bars, Level 1 complete badge, Intermediate next step and employer-specific qualification reminder."
+      ],
+      "knowledge_checks": [
+        {
+          "question": "Name two foundation red flags.",
+          "suggested_answer": "Examples: conflicting data, missing information, unexplained changes, system alerts, unclear source ownership or record/physical mismatch."
+        },
+        {
+          "question": "What should happen when a learner recognises a red flag but is not trained to resolve it?",
+          "suggested_answer": "Verify and escalate through the approved process."
+        },
+        {
+          "question": "What does Level 1 completion demonstrate?",
+          "suggested_answer": "Foundation theoretical understanding, not live operational authorisation."
+        },
+        {
+          "question": "What should an AIXX competency profile show?",
+          "suggested_answer": "Strengths and development areas across multiple competency categories."
+        },
+        {
+          "question": "What is the recommended next AIXX learning stage?",
+          "suggested_answer": "Intermediate Certificate in Aircraft Load Control."
+        }
+      ],
+      "summary": [
+        "Load control can be visualised as a chain: approved aircraft and operational information + traffic-load information + physical loading status + controlled communication + system processing + verification/reconciliation + final controlled record.",
+        "Integrate the main concepts from Modules 1-11.",
+        "Explain the end-to-end conceptual flow from source information to controlled final record.",
+        "Recognise common foundation-level red flags requiring verification or escalation.",
+        "Understand personal limits of competence and authority."
+      ],
+      "mcqs": [
+        {
+          "question": "Which sequence best represents the conceptual load-control flow?",
+          "options": [
+            "Authorised inputs → controlled processing → physical confirmation/reconciliation → final record",
+            "Ticket sale → retail purchase → parking payment → final record",
+            "Weather forecast → hotel booking → meal service → final record",
+            "Marketing campaign → social media → final record"
+          ],
+          "correct_answer": "A",
+          "explanation": "Load control relies on authorised inputs, controlled processing and reconciliation with the actual operation.",
+          "competency_tag": "Integrated workflow"
+        },
+        {
+          "question": "Which is a foundation-level red flag?",
+          "options": [
+            "Two authorised systems show conflicting load information",
+            "The airport has several cafés",
+            "A passenger has a window seat preference",
+            "The airline changes an advertisement"
+          ],
+          "correct_answer": "A",
+          "explanation": "Conflicting operational data requires verification and escalation.",
+          "competency_tag": "Red-flag recognition"
+        },
+        {
+          "question": "What does successful Level 1 completion mean?",
+          "options": [
+            "The learner has foundation knowledge but still needs employer-specific operational qualification",
+            "The learner may immediately control any aircraft",
+            "The learner no longer needs manuals",
+            "The learner is authorised by every airline"
+          ],
+          "correct_answer": "A",
+          "explanation": "Level 1 is educational and does not replace operational authorisation.",
+          "competency_tag": "Qualification boundary"
+        },
+        {
+          "question": "Why is a competency profile more useful than one exam percentage?",
+          "options": [
+            "It shows strengths and development areas across several skills",
+            "It hides weak areas",
+            "It removes the need for learning",
+            "It guarantees employment"
+          ],
+          "correct_answer": "A",
+          "explanation": "Multi-dimensional profiles support targeted development and personalised roadmaps.",
+          "competency_tag": "Learning analytics"
+        },
+        {
+          "question": "What is the safest response when a learner encounters an operational issue beyond their authority?",
+          "options": [
+            "Escalate using the approved process",
+            "Guess based on training examples",
+            "Copy another flight's data",
+            "Ignore the issue"
+          ],
+          "correct_answer": "A",
+          "explanation": "Knowing and respecting limits of competence is a core professional behaviour.",
+          "competency_tag": "Professional readiness"
+        },
+        {
+          "question": "What is the main purpose of the AIXX Aviation Career Passport concept?",
+          "options": [
+            "To maintain a continuing record of learning, competency and recommended progression",
+            "To replace airline employment records",
+            "To authorise live operations automatically",
+            "To publish confidential operational data"
+          ],
+          "correct_answer": "A",
+          "explanation": "The Career Passport supports long-term learner affiliation and development.",
+          "competency_tag": "Career progression"
+        }
+      ]
+    }
+  ]
+}

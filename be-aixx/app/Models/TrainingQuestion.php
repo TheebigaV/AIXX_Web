@@ -11,7 +11,8 @@ class TrainingQuestion extends Model
         'question',
         'options',
         'correct_answer',
-        'explanation'
+        'explanation',
+        'competency_tag',
     ];
 
     protected $casts = [

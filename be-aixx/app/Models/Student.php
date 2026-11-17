@@ -68,4 +68,9 @@ class Student extends Authenticatable
     {
         return $this->hasMany(CertificateAttempt::class);
     }
+
+    public function roadmap()
+    {
+        return $this->hasOne(StudentRoadmap::class);
+    }
 }
