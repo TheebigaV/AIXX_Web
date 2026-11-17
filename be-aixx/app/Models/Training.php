@@ -78,4 +78,19 @@ class Training extends Model
     {
         return $this->hasMany(Survey::class);
     }
+
+    public function profiles()
+    {
+        return $this->hasMany(CourseProfile::class);
+    }
+
+    public function blueprint()
+    {
+        return $this->hasOne(AssessmentBlueprint::class);
+    }
+
+    public function pathwayLevel()
+    {
+        return $this->hasOne(PathwayLevel::class);
+    }
 }

@@ -25,6 +25,9 @@ use App\Http\Controllers\Admin\ContributorController;
 use App\Http\Controllers\Admin\CertificateController as AdminCertificateController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\AnalyticsController as AdminAnalyticsController;
+use App\Http\Controllers\Admin\CurriculumContentController;
+use App\Http\Controllers\Admin\LearningAssignmentController;
+use App\Http\Controllers\Admin\QuestionQualityController;
 
 
 
@@ -130,6 +133,26 @@ Route::middleware('auth:sanctum')->group(function () {
         // Certificate issuance (manual)
         Route::post('certificate/issue', [AdminCertificateController::class, 'issue']);
         Route::patch('certificate/{id}/revoke', [AdminCertificateController::class, 'revoke']);
+
+        // Enterprise learning assignments + manager report
+        Route::get('learning-assignments', [LearningAssignmentController::class, 'index']);
+        Route::post('learning-assignments', [LearningAssignmentController::class, 'store']);
+        Route::get('learning-assignments/{id}', [LearningAssignmentController::class, 'show'])->whereNumber('id');
+        Route::put('learning-assignments/{id}', [LearningAssignmentController::class, 'update'])->whereNumber('id');
+        Route::delete('learning-assignments/{id}', [LearningAssignmentController::class, 'destroy'])->whereNumber('id');
+        Route::get('learning-assignments/{id}/report', [LearningAssignmentController::class, 'report'])->whereNumber('id');
+
+        // Structured curriculum content, certification blueprint and question quality
+        Route::get('trainings/{id}/blueprint', [CurriculumContentController::class, 'showBlueprint'])->whereNumber('id');
+        Route::put('trainings/{id}/blueprint', [CurriculumContentController::class, 'updateBlueprint'])->whereNumber('id');
+        Route::get('trainings/{id}/course-profile', [CurriculumContentController::class, 'showCourseProfile'])->whereNumber('id');
+        Route::put('trainings/{id}/course-profile', [CurriculumContentController::class, 'updateCourseProfile'])->whereNumber('id');
+        Route::get('trainings/{id}/question-analytics', [QuestionQualityController::class, 'analytics'])->whereNumber('id');
+        Route::get('training-modules/{id}/content', [CurriculumContentController::class, 'showModuleContent'])->whereNumber('id');
+        Route::put('training-modules/{id}/content', [CurriculumContentController::class, 'updateModuleContent'])->whereNumber('id');
+        Route::post('training-modules/{id}/scenarios/{number}/image', [CurriculumContentController::class, 'uploadScenarioImage'])->whereNumber(['id', 'number']);
+        Route::get('question-feedback', [QuestionQualityController::class, 'feedback']);
+        Route::patch('question-feedback/{id}', [QuestionQualityController::class, 'updateFeedback'])->whereNumber('id');
 
         // Payments reconciliation
         Route::get('payments', [AdminPaymentController::class, 'index']);

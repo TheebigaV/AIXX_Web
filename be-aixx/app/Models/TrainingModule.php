@@ -24,4 +24,14 @@ class TrainingModule extends Model
     {
         return $this->hasMany(TrainingQuestion::class);
     }
+
+    public function contents()
+    {
+        return $this->hasMany(ModuleContent::class);
+    }
+
+    public function knowledgeChecks()
+    {
+        return $this->hasMany(KnowledgeCheck::class)->orderBy('sort_order');
+    }
 }

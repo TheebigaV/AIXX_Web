@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\CourseController as WebCourseController;
 use App\Models\LearningPath;
 use App\Models\Training;
+use App\Models\TrainingQuestion;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -92,7 +93,12 @@ class CourseController extends Controller
             }
         }
 
-        $payload['questions'] = collect($payload['questions'] ?? [])->map(function ($q) use ($oldTitle, $payload) {
+        $competencyTags = TrainingQuestion::whereIn('id', collect($payload['questions'] ?? [])->pluck('id')->filter())
+            ->whereNotNull('competency_tag')
+            ->pluck('competency_tag', 'id');
+
+        $payload['questions'] = collect($payload['questions'] ?? [])->map(function ($q) use ($oldTitle, $payload, $competencyTags) {
+            $q['competency_tag'] = $competencyTags[$q['id'] ?? 0] ?? null;
             $text = preg_replace('/^\s*Question\s+\d+\s*:\s*/i', '', (string) ($q['question'] ?? ''));
             $q['question'] = $oldTitle !== '' ? str_replace($oldTitle, $payload['title'], $text) : $text;
             $q['options'] = collect($q['options'] ?? [])
