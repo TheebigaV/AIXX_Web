@@ -66,6 +66,13 @@ class AdminCurriculumTest extends TestCase
     /** Run a full certification attempt answering every question correctly or wrongly. */
     protected function certify(array $headers, bool $correct): void
     {
+        // Each call may use a different learner's token, so drop the user the guard cached from earlier requests
+        $this->app['auth']->forgetGuards();
+
+        // The assessment opens only once every module quiz is passed
+        foreach ($this->training->modules()->pluck('module_index') as $index) {
+            $this->passModule($headers, $index);
+        }
         $this->postJson('/api/courses/' . self::SLUG . '/acknowledge', ['accepted' => true], $headers)->assertOk();
         $id = $this->postJson('/api/courses/' . self::SLUG . '/certification/attempts', [], $headers)->json('data.id');
         $answers = CertificationAttemptItem::where('certification_attempt_id', $id)->with('question')->get()->mapWithKeys(function ($i) use ($correct) {

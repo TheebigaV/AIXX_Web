@@ -158,6 +158,19 @@ class MobileCurriculumTest extends TestCase
         $this->postJson("$base/knowledge-checks/{$checks[0]['id']}/answer", ['answer' => 'x'])->assertStatus(401);
     }
 
+    /** Displayed letter for every item of an attempt: the correct one, or a wrong one. */
+    protected function attemptAnswers(int $attemptId, bool $correct): array
+    {
+        return CertificationAttemptItem::where('certification_attempt_id', $attemptId)->with('question')->get()
+            ->mapWithKeys(function ($i) use ($correct) {
+                $right = $i->question->correct_answer;
+                $letter = $correct
+                    ? array_search($right, $i->options_mapping, true)
+                    : collect($i->options_mapping)->search(fn ($original) => $original !== $right);
+                return [(string) $i->training_question_id => $letter];
+            })->all();
+    }
+
     public function test_certification_flow_issues_certificate_and_retry_draws_new_questions(): void
     {
         $student = $this->makeStudent();
@@ -179,6 +192,24 @@ class MobileCurriculumTest extends TestCase
         $this->postJson("/api/courses/$slug/acknowledge", ['accepted' => true], $headers)->assertOk();
         $this->getJson("/api/courses/$slug/curriculum", $headers)->assertJsonPath('data.acknowledgement.acknowledged', true);
 
+        // Every module quiz must be passed first
+        $this->passModule($headers, 1);
+        $this->postJson("/api/courses/$slug/certification/attempts", [], $headers)
+            ->assertStatus(403)
+            ->assertJsonPath('code', 'modules_incomplete')
+            ->assertJsonPath('modules_completed', 1)
+            ->assertJsonPath('modules_total', 12);
+        $this->getJson("/api/courses/$slug/assessment/blueprint", $headers)
+            ->assertJsonPath('data.eligibility.can_start', false)
+            ->assertJsonPath('data.eligibility.blocked_reason', 'modules_incomplete');
+
+        foreach (range(2, 12) as $i) {
+            $this->passModule($headers, $i);
+        }
+        $this->getJson("/api/courses/$slug/assessment/blueprint", $headers)
+            ->assertJsonPath('data.eligibility.can_start', true)
+            ->assertJsonPath('data.eligibility.blocked_reason', null);
+
         $start = $this->postJson("/api/courses/$slug/certification/attempts", [], $headers)
             ->assertCreated()
             ->assertJsonPath('data.total_questions', 50)
@@ -199,16 +230,28 @@ class MobileCurriculumTest extends TestCase
         // Starting again resumes the open attempt
         $this->postJson("/api/courses/$slug/certification/attempts", [], $headers)->assertOk()->assertJsonPath('resumed', true)->assertJsonPath('data.id', $attemptId);
 
-        // Answer everything correctly using the displayed (shuffled) letters
-        $answers = CertificationAttemptItem::where('certification_attempt_id', $attemptId)->with('question')->get()
-            ->mapWithKeys(fn ($i) => [(string) $i->training_question_id => array_search($i->question->correct_answer, $i->options_mapping, true)])
-            ->all();
-        $this->postJson("/api/certification/attempts/$attemptId/answers", ['answers' => $answers + ['999999' => 'A']], $headers)
+        // First attempt fails: 40 wrong answers, and the 10 unanswered questions also count as wrong
+        $wrong = $this->attemptAnswers($attemptId, false);
+        $this->postJson("/api/certification/attempts/$attemptId/answers", ['answers' => array_slice($wrong, 0, 40, true) + ['999999' => 'A']], $headers)
             ->assertOk()
-            ->assertJsonPath('data.answered_count', 50)
+            ->assertJsonPath('data.answered_count', 40)
             ->assertJsonPath('data.ignored_question_ids', [999999]);
+        $this->postJson("/api/certification/attempts/$attemptId/complete", [], $headers)
+            ->assertOk()
+            ->assertJsonPath('data.score', 0)
+            ->assertJsonPath('data.passed', false)
+            ->assertJsonPath('data.certificate', null);
 
-        $result = $this->postJson("/api/certification/attempts/$attemptId/complete", [], $headers)
+        // A retry uses every question left unseen by the first attempt (66-question pool, 50 used)
+        $retry = $this->postJson("/api/courses/$slug/certification/attempts", [], $headers)->assertCreated();
+        $retryId = $retry->json('data.id');
+        $firstIds = collect(array_keys($wrong))->map(fn ($id) => (int) $id);
+        $this->assertCount(16, collect($retry->json('data.questions'))->pluck('question_id')->diff($firstIds));
+
+        // The retry passes and issues a certificate
+        $answers = $this->attemptAnswers($retryId, true);
+        $this->postJson("/api/certification/attempts/$retryId/answers", ['answers' => $answers], $headers)->assertOk()->assertJsonPath('data.answered_count', 50);
+        $result = $this->postJson("/api/certification/attempts/$retryId/complete", [], $headers)
             ->assertOk()
             ->assertJsonPath('already_completed', false)
             ->assertJsonPath('data.score', 100)
@@ -218,18 +261,19 @@ class MobileCurriculumTest extends TestCase
         $this->assertNotNull($token);
         $this->assertNotNull($result->json('data.questions.0.explanation'));
 
-        $this->postJson("/api/certification/attempts/$attemptId/complete", [], $headers)->assertOk()->assertJsonPath('already_completed', true)->assertJsonPath('data.certificate.certificate_token', $token);
-        $this->postJson("/api/certification/attempts/$attemptId/answers", ['answers' => [array_key_first($answers) => 'A']], $headers)->assertStatus(409);
+        $this->postJson("/api/certification/attempts/$retryId/complete", [], $headers)->assertOk()->assertJsonPath('already_completed', true)->assertJsonPath('data.certificate.certificate_token', $token);
+        $this->postJson("/api/certification/attempts/$retryId/answers", ['answers' => [array_key_first($answers) => 'A']], $headers)->assertStatus(409);
 
         // Certificate shows up in the existing certificate APIs
         $this->getJson('/api/certificate', $headers)->assertOk()->assertJsonPath('count', 1);
         $this->getJson("/api/certificate/verify/$token")->assertOk();
 
-        // A retry uses every question left unseen by the first attempt (66-question pool, 50 used)
-        $retry = $this->postJson("/api/courses/$slug/certification/attempts", [], $headers)->assertCreated();
-        $firstIds = collect(array_keys($answers))->map(fn ($id) => (int) $id);
-        $retryIds = collect($retry->json('data.questions'))->pluck('question_id');
-        $this->assertCount(16, $retryIds->diff($firstIds));
+        // Once certified, the assessment cannot be started again
+        $this->postJson("/api/courses/$slug/certification/attempts", [], $headers)
+            ->assertStatus(409)
+            ->assertJsonPath('code', 'already_certified')
+            ->assertJsonPath('attempt_id', $retryId);
+        $this->getJson("/api/courses/$slug/assessment/blueprint", $headers)->assertJsonPath('data.eligibility.blocked_reason', 'already_certified');
 
         $this->getJson('/api/certification/attempts', $headers)->assertOk()->assertJsonPath('count', 2);
         $this->getJson("/api/certification/attempts/$attemptId", $headers)->assertOk()->assertJsonPath('data.status', 'completed');

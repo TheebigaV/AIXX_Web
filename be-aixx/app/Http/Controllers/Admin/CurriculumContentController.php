@@ -9,10 +9,10 @@ use App\Models\KnowledgeCheck;
 use App\Models\ModuleContent;
 use App\Models\Training;
 use App\Models\TrainingModule;
+use App\Services\ScenarioImageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Admin management of structured curriculum content: course profile, module
@@ -194,26 +194,16 @@ class CurriculumContentController extends Controller
         ]);
 
         $content = $module->contents()->where('lang', $request->input('lang', 'en'))->first();
-        $scenarios = $content?->scenarios ?? [];
-        if (!isset($scenarios[$number - 1])) {
+        if (!isset(($content?->scenarios ?? [])[$number - 1])) {
             return response()->json(['success' => false, 'message' => "Scenario {$number} does not exist for this module."], 404);
         }
 
-        $path = $request->file('image')->store("curriculum/scenarios/module-{$module->id}", 'public');
-        $previous = $scenarios[$number - 1]['image_path'] ?? null;
-
-        $scenarios[$number - 1]['image_url'] = Storage::disk('public')->url($path);
-        $scenarios[$number - 1]['image_path'] = $path;
-        $content->update(['scenarios' => $scenarios]);
-
-        if ($previous && $previous !== $path) {
-            Storage::disk('public')->delete($previous);
-        }
+        $url = app(ScenarioImageService::class)->attach($content, $number, $request->file('image'));
 
         return response()->json(['success' => true, 'data' => [
             'module_id' => $module->id,
             'scenario' => $number,
-            'image_url' => $scenarios[$number - 1]['image_url'],
+            'image_url' => $url,
         ]]);
     }
 

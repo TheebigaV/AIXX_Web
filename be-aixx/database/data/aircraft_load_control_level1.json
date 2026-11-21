@@ -254,24 +254,24 @@
         {
           "question": "Which statement best describes the foundation purpose of aircraft load control?",
           "options": [
-            "To coordinate reliable load information for safe and controlled aircraft operation",
             "To sell additional baggage allowance",
+            "To coordinate reliable load information for safe and controlled aircraft operation",
             "To schedule airport retail staff",
             "To select the flight route"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Load control brings together controlled information about what is carried and how the load is represented for departure.",
           "competency_tag": "Role awareness / safety purpose"
         },
         {
           "question": "Why does load control communicate with passenger, baggage, cargo and ramp teams?",
           "options": [
-            "Because each team provides part of the operational load picture",
             "Because load control manages all airport shops",
             "Because load control decides airline fares",
+            "Because each team provides part of the operational load picture",
             "Because these teams operate the aircraft engines"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "The load picture is assembled from several operational information sources.",
           "competency_tag": "Stakeholder coordination"
         },
@@ -280,10 +280,10 @@
           "options": [
             "Use the larger figure",
             "Use the smaller figure",
-            "Verify and escalate the discrepancy according to the approved process",
-            "Average the two figures"
+            "Average the two figures",
+            "Verify and escalate the discrepancy according to the approved process"
           ],
-          "correct_answer": "C",
+          "correct_answer": "D",
           "explanation": "Conflicting operational data must be resolved through verification and escalation, not assumption.",
           "competency_tag": "Data integrity / escalation"
         },
@@ -314,12 +314,12 @@
         {
           "question": "What normally remains necessary after completing a generic foundation course?",
           "options": [
-            "Employer-specific operational training and authorisation",
             "Nothing else",
             "Only a social-media profile",
+            "Employer-specific operational training and authorisation",
             "A retail-service certificate"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Generic learning supports knowledge but does not replace operator-specific competency and authorisation.",
           "competency_tag": "Qualification boundary"
         }
@@ -420,24 +420,24 @@
         {
           "question": "Which pair of ideas must both be considered when thinking about aircraft loading?",
           "options": [
-            "Mass and balance",
             "Ticket price and meal choice",
             "Weather and retail sales",
+            "Mass and balance",
             "Gate number and uniform colour"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Aircraft loading is concerned with both how much mass is carried and how it is distributed.",
           "competency_tag": "Mass/balance concept"
         },
         {
           "question": "What can happen when load is moved forward or aft?",
           "options": [
-            "The centre of gravity can change",
             "The aircraft registration changes",
             "The runway number changes",
-            "The ticket class changes"
+            "The ticket class changes",
+            "The centre of gravity can change"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Moving mass changes its distribution and can move the centre of gravity.",
           "competency_tag": "CG concept"
         },
@@ -456,36 +456,36 @@
         {
           "question": "Why does a Level 1 course avoid teaching live aircraft-specific calculations?",
           "options": [
-            "Because those require current approved data and supervised qualification",
             "Because calculations are never used in aviation",
+            "Because those require current approved data and supervised qualification",
             "Because only pilots may learn mathematics",
             "Because balance is unrelated to loading"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Foundation learning should explain concepts without pretending to replace operator-specific technical qualification.",
           "competency_tag": "Training boundary"
         },
         {
           "question": "Which force acts primarily downward in the basic four-force model?",
           "options": [
-            "Weight",
             "Lift",
             "Thrust",
+            "Weight",
             "Drag"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Weight acts downward due to gravity.",
           "competency_tag": "Basic flight theory"
         },
         {
           "question": "Two aircraft have the same total mass but different load distribution. What may differ?",
           "options": [
-            "Their balance condition",
             "Their airline brand",
             "Their airport code",
-            "Their flight number format"
+            "Their flight number format",
+            "Their balance condition"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Distribution affects balance even when total mass is unchanged.",
           "competency_tag": "Distribution awareness"
         }
@@ -589,12 +589,12 @@
         {
           "question": "Which item is typically part of traffic load?",
           "options": [
-            "Passenger baggage",
             "Airport terminal furniture",
             "Runway lighting",
-            "Check-in counter signage"
+            "Check-in counter signage",
+            "Passenger baggage"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Baggage carried on the flight is part of the traffic-load picture.",
           "competency_tag": "Terminology"
         },
@@ -625,24 +625,24 @@
         {
           "question": "Why does Level 1 introduce flight-stage weight concepts without detailed equations?",
           "options": [
-            "To build conceptual understanding before operator-specific technical training",
             "Because aircraft weight never changes",
             "Because equations are prohibited in aviation",
+            "To build conceptual understanding before operator-specific technical training",
             "Because fuel is unrelated to aircraft mass"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Foundation learning prepares learners for later approved technical instruction.",
           "competency_tag": "Learning progression"
         },
         {
           "question": "Which group contains only flight-related load inputs?",
           "options": [
-            "Passengers, baggage, cargo, mail",
             "Retail sales, parking fees, uniforms, gates",
             "Weather radar, runway lights, terminal seats, buses",
-            "Catering menu, website banner, office printer, taxi queue"
+            "Catering menu, website banner, office printer, taxi queue",
+            "Passengers, baggage, cargo, mail"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "These are common categories of traffic load.",
           "competency_tag": "Traffic-load awareness"
         },
@@ -768,36 +768,36 @@
         {
           "question": "What is the foundation purpose of load reconciliation?",
           "options": [
-            "To make recorded load information agree with the physical loading condition",
             "To count airport shops",
+            "To make recorded load information agree with the physical loading condition",
             "To calculate crew salaries",
             "To allocate parking spaces"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Reconciliation checks that system/documented information reflects what is actually loaded.",
           "competency_tag": "Reconciliation"
         },
         {
           "question": "What is a ULD used for in general terms?",
           "options": [
-            "Grouping and handling load on suitable aircraft",
             "Controlling runway lights",
             "Checking passports",
+            "Grouping and handling load on suitable aircraft",
             "Powering aircraft engines"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "ULDs are containers or pallets used in cargo/baggage handling on compatible aircraft.",
           "competency_tag": "Loading equipment awareness"
         },
         {
           "question": "A baggage item is physically removed after the planned load was prepared. What principle applies?",
           "options": [
-            "The load information should be updated through the approved process",
             "No action is needed because the plan was already made",
             "The discrepancy should be hidden",
-            "The original record should never change"
+            "The original record should never change",
+            "The load information should be updated through the approved process"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Physical changes must be reflected in controlled load information.",
           "competency_tag": "Change/reconciliation"
         },
@@ -816,12 +816,12 @@
         {
           "question": "Why can special loads require extra information?",
           "options": [
-            "They may have additional handling or operational requirements",
             "They always weigh nothing",
+            "They may have additional handling or operational requirements",
             "They are never recorded",
             "They replace passenger data"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Special loads can require specific handling and communication under approved procedures.",
           "competency_tag": "Special-load awareness"
         }
@@ -920,38 +920,38 @@
       ],
       "mcqs": [
         {
-          "question": "What makes an information source \"authoritative\" in an operational process?",
+          "question": "What makes an information source “authoritative” in an operational process?",
           "options": [
-            "It is the approved source designated by the organisation",
             "It is the message received first",
+            "It is the approved source designated by the organisation",
             "It is the easiest source to access",
             "It is the opinion of the most senior person nearby"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Authoritative sources are defined by the organisation's controlled process and system design.",
           "competency_tag": "Data governance"
         },
         {
           "question": "Why are timestamps useful in load-control information?",
           "options": [
-            "They help users determine whether information is current",
             "They replace all verification",
             "They determine ticket prices",
+            "They help users determine whether information is current",
             "They show staff birthdays"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Operations change quickly, so knowing when information was produced or updated is important.",
           "competency_tag": "Data currency"
         },
         {
           "question": "Which example best reflects closed-loop communication?",
           "options": [
-            "A change is sent, acknowledged and understood by the receiving team",
             "A message is sent with no confirmation",
             "A rumour is repeated",
-            "An update is written on scrap paper"
+            "An update is written on scrap paper",
+            "A change is sent, acknowledged and understood by the receiving team"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Closed-loop communication confirms that critical information has been received and understood.",
           "competency_tag": "Communication"
         },
@@ -970,24 +970,24 @@
         {
           "question": "Which item belongs in a good operational handover?",
           "options": [
-            "Unresolved discrepancies and pending actions",
             "Personal shopping plans",
+            "Unresolved discrepancies and pending actions",
             "Unrelated social-media messages",
             "Retail promotions"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Handovers should communicate operational status and outstanding risks.",
           "competency_tag": "Handover"
         },
         {
           "question": "A staff member receives an informal message saying a load changed. What is the foundation principle?",
           "options": [
-            "Ensure the authorised operational record is updated through the approved process",
             "Assume the informal message automatically changes all systems",
             "Ignore the message",
+            "Ensure the authorised operational record is updated through the approved process",
             "Use whichever value is easier"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Being informed does not necessarily mean the controlled record has been updated.",
           "competency_tag": "Source control"
         }
@@ -1088,24 +1088,24 @@
         {
           "question": "Which statement best describes load planning?",
           "options": [
-            "A controlled way of arranging intended load within approved operational constraints",
             "A method for setting ticket prices",
             "A system for assigning airport shops",
+            "A controlled way of arranging intended load within approved operational constraints",
             "A process for choosing pilots"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Load planning translates intended traffic load into an operationally feasible loading concept.",
           "competency_tag": "Planning purpose"
         },
         {
           "question": "Which factor can act as a load-planning constraint?",
           "options": [
-            "Aircraft configuration",
             "Coffee-shop menu",
             "Car-park colour",
-            "Website font"
+            "Website font",
+            "Aircraft configuration"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Aircraft configuration is one of several operational factors that can shape a plan.",
           "competency_tag": "Constraints"
         },
@@ -1124,36 +1124,36 @@
         {
           "question": "Why can load plans change during turnaround?",
           "options": [
-            "Operational inputs such as passengers, baggage or cargo can change",
             "Aircraft never receive updates",
+            "Operational inputs such as passengers, baggage or cargo can change",
             "Plans are always random",
             "Only weather can change a plan"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Turnaround inputs are dynamic and may require controlled revision.",
           "competency_tag": "Change awareness"
         },
         {
           "question": "What is the correct Level 1 approach to detailed loading-position limits?",
           "options": [
-            "Learn the concept but use only current approved operator data in actual operations",
             "Memorise generic internet values",
             "Assume all aircraft are identical",
+            "Learn the concept but use only current approved operator data in actual operations",
             "Use training graphics as live instructions"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Aircraft-specific limits belong to approved operator data and training.",
           "competency_tag": "Operational boundary"
         },
         {
           "question": "Which principle best describes the relationship between efficiency and safety?",
           "options": [
-            "Efficiency is pursued within safety and compliance boundaries",
             "Efficiency always overrides safety",
             "Safety matters only after departure",
-            "Commercial value determines allowable limits"
+            "Commercial value determines allowable limits",
+            "Efficiency is pursued within safety and compliance boundaries"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Operational efficiency must remain inside approved safety and compliance requirements.",
           "competency_tag": "Professional judgement"
         }
@@ -1254,12 +1254,12 @@
         {
           "question": "What is the main purpose of load-control documentation?",
           "options": [
-            "To provide a controlled record of verified operational load information",
             "To advertise the airline",
             "To schedule airport shops",
-            "To replace all communication"
+            "To replace all communication",
+            "To provide a controlled record of verified operational load information"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Documentation provides a controlled, traceable representation of the load condition.",
           "competency_tag": "Documentation purpose"
         },
@@ -1278,36 +1278,36 @@
         {
           "question": "Why is version control important?",
           "options": [
-            "It helps prevent use of outdated information",
             "It increases ticket sales",
+            "It helps prevent use of outdated information",
             "It selects the aircraft type",
             "It replaces access control"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Users need to know which information is current and final.",
           "competency_tag": "Version control"
         },
         {
           "question": "Which statement about electronic records is correct?",
           "options": [
-            "They still require validation, permissions and audit trails",
             "They are always correct automatically",
             "They cannot be changed",
+            "They still require validation, permissions and audit trails",
             "They never contain sensitive data"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Digital systems still require governance and data-control disciplines.",
           "competency_tag": "Digital records"
         },
         {
           "question": "What is an audit trail used for?",
           "options": [
-            "Tracing who changed information and when",
             "Choosing passenger meals",
             "Setting airport parking fees",
-            "Assigning retail stores"
+            "Assigning retail stores",
+            "Tracing who changed information and when"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Audit trails provide accountability and traceability.",
           "competency_tag": "Traceability"
         },
@@ -1434,36 +1434,36 @@
         {
           "question": "Which set lists four useful data-quality dimensions?",
           "options": [
-            "Accuracy, completeness, timeliness, consistency",
             "Colour, price, advertising, popularity",
+            "Accuracy, completeness, timeliness, consistency",
             "Speed, uniform, meal, gate",
             "Brand, route, retail, parking"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "These four dimensions help users think about whether operational data is fit for use.",
           "competency_tag": "Data quality"
         },
         {
           "question": "A system automatically populates a value. What should the user assume?",
           "options": [
-            "Automation is useful, but unusual or conflicting values still require the approved verification response",
             "Automatic values can never be wrong",
             "The value should be changed manually without evidence",
+            "Automation is useful, but unusual or conflicting values still require the approved verification response",
             "All source systems can be ignored"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Automation supports operations but does not eliminate data-quality controls.",
           "competency_tag": "Automation oversight"
         },
         {
           "question": "What should staff do if a critical system is unavailable?",
           "options": [
-            "Follow the approved contingency and escalation process",
             "Invent a new procedure",
             "Use personal software without permission",
-            "Guess the missing values"
+            "Guess the missing values",
+            "Follow the approved contingency and escalation process"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Fallback methods must be controlled and organisation-approved.",
           "competency_tag": "Contingency awareness"
         },
@@ -1482,12 +1482,12 @@
         {
           "question": "Which statement about digital systems is most accurate?",
           "options": [
-            "They can improve efficiency while increasing the importance of data governance",
             "They make data governance unnecessary",
+            "They can improve efficiency while increasing the importance of data governance",
             "They remove the need for source ownership",
             "They guarantee that all interfaces always agree"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Digitalisation improves capability but also makes data lineage and governance critical.",
           "competency_tag": "Digital professionalism"
         }
@@ -1589,36 +1589,36 @@
         {
           "question": "Which human factor can make a person skip a verification step?",
           "options": [
-            "Time pressure",
             "Aircraft paint colour",
+            "Time pressure",
             "Terminal architecture",
             "Retail opening hours"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Time pressure can encourage shortcuts if not managed by strong procedures and culture.",
           "competency_tag": "Human factors"
         },
         {
           "question": "What is one purpose of an independent cross-check?",
           "options": [
-            "To detect errors that may have been missed",
             "To make all tasks slower",
             "To replace approved data",
+            "To detect errors that may have been missed",
             "To avoid teamwork"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Cross-checks are designed to catch mistakes before they propagate.",
           "competency_tag": "Error prevention"
         },
         {
           "question": "Why should near misses be reported?",
           "options": [
-            "They can reveal process weaknesses and support learning",
             "They should always be hidden",
             "They have no value if no damage occurred",
-            "They are only useful for marketing"
+            "They are only useful for marketing",
+            "They can reveal process weaknesses and support learning"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Near-miss learning helps organisations strengthen controls before a more serious event occurs.",
           "competency_tag": "Safety reporting"
         },
@@ -1637,24 +1637,24 @@
         {
           "question": "Which statement best reflects professional behaviour under heavy workload?",
           "options": [
-            "Use approved workload and escalation controls when performance may be affected",
             "Hide fatigue and continue regardless",
+            "Use approved workload and escalation controls when performance may be affected",
             "Skip checks to save time",
             "Guess missing information"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Recognising limits and using escalation controls is part of professional safety behaviour.",
           "competency_tag": "Fitness/workload"
         },
         {
           "question": "What is the best relationship between on-time performance and safety controls?",
           "options": [
-            "On-time performance matters, but safety controls should not be bypassed to achieve it",
             "On-time performance always comes first",
             "Safety controls matter only after delay occurs",
+            "On-time performance matters, but safety controls should not be bypassed to achieve it",
             "The two are unrelated"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Operational efficiency must remain inside safety and compliance boundaries.",
           "competency_tag": "Safety culture"
         }
@@ -1755,24 +1755,24 @@
         {
           "question": "Which statement best describes operational change in load control?",
           "options": [
-            "It is expected and should be managed through controlled processes",
             "It should never occur",
             "It can always be handled informally",
+            "It is expected and should be managed through controlled processes",
             "It does not affect documentation"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Turnarounds are dynamic, so systems and procedures must manage change safely.",
           "competency_tag": "Change management"
         },
         {
           "question": "Why can last-minute changes require extra discipline?",
           "options": [
-            "There is less time for review and communication",
             "They are never recorded",
             "They always reduce aircraft mass",
-            "They remove the need for verification"
+            "They remove the need for verification",
+            "There is less time for review and communication"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Time compression increases the importance of controlled updates and communication.",
           "competency_tag": "Late-change awareness"
         },
@@ -1791,36 +1791,36 @@
         {
           "question": "A late change creates conflicting information in two systems. What should happen?",
           "options": [
-            "Verify and escalate according to the approved process",
             "Choose the more convenient value",
+            "Verify and escalate according to the approved process",
             "Average both values",
             "Ignore the conflict because departure is close"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Time pressure does not justify guessing between conflicting operational data.",
           "competency_tag": "Escalation/data integrity"
         },
         {
           "question": "What is the purpose of controlling operational changes?",
           "options": [
-            "To keep the final information accurate, traceable and communicated",
             "To prevent any updates",
             "To eliminate all delays",
+            "To keep the final information accurate, traceable and communicated",
             "To replace staff training"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Controlled change management protects the integrity of the final operating picture.",
           "competency_tag": "Change control"
         },
         {
           "question": "During irregular operations, which discipline becomes even more important?",
           "options": [
-            "Clear communication and version control",
             "Informal assumptions",
             "Unrecorded changes",
-            "Shared passwords"
+            "Shared passwords",
+            "Clear communication and version control"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Rapidly changing conditions increase the need for disciplined information management.",
           "competency_tag": "Irregular operations"
         }
@@ -1922,12 +1922,12 @@
         {
           "question": "What is one benefit of standardisation in ground operations?",
           "options": [
-            "More consistent safety and training expectations",
             "More informal local variation",
             "Less need for controlled procedures",
-            "Removal of all audits"
+            "Removal of all audits",
+            "More consistent safety and training expectations"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Standardisation helps reduce complexity and improve consistency.",
           "competency_tag": "Quality/standardisation"
         },
@@ -1946,36 +1946,36 @@
         {
           "question": "What is corrective action intended to do?",
           "options": [
-            "Address causes of a gap and reduce recurrence",
             "Hide audit findings",
+            "Address causes of a gap and reduce recurrence",
             "Punish every honest mistake",
             "Replace procedures with reminders"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Good corrective action improves the system rather than merely reacting to symptoms.",
           "competency_tag": "Quality improvement"
         },
         {
           "question": "Which behaviour best demonstrates professional integrity?",
           "options": [
-            "Recording a discrepancy accurately even when it may cause delay",
             "Changing data to avoid questions",
             "Sharing credentials with colleagues",
+            "Recording a discrepancy accurately even when it may cause delay",
             "Ignoring an inconvenient alert"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Integrity means preserving accurate information and reporting problems honestly.",
           "competency_tag": "Professional conduct"
         },
         {
           "question": "Why is recurrent learning important?",
           "options": [
-            "Operational standards, systems and procedures change",
             "Nothing changes after initial training",
             "It is only needed for marketing",
-            "It replaces current manuals"
+            "It replaces current manuals",
+            "Operational standards, systems and procedures change"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Competence must remain current as the operating environment evolves.",
           "competency_tag": "Continuous learning"
         },
@@ -2098,36 +2098,36 @@
         {
           "question": "Which is a foundation-level red flag?",
           "options": [
-            "Two authorised systems show conflicting load information",
             "The airport has several cafés",
+            "Two authorised systems show conflicting load information",
             "A passenger has a window seat preference",
             "The airline changes an advertisement"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "Conflicting operational data requires verification and escalation.",
           "competency_tag": "Red-flag recognition"
         },
         {
           "question": "What does successful Level 1 completion mean?",
           "options": [
-            "The learner has foundation knowledge but still needs employer-specific operational qualification",
             "The learner may immediately control any aircraft",
             "The learner no longer needs manuals",
+            "The learner has foundation knowledge but still needs employer-specific operational qualification",
             "The learner is authorised by every airline"
           ],
-          "correct_answer": "A",
+          "correct_answer": "C",
           "explanation": "Level 1 is educational and does not replace operational authorisation.",
           "competency_tag": "Qualification boundary"
         },
         {
           "question": "Why is a competency profile more useful than one exam percentage?",
           "options": [
-            "It shows strengths and development areas across several skills",
             "It hides weak areas",
             "It removes the need for learning",
-            "It guarantees employment"
+            "It guarantees employment",
+            "It shows strengths and development areas across several skills"
           ],
-          "correct_answer": "A",
+          "correct_answer": "D",
           "explanation": "Multi-dimensional profiles support targeted development and personalised roadmaps.",
           "competency_tag": "Learning analytics"
         },
@@ -2146,12 +2146,12 @@
         {
           "question": "What is the main purpose of the AIXX Aviation Career Passport concept?",
           "options": [
-            "To maintain a continuing record of learning, competency and recommended progression",
             "To replace airline employment records",
+            "To maintain a continuing record of learning, competency and recommended progression",
             "To authorise live operations automatically",
             "To publish confidential operational data"
           ],
-          "correct_answer": "A",
+          "correct_answer": "B",
           "explanation": "The Career Passport supports long-term learner affiliation and development.",
           "competency_tag": "Career progression"
         }

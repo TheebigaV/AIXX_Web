@@ -130,16 +130,19 @@ class AircraftLoadControlSeeder extends Seeder
             );
         }
 
-        foreach ($m['mcqs'] as $q) {
-            TrainingQuestion::updateOrCreate(
-                ['training_module_id' => $module->id, 'question' => $q['question']],
-                [
-                    'options' => $q['options'],
-                    'correct_answer' => $q['correct_answer'],
-                    'explanation' => $q['explanation'],
-                    'competency_tag' => $q['competency_tag'],
-                ]
-            );
+        // Matched by position within the module, so edited question text updates in place instead of duplicating.
+        $existing = TrainingQuestion::where('training_module_id', $module->id)->orderBy('id')->get()->values();
+        foreach (array_values($m['mcqs']) as $i => $q) {
+            $values = [
+                'question' => $q['question'],
+                'options' => $q['options'],
+                'correct_answer' => $q['correct_answer'],
+                'explanation' => $q['explanation'],
+                'competency_tag' => $q['competency_tag'],
+            ];
+            $existing->get($i)
+                ? $existing->get($i)->update($values)
+                : TrainingQuestion::create($values + ['training_module_id' => $module->id]);
         }
     }
 }
