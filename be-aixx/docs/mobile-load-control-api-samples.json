@@ -1,0 +1,766 @@
+{
+  "_info": {
+    "base_url": "/api",
+    "auth": "Endpoints with \"auth\": \"required\" need header Authorization: Bearer <token>. \"optional\" = public, but learner progress is included when the token is sent.",
+    "error_shape": { "success": false, "message": "..." },
+    "sample_course_slug": "aircraft-load-control-level-1",
+    "notes": "IDs, dates and scores are sample values. Long text is shortened with '...'."
+  },
+
+  "phase_1_study_flow": {
+
+    "GET /courses/{slug}/curriculum": {
+      "auth": "optional",
+      "query": { "lang": "optional, e.g. en (falls back to English)" },
+      "response_200": {
+        "success": true,
+        "data": {
+          "course": {
+            "id": 14,
+            "name": "Level 1 Certificate in Aircraft Load Control Fundamentals",
+            "slug": "aircraft-load-control-level-1",
+            "duration": "Approximately 24-30 hours"
+          },
+          "lang": "en",
+          "pathway": {
+            "slug": "aircraft-load-control",
+            "name": "Aircraft Load Control Professional Development Pathway",
+            "level": 1,
+            "level_name": "Level 1 - Foundation Certificate"
+          },
+          "target_learner": "Aspiring aircraft load-control personnel and airport/airline staff seeking foundation knowledge",
+          "delivery": "Self-paced digital learning with images, scenarios, knowledge checks and dynamic MCQs",
+          "outcomes": [
+            "Explain the purpose of aircraft load control and its role in safe operations.",
+            "..."
+          ],
+          "competency_areas": [
+            { "area": "Role Awareness", "description": "Understanding of load control purpose and interfaces" },
+            { "area": "Mass & Balance Concepts", "description": "Conceptual understanding of why mass and distribution matter" },
+            { "area": "Terminology", "description": "Recognition and correct use of controlled language" }
+          ],
+          "boundary_statement": "This course is educational and non-aircraft-specific; it does not qualify or authorise a learner to perform live aircraft load control.",
+          "safety_boundary": "This curriculum is designed for education, professional development and preparation for further approved training. ...",
+          "version": "1.0",
+          "effective_date": "2026-11-17",
+          "acknowledgement": {
+            "required": true,
+            "acknowledged": false,
+            "acknowledged_at": null
+          },
+          "modules": [
+            {
+              "module_index": 1,
+              "title": "The Load Control Role and the Airport/Airline Ecosystem",
+              "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+              "competency_area": "Role Awareness",
+              "objectives": [
+                "Describe the purpose of load control.",
+                "Identify the main airport and airline teams that exchange information with load control."
+              ],
+              "passed": true,
+              "best_score": 83
+            },
+            {
+              "module_index": 2,
+              "title": "Foundations of Flight, Mass and Balance",
+              "study_time": "Approximately 2-3 hours",
+              "competency_area": "Mass & Balance Concepts",
+              "objectives": ["..."],
+              "passed": false,
+              "best_score": null
+            }
+          ]
+        }
+      },
+      "response_404": { "success": false, "message": "No structured curriculum for this course." },
+      "notes": "passed / best_score are null when no token is sent."
+    },
+
+    "GET /courses/{slug}/modules/{i}/lesson": {
+      "auth": "optional",
+      "query": { "lang": "optional" },
+      "response_200": {
+        "success": true,
+        "data": {
+          "course_slug": "aircraft-load-control-level-1",
+          "course_name": "Level 1 Certificate in Aircraft Load Control Fundamentals",
+          "module_index": 1,
+          "title": "The Load Control Role and the Airport/Airline Ecosystem",
+          "lang": "en",
+          "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+          "competency_area": "Role Awareness",
+          "version": "1.0",
+          "effective_date": "2026-11-17",
+          "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+          "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+          "objectives": [
+            "Describe the purpose of load control.",
+            "Identify the main airport and airline teams that exchange information with load control."
+          ],
+          "cards": [
+            {
+              "index": 1,
+              "heading": "Why load control exists",
+              "body": "Aircraft do not depart safely simply because all passengers and bags have arrived. ...",
+              "type": "text"
+            },
+            {
+              "index": 2,
+              "heading": "Where load control sits in the operation",
+              "body": "Load control usually sits between several functions. ...",
+              "type": "text"
+            },
+            {
+              "index": 6,
+              "heading": "Operational boundary",
+              "body": "No aircraft-specific live calculations or operator-specific procedural authorisation. This course is educational and non-aircraft-specific; ...",
+              "type": "warning"
+            }
+          ],
+          "terminology": ["Load control", "Ground handling", "Turnaround", "Flight crew", "Ramp"],
+          "scenarios": [
+            {
+              "title": "Scenario 1",
+              "description": "Process map showing Passenger Services, Baggage, Cargo, Ramp, Operations and Flight Crew feeding or receiving information through a central Load Control node.",
+              "image_url": null
+            },
+            {
+              "title": "Scenario 2",
+              "description": "Split-screen scenario: local station load-control desk on the left and centralised remote load-control centre on the right, ...",
+              "image_url": "https://<api-host>/storage/curriculum/scenarios/module-41/k2Jd9s.png"
+            }
+          ],
+          "knowledge_checks_count": 5,
+          "summary": [
+            "Aircraft do not depart safely simply because all passengers and bags have arrived.",
+            "..."
+          ],
+          "steps": {
+            "items": [
+              { "step": "learn", "completed": true, "completed_at": "2026-11-20T09:12:00+00:00" },
+              { "step": "check", "completed": false, "completed_at": null },
+              { "step": "scenario", "completed": false, "completed_at": null },
+              { "step": "review", "completed": false, "completed_at": null },
+              { "step": "assess", "completed": false, "completed_at": null }
+            ],
+            "next_step": "check",
+            "module_completed": false
+          },
+          "quiz_url": "/api/courses/aircraft-load-control-level-1/modules/1",
+          "previous_module": null,
+          "next_module": 2
+        }
+      },
+      "response_404": { "success": false, "message": "No structured lesson for this module." },
+      "notes": "card.type is 'text' or 'warning'. steps is null when no token is sent. image_url may be null."
+    },
+
+    "GET /courses/{slug}/modules/{i}/terminology": {
+      "auth": "optional",
+      "response_200": {
+        "success": true,
+        "data": {
+          "course_slug": "aircraft-load-control-level-1",
+          "course_name": "Level 1 Certificate in Aircraft Load Control Fundamentals",
+          "module_index": 1,
+          "title": "The Load Control Role and the Airport/Airline Ecosystem",
+          "lang": "en",
+          "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+          "competency_area": "Role Awareness",
+          "version": "1.0",
+          "effective_date": "2026-11-17",
+          "terms": ["Load control", "Ground handling", "Turnaround", "Flight crew", "Ramp", "Passenger services", "Cargo", "Operations control", "Centralised load control"]
+        }
+      }
+    },
+
+    "GET /courses/{slug}/modules/{i}/scenarios": {
+      "auth": "optional",
+      "response_200": {
+        "success": true,
+        "data": {
+          "course_slug": "aircraft-load-control-level-1",
+          "course_name": "Level 1 Certificate in Aircraft Load Control Fundamentals",
+          "module_index": 1,
+          "title": "The Load Control Role and the Airport/Airline Ecosystem",
+          "lang": "en",
+          "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+          "competency_area": "Role Awareness",
+          "version": "1.0",
+          "effective_date": "2026-11-17",
+          "scenarios": [
+            {
+              "title": "Scenario 1",
+              "description": "Process map showing Passenger Services, Baggage, Cargo, Ramp, Operations and Flight Crew ...",
+              "image_url": null
+            },
+            {
+              "title": "Scenario 2",
+              "description": "Split-screen scenario: local station load-control desk ...",
+              "image_url": "https://<api-host>/storage/curriculum/scenarios/module-41/k2Jd9s.png"
+            }
+          ]
+        }
+      }
+    },
+
+    "GET /courses/{slug}/modules/{i}/summary": {
+      "auth": "optional",
+      "response_200": {
+        "success": true,
+        "data": {
+          "course_slug": "aircraft-load-control-level-1",
+          "course_name": "Level 1 Certificate in Aircraft Load Control Fundamentals",
+          "module_index": 1,
+          "title": "The Load Control Role and the Airport/Airline Ecosystem",
+          "lang": "en",
+          "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+          "competency_area": "Role Awareness",
+          "version": "1.0",
+          "effective_date": "2026-11-17",
+          "summary": [
+            "Aircraft do not depart safely simply because all passengers and bags have arrived.",
+            "..."
+          ],
+          "objectives": [
+            "Describe the purpose of load control.",
+            "..."
+          ]
+        }
+      }
+    },
+
+    "GET /courses/{slug}/modules/{i}/knowledge-checks": {
+      "auth": "optional",
+      "response_200": {
+        "success": true,
+        "data": {
+          "course_slug": "aircraft-load-control-level-1",
+          "course_name": "Level 1 Certificate in Aircraft Load Control Fundamentals",
+          "module_index": 1,
+          "title": "The Load Control Role and the Airport/Airline Ecosystem",
+          "lang": "en",
+          "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+          "competency_area": "Role Awareness",
+          "version": "1.0",
+          "effective_date": "2026-11-17",
+          "answered_count": 1,
+          "total": 5,
+          "checks": [
+            {
+              "id": 201,
+              "number": 1,
+              "question": "Why does load control depend on many other teams?",
+              "answered": true,
+              "your_answer": "Because each team owns part of the load picture.",
+              "suggested_answer": "Because the final load picture is built from information generated across passenger, baggage, cargo, ramp and operations activities."
+            },
+            {
+              "id": 202,
+              "number": 2,
+              "question": "What should happen if two operational data sources conflict?",
+              "answered": false,
+              "your_answer": null,
+              "suggested_answer": null
+            }
+          ]
+        }
+      },
+      "notes": "suggested_answer is only returned after the learner has answered that check."
+    },
+
+    "POST /courses/{slug}/modules/{i}/knowledge-checks/{id}/answer": {
+      "auth": "required",
+      "request": { "answer": "Because each team owns part of the load picture." },
+      "request_rules": { "answer": "required, string, max 2000" },
+      "response_200": {
+        "success": true,
+        "data": {
+          "id": 201,
+          "question": "Why does load control depend on many other teams?",
+          "your_answer": "Because each team owns part of the load picture.",
+          "suggested_answer": "Because the final load picture is built from information generated across passenger, baggage, cargo, ramp and operations activities.",
+          "answered_count": 2,
+          "total": 5,
+          "all_answered": false
+        }
+      },
+      "response_404": { "success": false, "message": "Knowledge check not found." }
+    },
+
+    "POST /courses/{slug}/modules/{i}/steps/{step}/complete": {
+      "auth": "required",
+      "path_step_values": ["learn", "check", "scenario", "review"],
+      "request": null,
+      "response_200": {
+        "success": true,
+        "data": {
+          "items": [
+            { "step": "learn", "completed": true, "completed_at": "2026-11-20T09:12:00+00:00" },
+            { "step": "check", "completed": true, "completed_at": "2026-11-21T08:10:00+00:00" },
+            { "step": "scenario", "completed": false, "completed_at": null },
+            { "step": "review", "completed": false, "completed_at": null },
+            { "step": "assess", "completed": false, "completed_at": null }
+          ],
+          "next_step": "scenario",
+          "module_completed": false
+        }
+      },
+      "response_422_examples": [
+        { "success": false, "message": "Unknown step. Use one of: learn, check, scenario, review, assess." },
+        { "success": false, "message": "The assess step completes when the module quiz is passed." },
+        { "success": false, "message": "Answer all knowledge checks first (2/5)." }
+      ]
+    },
+
+    "POST /courses/{slug}/acknowledge": {
+      "auth": "required",
+      "request": { "accepted": true },
+      "response_200": {
+        "success": true,
+        "message": "Training boundary acknowledged.",
+        "data": {
+          "course_slug": "aircraft-load-control-level-1",
+          "version": "1.0",
+          "acknowledged_at": "2026-11-21T08:30:00+00:00",
+          "boundary_statement": "This course is educational and non-aircraft-specific; it does not qualify or authorise a learner to perform live aircraft load control."
+        }
+      }
+    },
+
+    "GET /courses/{slug}/modules/{i}  (existing MCQ quiz, for reference)": {
+      "auth": "optional",
+      "response_200": {
+        "success": true,
+        "course_slug": "aircraft-load-control-level-1",
+        "course_name": "Level 1 Certificate in Aircraft Load Control Fundamentals",
+        "module_index": 1,
+        "title": "The Load Control Role and the Airport/Airline Ecosystem",
+        "study_notes": "Why load control exists\nAircraft do not depart safely ...",
+        "total_questions": 6,
+        "questions": [
+          {
+            "id": 812,
+            "question_index": 1,
+            "question": "Which statement best describes the foundation purpose of aircraft load control?",
+            "options": {
+              "A": "To coordinate reliable load information for safe and controlled aircraft operation",
+              "B": "To sell additional baggage allowance",
+              "C": "To schedule airport retail staff",
+              "D": "To select the flight route"
+            },
+            "competency_tag": "Role awareness / safety purpose"
+          }
+        ],
+        "submit_url": "/api/courses/aircraft-load-control-level-1/modules/1/submit-quiz"
+      },
+      "notes": "Only change: competency_tag added (null for older courses). No image field."
+    }
+  },
+
+  "phase_2_certification": {
+
+    "GET /courses/{slug}/assessment/blueprint": {
+      "auth": "optional",
+      "response_200": {
+        "success": true,
+        "data": {
+          "course": { "id": 14, "name": "Level 1 Certificate in Aircraft Load Control Fundamentals", "slug": "aircraft-load-control-level-1" },
+          "total_questions": 50,
+          "blueprint_total_questions": 50,
+          "pass_mark": 70,
+          "topics": [
+            { "module_index": 1, "topic": "Role and ecosystem", "min": 4, "max": 5, "pool_size": 6 },
+            { "module_index": 2, "topic": "Flight / mass / balance concepts", "min": 5, "max": 6, "pool_size": 6 },
+            { "module_index": 3, "topic": "Terminology", "min": 5, "max": 6, "pool_size": 6 }
+          ],
+          "rules": [
+            "Pass every module quiz and acknowledge the training boundary before starting.",
+            "Unanswered questions count as incorrect. There is no time limit.",
+            "Once you pass, the certification cannot be retaken.",
+            "Questions are selected per topic to keep topic balance.",
+            "Repeat attempts draw a different question mix where the pool allows.",
+            "Correct answers and explanations are shown after you complete the attempt."
+          ],
+          "requires_acknowledgement": true,
+          "eligibility": {
+            "acknowledged": true,
+            "modules_completed": 3,
+            "modules_total": 12,
+            "already_certified": false,
+            "in_progress_attempt_id": null,
+            "can_start": false,
+            "blocked_reason": "modules_incomplete"
+          }
+        }
+      },
+      "enums": { "eligibility.blocked_reason": [null, "already_certified", "acknowledgement_required", "modules_incomplete"] },
+      "notes": "eligibility is null when no token is sent. Show the Start button only when can_start is true."
+    },
+
+    "POST /courses/{slug}/certification/attempts": {
+      "auth": "required",
+      "request": null,
+      "response_201_new  (200 with resumed=true if an attempt is already open)": {
+        "success": true,
+        "resumed": false,
+        "data": {
+          "id": 9,
+          "course": { "id": 14, "name": "Level 1 Certificate in Aircraft Load Control Fundamentals", "slug": "aircraft-load-control-level-1" },
+          "status": "in_progress",
+          "score": null,
+          "passed": null,
+          "total_questions": 50,
+          "correct_count": null,
+          "started_at": "2026-11-21T08:31:00+00:00",
+          "completed_at": null,
+          "answered_count": 0,
+          "questions": [
+            {
+              "question_id": 812,
+              "number": 1,
+              "question": "Which statement best describes the foundation purpose of aircraft load control?",
+              "options": {
+                "A": "To select the flight route",
+                "B": "To coordinate reliable load information for safe and controlled aircraft operation",
+                "C": "To sell additional baggage allowance",
+                "D": "To schedule airport retail staff"
+              },
+              "selected_option": null
+            }
+          ],
+          "answers_url": "/api/certification/attempts/9/answers",
+          "complete_url": "/api/certification/attempts/9/complete"
+        }
+      },
+      "response_403": {
+        "success": false,
+        "code": "acknowledgement_required",
+        "message": "Acknowledge the training boundary before starting the assessment.",
+        "acknowledge_url": "/api/courses/aircraft-load-control-level-1/acknowledge"
+      },
+      "response_403_modules_incomplete": {
+        "success": false,
+        "code": "modules_incomplete",
+        "message": "Pass every module quiz before starting the assessment (3/12).",
+        "modules_completed": 3,
+        "modules_total": 12
+      },
+      "response_409_already_certified": {
+        "success": false,
+        "code": "already_certified",
+        "message": "You have already passed this certification.",
+        "attempt_id": 9,
+        "results_url": "/api/certification/attempts/9"
+      },
+      "notes": "Options are shuffled per attempt; always send back the displayed letter. Check order: already_certified, then acknowledgement, then an open attempt is resumed, then modules must all be passed."
+    },
+
+    "GET /certification/attempts?course={slug}": {
+      "auth": "required",
+      "response_200": {
+        "success": true,
+        "count": 1,
+        "data": [
+          {
+            "id": 9,
+            "course": { "id": 14, "name": "Level 1 Certificate in Aircraft Load Control Fundamentals", "slug": "aircraft-load-control-level-1" },
+            "status": "completed",
+            "score": 78,
+            "passed": true,
+            "total_questions": 50,
+            "correct_count": 39,
+            "started_at": "2026-11-21T08:31:00+00:00",
+            "completed_at": "2026-11-21T09:05:00+00:00"
+          }
+        ]
+      }
+    },
+
+    "GET /certification/attempts/{id}": {
+      "auth": "required",
+      "notes": "Returns the same shape as POST .../attempts data while in_progress, and the same shape as /complete data once completed."
+    },
+
+    "POST /certification/attempts/{id}/answers": {
+      "auth": "required",
+      "request": { "answers": { "812": "B", "815": "D" } },
+      "request_rules": { "answers": "object of question_id => letter A-F (or null to clear); send one or many, call as often as needed" },
+      "response_200": {
+        "success": true,
+        "data": {
+          "attempt_id": 9,
+          "answered_count": 2,
+          "total_questions": 50,
+          "ignored_question_ids": []
+        }
+      },
+      "response_409": { "success": false, "message": "This attempt is already completed." }
+    },
+
+    "POST /certification/attempts/{id}/complete": {
+      "auth": "required",
+      "request": null,
+      "response_200": {
+        "success": true,
+        "already_completed": false,
+        "data": {
+          "id": 9,
+          "course": { "id": 14, "name": "Level 1 Certificate in Aircraft Load Control Fundamentals", "slug": "aircraft-load-control-level-1" },
+          "status": "completed",
+          "score": 78,
+          "passed": true,
+          "total_questions": 50,
+          "correct_count": 39,
+          "started_at": "2026-11-21T08:31:00+00:00",
+          "completed_at": "2026-11-21T09:05:00+00:00",
+          "pass_mark": 70,
+          "topic_results": [
+            { "module_index": 1, "topic": "Role and ecosystem", "correct": 4, "total": 5, "percent": 80 },
+            { "module_index": 2, "topic": "Flight / mass / balance concepts", "correct": 4, "total": 5, "percent": 80 }
+          ],
+          "certificate": {
+            "id": 57,
+            "certificate_token": "3f1c2a9e-8d7b-4c1e-9a55-0b6f2d4e7c10",
+            "issued_at": "2026-11-21T09:05:00+00:00",
+            "verify_url": "https://aixx.com.sg/certificate/verify/3f1c2a9e-8d7b-4c1e-9a55-0b6f2d4e7c10",
+            "verify_api_url": "/api/certificate/verify/3f1c2a9e-8d7b-4c1e-9a55-0b6f2d4e7c10"
+          },
+          "questions": [
+            {
+              "question_id": 812,
+              "number": 1,
+              "module_index": 1,
+              "question": "Which statement best describes the foundation purpose of aircraft load control?",
+              "options": {
+                "A": "To select the flight route",
+                "B": "To coordinate reliable load information for safe and controlled aircraft operation",
+                "C": "To sell additional baggage allowance",
+                "D": "To schedule airport retail staff"
+              },
+              "selected_option": "B",
+              "correct_option": "B",
+              "is_correct": true,
+              "explanation": "Load control brings together controlled information about what is carried and how the load is represented for departure.",
+              "competency_tag": "Role awareness / safety purpose"
+            }
+          ]
+        }
+      },
+      "notes": "certificate is null when failed. A repeat call returns the same data with already_completed: true."
+    }
+  },
+
+  "phase_3_roadmap_and_profile": {
+
+    "GET /roadmap/destinations?q=": {
+      "auth": "none",
+      "response_200": {
+        "success": true,
+        "count": 1,
+        "data": [
+          {
+            "id": 6,
+            "name": "Aircraft Load Control",
+            "slug": "aircraft-load-control",
+            "description": "Aircraft load control professional development pathway: load controller, weight and balance, ground operations.",
+            "courses_count": 1,
+            "modules_count": 12,
+            "estimated_hours": 48
+          }
+        ]
+      }
+    },
+
+    "POST /roadmap": {
+      "auth": "required",
+      "request": { "destination": "aircraft-load-control", "hours_per_week": 6, "start_date": "2026-11-23" },
+      "request_rules": {
+        "destination": "required; path id, slug, name or free text",
+        "hours_per_week": "required, integer 1-40",
+        "start_date": "optional, YYYY-MM-DD, defaults to today"
+      },
+      "response_201": "Same object as GET /roadmap",
+      "response_422": {
+        "success": false,
+        "message": "No roadmap found for that destination.",
+        "suggestions": [ { "id": 6, "name": "Aircraft Load Control", "slug": "aircraft-load-control" } ]
+      }
+    },
+
+    "PATCH /roadmap/load": {
+      "auth": "required",
+      "request": { "hours_per_week": 8, "start_date": "2026-11-23" },
+      "request_rules": {
+        "hours_per_week": "required, integer 1-40",
+        "start_date": "optional, defaults to today"
+      },
+      "response_200": "Same object as GET /roadmap"
+    },
+
+    "GET /roadmap": {
+      "auth": "required",
+      "response_200": {
+        "success": true,
+        "data": {
+          "destination": {
+            "id": 6,
+            "name": "Aircraft Load Control",
+            "slug": "aircraft-load-control",
+            "description": "Aircraft load control professional development pathway: load controller, weight and balance, ground operations."
+          },
+          "destination_query": "aircraft-load-control",
+          "load": { "hours_per_week": 8, "module_hours": 4, "modules_per_week": 2 },
+          "start_date": "2026-11-23",
+          "total_weeks": 6,
+          "estimated_completion_date": "2027-01-03",
+          "progress": {
+            "total_modules": 12,
+            "completed_modules": 1,
+            "percent": 8,
+            "overdue_modules": 0,
+            "on_track": true
+          },
+          "next": {
+            "course_slug": "aircraft-load-control-level-1",
+            "course_name": "Level 1 Certificate in Aircraft Load Control Fundamentals",
+            "module_index": 2,
+            "title": "Foundations of Flight, Mass and Balance",
+            "due_date": "2026-11-29"
+          },
+          "steps": [
+            {
+              "step": 1,
+              "course": { "id": 14, "name": "Level 1 Certificate in Aircraft Load Control Fundamentals", "slug": "aircraft-load-control-level-1" },
+              "status": "in_progress",
+              "completed_modules": 1,
+              "total_modules": 12,
+              "modules": [
+                { "module_index": 1, "title": "The Load Control Role and the Airport/Airline Ecosystem", "status": "completed", "week": null, "due_date": null, "best_score": 83, "completed_at": "2026-11-20T10:00:00+00:00" },
+                { "module_index": 2, "title": "Foundations of Flight, Mass and Balance", "status": "current", "week": 1, "due_date": "2026-11-29", "best_score": null, "completed_at": null },
+                { "module_index": 3, "title": "Load-Control Terminology and Aircraft Weight Concepts", "status": "pending", "week": 1, "due_date": "2026-11-29", "best_score": null, "completed_at": null }
+              ]
+            }
+          ]
+        }
+      },
+      "response_404": { "success": false, "message": "No roadmap yet. Choose a destination first." },
+      "enums": {
+        "module.status": ["completed", "current", "pending", "overdue"],
+        "step.status": ["completed", "in_progress", "not_started"]
+      }
+    },
+
+    "DELETE /roadmap": {
+      "auth": "required",
+      "response_200": { "success": true, "message": "Roadmap removed." }
+    },
+
+    "GET /me/competency-profile?course={slug}": {
+      "auth": "required",
+      "response_200": {
+        "success": true,
+        "count": 1,
+        "data": [
+          {
+            "course": { "id": 14, "name": "Level 1 Certificate in Aircraft Load Control Fundamentals", "slug": "aircraft-load-control-level-1" },
+            "overall_score": 76,
+            "assessed_areas": 3,
+            "total_areas": 10,
+            "strengths": ["Role Awareness"],
+            "development_areas": ["Terminology"],
+            "areas": [
+              { "area": "Role Awareness", "description": "Understanding of load control purpose and interfaces", "score": 85, "status": "strength", "evidence_count": 2 },
+              { "area": "Terminology", "description": "Recognition and correct use of controlled language", "score": 55, "status": "development_needed", "evidence_count": 1 },
+              { "area": "Digital Systems", "description": "DCS concepts, data quality and access control", "score": null, "status": "not_assessed", "evidence_count": 0 }
+            ]
+          }
+        ]
+      },
+      "enums": { "area.status": ["strength", "development_needed", "not_assessed"] },
+      "notes": "Without ?course, returns every Load Control course the learner has started."
+    },
+
+    "GET /me/next-steps?course={slug}": {
+      "auth": "required",
+      "response_200": {
+        "success": true,
+        "count": 2,
+        "data": [
+          {
+            "type": "continue_module",
+            "title": "Continue Module 2: Foundations of Flight, Mass and Balance",
+            "course": { "id": 14, "name": "Level 1 Certificate in Aircraft Load Control Fundamentals", "slug": "aircraft-load-control-level-1" },
+            "module_index": 2,
+            "url": "/api/courses/aircraft-load-control-level-1/modules/2/lesson"
+          },
+          {
+            "type": "revise",
+            "title": "Revise Terminology",
+            "course": { "id": 14, "name": "Level 1 Certificate in Aircraft Load Control Fundamentals", "slug": "aircraft-load-control-level-1" },
+            "competency_area": "Terminology",
+            "module_indexes": [3]
+          }
+        ],
+        "reminder": "Course completion builds foundation knowledge only. Live operational work still requires employer-specific training, approved data, supervised competency assessment and authorisation."
+      },
+      "enums": { "type": ["continue_module", "certification", "revise", "next_level", "next_level_coming_soon", "pathway_complete", "start_course"] }
+    }
+  },
+
+  "admin": {
+
+    "PUT /admin/training-modules/{id}/content": {
+      "auth": "admin",
+      "request": {
+        "lang": "en",
+        "study_time": "Approximately 1.5-2.5 hours, depending on learner background",
+        "assessment_approach": "Knowledge checks + mapped MCQs + competency update",
+        "operational_boundary": "No aircraft-specific live calculations or operator-specific procedural authorisation",
+        "competency_area": "Role Awareness",
+        "objectives": [
+          "Describe the purpose of load control.",
+          "Identify the main airport and airline teams that exchange information with load control."
+        ],
+        "terminology": ["Load control", "Ground handling", "Turnaround"],
+        "cards": [
+          { "heading": "Why load control exists", "body": "Aircraft do not depart safely simply because all passengers and bags have arrived. ...", "type": "text" },
+          { "heading": "Operational boundary", "body": "No aircraft-specific live calculations ...", "type": "warning" }
+        ],
+        "scenarios": [
+          { "title": "Scenario 1", "description": "Process map showing Passenger Services, Baggage, Cargo, Ramp, ...", "image_url": null }
+        ],
+        "summary": ["Aircraft do not depart safely simply because all passengers and bags have arrived."],
+        "version": "1.0",
+        "effective_date": "2026-11-17",
+        "knowledge_checks": [
+          {
+            "question": "Why does load control depend on many other teams?",
+            "suggested_answer": "Because the final load picture is built from information generated across passenger, baggage, cargo, ramp and operations activities."
+          }
+        ]
+      },
+      "request_rules": {
+        "all_fields": "optional; lang defaults to en",
+        "cards[].body": "required; cards[].type is 'text' or 'warning'",
+        "scenarios[].title": "required",
+        "knowledge_checks": "when sent, replaces that language's list (matched by position)",
+        "mcqs": "not part of this body; use the existing question admin"
+      }
+    },
+
+    "POST /admin/training-modules/{id}/scenarios/{number}/image": {
+      "auth": "admin",
+      "request_multipart": { "image": "file: jpg, jpeg, png, webp or svg, max 5 MB", "lang": "optional, default en" },
+      "response_200": {
+        "success": true,
+        "data": {
+          "module_id": 41,
+          "scenario": 1,
+          "image_url": "https://<api-host>/storage/curriculum/scenarios/module-41/k2Jd9s.png"
+        }
+      }
+    }
+  }
+}

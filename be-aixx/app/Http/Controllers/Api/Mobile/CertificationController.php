@@ -49,6 +49,9 @@ class CertificationController extends Controller
             'pass_mark' => $blueprint->pass_mark,
             'topics' => collect($blueprint->topics)->map(fn ($t) => $t + ['pool_size' => $pool->get($t['module_index'], collect())->count()])->values(),
             'rules' => [
+                'Pass every module quiz and acknowledge the training boundary before starting.',
+                'Unanswered questions count as incorrect. There is no time limit.',
+                'Once you pass, the certification cannot be retaken.',
                 'Questions are selected per topic to keep topic balance.',
                 'Repeat attempts draw a different question mix where the pool allows.',
                 'Correct answers and explanations are shown after you complete the attempt.',
@@ -69,6 +72,16 @@ class CertificationController extends Controller
         /** @var Student $student */
         $student = $request->user();
         $eligibility = $this->eligibility($student, $training);
+        if ($eligibility['already_certified']) {
+            $passed = $this->progress->passedCertification($training, $student);
+            return response()->json([
+                'success' => false,
+                'code' => 'already_certified',
+                'message' => 'You have already passed this certification.',
+                'attempt_id' => $passed->id,
+                'results_url' => "/api/certification/attempts/{$passed->id}",
+            ], 409);
+        }
         if (!$eligibility['acknowledged']) {
             return response()->json([
                 'success' => false,
@@ -81,6 +94,16 @@ class CertificationController extends Controller
         $open = CertificationAttempt::where('student_id', $student->id)->where('training_id', $training->id)->where('status', 'in_progress')->first();
         if ($open) {
             return response()->json(['success' => true, 'resumed' => true, 'data' => $this->presentAttempt($open)], 200);
+        }
+
+        if ($eligibility['modules_completed'] < $eligibility['modules_total']) {
+            return response()->json([
+                'success' => false,
+                'code' => 'modules_incomplete',
+                'message' => "Pass every module quiz before starting the assessment ({$eligibility['modules_completed']}/{$eligibility['modules_total']}).",
+                'modules_completed' => $eligibility['modules_completed'],
+                'modules_total' => $eligibility['modules_total'],
+            ], 403);
         }
 
         $questions = $this->selectQuestions($student, $training, $blueprint);
@@ -302,13 +325,26 @@ class CertificationController extends Controller
         $profile = $this->progress->courseProfile($training);
         $ack = CourseAcknowledgement::where('student_id', $student->id)->where('training_id', $training->id)->first();
         $modules = $this->progress->modulesWithProgress($training, $student);
+        $acknowledged = $ack !== null && $ack->version === $profile?->version;
+        $completed = $modules->filter(fn ($m) => $m['progress']['passed'])->count();
+        $certified = $this->progress->passedCertification($training, $student) !== null;
+        $openId = CertificationAttempt::where('student_id', $student->id)->where('training_id', $training->id)->where('status', 'in_progress')->value('id');
+
+        $blockedReason = match (true) {
+            $certified => 'already_certified',
+            !$acknowledged => 'acknowledgement_required',
+            $openId === null && $completed < $modules->count() => 'modules_incomplete',
+            default => null,
+        };
 
         return [
-            'acknowledged' => $ack !== null && $ack->version === $profile?->version,
-            'modules_completed' => $modules->filter(fn ($m) => $m['progress']['passed'])->count(),
+            'acknowledged' => $acknowledged,
+            'modules_completed' => $completed,
             'modules_total' => $modules->count(),
-            'already_certified' => $this->progress->passedCertification($training, $student) !== null,
-            'in_progress_attempt_id' => CertificationAttempt::where('student_id', $student->id)->where('training_id', $training->id)->where('status', 'in_progress')->value('id'),
+            'already_certified' => $certified,
+            'in_progress_attempt_id' => $openId,
+            'can_start' => $blockedReason === null,
+            'blocked_reason' => $blockedReason,
         ];
     }
 
