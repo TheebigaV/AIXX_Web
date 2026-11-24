@@ -177,12 +177,15 @@ return new class extends Migration
 
         Schema::create('learning_assignment_acknowledgements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('learning_assignment_id')->constrained('learning_assignments')->cascadeOnDelete();
+            // Explicit short names: the generated ones exceed MySQL's 64-character identifier limit.
+            $table->foreignId('learning_assignment_id')
+                ->constrained('learning_assignments', indexName: 'la_acks_learning_assignment_id_foreign')
+                ->cascadeOnDelete();
             $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
             $table->string('version')->nullable();
             $table->timestamp('acknowledged_at');
             $table->timestamps();
-            $table->unique(['learning_assignment_id', 'student_id']);
+            $table->unique(['learning_assignment_id', 'student_id'], 'la_acks_assignment_student_unique');
         });
     }
 
